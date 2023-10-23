@@ -4,12 +4,12 @@ import axios from 'axios';
 @Injectable()
 export class TasksService {
     private readonly logger = new Logger(TasksService.name);
+    private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=aebfebdd-779c-460f-8838-d06bb51e51ab`;
+    // private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4db5544c-1ac9-42ea-8661-fe8b55051002`; //信息部群
 
     @Cron('40 08 * * *')
     // @Cron(CronExpression.EVERY_5_SECONDS)
-
-    async handleCron() {
-
+    async weatherFun() {
         //天气api，地址广州，具体citycode可以查询文件/网络
         const url = `http://t.weather.sojson.com/api/weather/city/101280101`;
         const { data: weather } = await axios.get(url);
@@ -17,9 +17,7 @@ export class TasksService {
             this.logger.warn(weather.message)
             return
         }
-        // const robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4db5544c-1ac9-42ea-8661-fe8b55051002`;
 
-        const robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=aebfebdd-779c-460f-8838-d06bb51e51ab`;
         let dataObj = {
             "msgtype": "markdown",
             "markdown": {
@@ -33,13 +31,17 @@ export class TasksService {
                  `
             }
         }
-        const { data } = await axios.post(robot, dataObj
+        const { data } = await axios.post(this.robot, dataObj
         );
         if (data.errcode == 0) {
             this.logger.warn(data.errmsg)
             return
         }
+    }
+    @Cron('40 08 * * *')
+    // @Cron(CronExpression.EVERY_5_SECONDS)
 
+    async newsFun() {
         const newsUrl = `https://api.oioweb.cn/api/common/HotList`
         const { data: news } = await axios.get(newsUrl);
         if (news.code !== 200) {
@@ -47,19 +49,19 @@ export class TasksService {
             return
         }
         let Allnew: any[] = []
-        Allnew=Allnew.concat(news.result['实时榜中榜'].filter((e: any) => e.index > 0))
-        Allnew=Allnew.concat(news.result['微博'][0])
-        Allnew=Allnew.concat(news.result['百度'].filter((e: any) => e.index < 4))
-        Allnew=Allnew.concat(news.result['第一财经'].filter((e: any) => e.index < 9))
+        Allnew = Allnew.concat(news.result['实时榜中榜'].filter((e: any) => e.index > 0))
+        Allnew = Allnew.concat(news.result['微博'][0])
+        Allnew = Allnew.concat(news.result['百度'].filter((e: any) => e.index < 4))
+        Allnew = Allnew.concat(news.result['第一财经'].filter((e: any) => e.index < 9))
         let newObj = {
             "msgtype": "markdown",
             "markdown": {
-                'content': `# 今日新闻\n${Allnew.map(e => {
-                    return `[${e.title}](${e.href})`
+                'content': `# 今日新闻\n${Allnew.map((e,i) => {
+                    return `${i+1}、[${e.title}](${e.href})`
                 }).join('\n')}
             `}
         }
-        const { data: result } = await axios.post(robot, newObj);
+        const { data: result } = await axios.post(this.robot, newObj);
         console.log(result)
         if (result.errcode == 0) {
             this.logger.warn(result.errmsg)
