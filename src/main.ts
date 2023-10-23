@@ -16,7 +16,9 @@ const PREFIX = config.PREFIX || '/';
 async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
 
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
+    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
+  });
   app.enableCors();
   // 启动版本管理
   app.enableVersioning({
@@ -38,10 +40,10 @@ async function bootstrap() {
 // async function bootstrap() {
 //   const logger: Logger = new Logger('main.ts');
 //   //暂时关闭了api接口
-//   const app = await NestFactory.create( AppModule , {
-//     // 开启日志级别打印
-//     logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
-//   });
+// const app = await NestFactory.create( AppModule , {
+//   // 开启日志级别打印
+//   logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
+// });
 //   //允许跨域请求
 //   app.enableCors();
 //   // 启动版本管理
