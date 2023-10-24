@@ -19,7 +19,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
     logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
   });
-  app.enableCors();
+  app.enableCors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  });
   // 启动版本管理
   app.enableVersioning({
     defaultVersion: '1', // 不指定默认版本为v1
