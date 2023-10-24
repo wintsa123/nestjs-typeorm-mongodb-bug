@@ -35,11 +35,12 @@ async function bootstrap() {
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
-  // app.register(fastifyCsrf);
+  app.register(fastifyCsrf);
 
   app.setGlobalPrefix(PREFIX);
   await app.listen(PORT, () => {
-    logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
+    logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`)
+    return '0.0.0.0'
   });
 }
 // async function bootstrap() {
