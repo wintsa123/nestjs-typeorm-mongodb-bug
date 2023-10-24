@@ -38,10 +38,10 @@ async function bootstrap() {
   app.register(fastifyCsrf);
 
   app.setGlobalPrefix(PREFIX);
-  await app.listen(PORT, () => {
-    logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`)
-    return '0.0.0.0'
+  await app.listen(PORT, '0.0.0.0', () => {
+    logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
   });
+
 }
 // async function bootstrap() {
 //   const logger: Logger = new Logger('main.ts');
