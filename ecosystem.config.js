@@ -23,20 +23,20 @@ module.exports = {
       env: {
         // 环境参数，当前指定为开发环境
         NODE_ENV: 'development',
-        "PORT": 8001,
+        "PORT": 9098,
         DOTENV_CONFIG_PATH: '.env.development',
       },
       env_production: {
         // 环境参数,当前指定为生产环境
 
         NODE_ENV: 'production',
-        "PORT": 8001,
+        "PORT": 9098,
 
       },
       env_test: {
         // 环境参数,当前为测试环境
         NODE_ENV: 'test',
-        "PORT": 8001,
+        "PORT": 9098,
 
       },
     },
