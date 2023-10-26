@@ -12,12 +12,12 @@ defaultPassword: 123456
 # 数据库配置
 datasource:
   driverName: mysql
-  host: localhost
+  host: 192.168.2.222
   port: 3306
-  database: nestjs-mysql-api
+  database: nestapi
   username: root
-  password: 123456
-  charset: utf8mb4
+  password: 12300114
+  charset: utf8
   loc: Asia/Shanghai
   logging: true
 
