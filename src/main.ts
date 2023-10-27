@@ -4,6 +4,7 @@ import { Logger } from '@nestjs/common/services';
 import { AppModule } from './app.module';
 import { getConfig, IS_DEV } from './utils';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import fastifyCsrf from 'fastify-csrf';
 
@@ -31,13 +32,21 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  // 给请求添加prefix
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
+ 
   app.register(fastifyCsrf);
+  // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
+  const config = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   await app.listen(PORT, '0.0.0.0', () => {
     logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
   });
