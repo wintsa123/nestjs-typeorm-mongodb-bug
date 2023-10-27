@@ -17,7 +17,7 @@ export class RedisService {
 
   private getClient() {
     this.redisClient = new Redis({
-      port: 6380, // Redis port
+      port: 6399, // Redis port
       host: 'localhost', // redisDb Redis host
       username: '', // needs Redis >= 6
       password: '12300114', // 密码

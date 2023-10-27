@@ -46,7 +46,7 @@ export class InitDbService {
       await this.tenantRepository.save(tenantData);
       // 初始化账号
       const username: string = this.configService.get('defaultAccount') ?? 'admin';
-      const defaultPassword: string = this.configService.get('defaultPassword') ?? '123456';
+      const defaultPassword: string = this.configService.get('defaultPassword') ?? '12300114';
       const salt = this.toolsService.getRandomSalt;
       const password = this.toolsService.makePassword(defaultPassword, salt);
       const accountData = this.accountRepository.create({
