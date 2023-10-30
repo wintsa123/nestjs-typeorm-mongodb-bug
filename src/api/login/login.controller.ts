@@ -5,6 +5,8 @@ import { LoginVo } from './vo/login.vo';
 import * as svgCaptcha from 'svg-captcha';
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @Controller()
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}

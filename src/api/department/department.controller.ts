@@ -16,6 +16,8 @@ import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { DepartmentPageVo, DepartmentVo, SimplenessDepartmentVo } from './vo/department.vo';
 import { QueryDepartmentDto } from './dto/department.query';
 import { AuthGuard } from '@src/guard/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('department')
 export class DepartmentController {

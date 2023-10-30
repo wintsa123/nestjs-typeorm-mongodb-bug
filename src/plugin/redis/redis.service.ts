@@ -17,8 +17,8 @@ export class RedisService {
 
   private getClient() {
     this.redisClient = new Redis({
-      port: 6399, // Redis port
-      host: 'localhost', // redisDb Redis host
+      port: 6388, // Redis port
+      host: '192.168.2.221', // redisDb Redis host
       username: '', // needs Redis >= 6
       password: '12300114', // 密码
       db: 0, // redis是几个数据库的，使用第一个

@@ -4,7 +4,8 @@ import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleEntity } from '../role/entities/role.entity';
 import { AccountRoleService } from './accountRole.service';
 import { AccountRoleDto } from './dto/account.role.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('accountRole')
 export class AccountRoleController {

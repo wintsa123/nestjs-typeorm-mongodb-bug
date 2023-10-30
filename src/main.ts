@@ -41,8 +41,10 @@ async function bootstrap() {
 
   app.setGlobalPrefix(PREFIX);
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Api example')
+    .setDescription('')
+
+
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

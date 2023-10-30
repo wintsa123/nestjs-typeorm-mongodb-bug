@@ -2,7 +2,8 @@ import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { AreaEntity } from './entities/area.entity';
 import { AreaService } from './area.service';
 import { RedisCacheApi } from '@src/decorators';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @Controller('area')
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}

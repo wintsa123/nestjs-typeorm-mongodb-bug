@@ -16,7 +16,8 @@ import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query';
 import { RoleService } from './role.service';
 import { RolePageVo, RoleVo } from './vo/role.vo';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('role')
 export class RoleController {

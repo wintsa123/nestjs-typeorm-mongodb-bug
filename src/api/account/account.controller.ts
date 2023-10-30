@@ -18,7 +18,8 @@ import { Request } from 'express';
 import { AccountPageVo, AccountVo } from './vo/account.vo';
 import { QueryAccountDto } from './dto/account.query';
 import { AccountEntity } from './entities/account.entity';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('account')
 export class AccountController {

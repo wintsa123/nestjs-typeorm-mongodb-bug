@@ -16,7 +16,8 @@ import { ResourcesDto } from './dto/resources.dto';
 import { QueryResourcesDto } from './dto/resources.query.dto';
 import { ResourcesService } from './resources.service';
 import { ResourcesListVo, SimplenessResourceVo } from './vo/resources.vo';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('resources')
 export class ResourcesController {

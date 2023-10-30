@@ -16,7 +16,9 @@ import { CreateDefaultAccountDto, RechargeDto, TenantDto } from './dto/tenant.dt
 import { QueryTenantDto } from './dto/tenant.query';
 import { TenantService } from './tenant.service';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
+import { ApiTags } from '@nestjs/swagger';
 @UseGuards(AuthGuard)
+@ApiTags('admin')
 @Controller('tenant')
 export class TenantController {
   constructor(private readonly tenantService: TenantService) {}

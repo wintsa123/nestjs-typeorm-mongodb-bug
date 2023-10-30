@@ -3,7 +3,8 @@ import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { MenusService } from './menus.service';
 import { ApiVo, MenusVo } from './vo/menus.vo';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('admin')
 @UseGuards(AuthGuard)
 @Controller('menus')
 export class MenusController {
