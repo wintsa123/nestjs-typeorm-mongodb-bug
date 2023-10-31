@@ -10,7 +10,6 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller()
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}
-
   @Post('login')
   async loginApi(@Body() req: LoginDto): Promise<LoginVo> {
     if (req.captcha.toLowerCase() === req.codeText.toLowerCase()) {

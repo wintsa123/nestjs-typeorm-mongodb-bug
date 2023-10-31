@@ -9,6 +9,7 @@ import { MenusModule } from './menus/menus.module';
 import { ResourcesModule } from './resources/resources.module';
 import { RoleResourcesModule } from './roleResources/role.resources.module';
 import { DepartmentModule } from './department/department.module';
+import { WxchatModule } from './wxchat/wxchat.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DepartmentModule } from './department/department.module';
     ResourcesModule,
     RoleResourcesModule,
     DepartmentModule,
+    WxchatModule
   ],
 })
 export class ApiModule {}

@@ -165,8 +165,9 @@ export class LoginService {
     console.log(accountToken, accountRefreshToken, '要删除的');
     await this.redisService.del(accountToken);
     await this.redisService.del(accountRefreshToken);
-    this.redisService.set(accountTokenKey, token, tokenExpire * 60 * 60);
-    this.redisService.set(accountRefreshTokenKey, refreshToken, refreshTokenExpire * 24 * 60 * 60);
+    await this.redisService.set(accountTokenKey, token, tokenExpire * 60 * 60);
+    await this.redisService.set(accountRefreshTokenKey, refreshToken, refreshTokenExpire * 24 * 60 * 60);
+    
     return {
       id: accountEntity.id, // 账号id
       username: accountEntity.username, // 用户名

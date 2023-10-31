@@ -5,9 +5,11 @@ import { AppModule } from './app.module';
 import { getConfig, IS_DEV } from './utils';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { join } from 'path';
+import helmet from '@fastify/helmet';
+import fastifyStatic from '@fastify/static';
 
 import fastifyCsrf from 'fastify-csrf';
-
 import fastifyCookie from '@fastify/cookie';
 
 
@@ -17,7 +19,7 @@ const PREFIX = config.PREFIX || '/';
 async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
 
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }), {
     logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
   });
   app.enableCors({
@@ -31,20 +33,29 @@ async function bootstrap() {
     defaultVersion: '1', // 不指定默认版本为v1
     type: VersioningType.URI,
   });
-
+  app.register(fastifyStatic, {
+    root: join(__dirname, 'public'),
+    prefix: '/', // optional: default '/'
+  })
+  
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
- 
+  // app.register(helmet);
+  app.register(
+    helmet,
+    // Example disables the `contentSecurityPolicy` middleware but keeps the rest.
+    { contentSecurityPolicy: false }
+  )
   app.register(fastifyCsrf);
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
+  
+
   const config = new DocumentBuilder()
     .setTitle('Api example')
     .setDescription('')
-
-
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

@@ -18,6 +18,9 @@ import { ApiModule } from './api/api.module';
 import { SharedModule } from './shared/shared.module';
 import { PluginModule } from './plugin/plugin.module';
 import { TasksService } from './corn/robot';
+import { WxchatModule } from './api/wxchat/wxchat.module';
+import { WxchatService } from './api/wxchat/wxchat.service';
+
 
 @Module({
   imports: [
@@ -43,22 +46,23 @@ import { TasksService } from './corn/robot';
         cache: {
           duration: 60000, // 1分钟的缓存
         },
-        extra: {
-          poolMax: 32,
-          poolMin: 16,
-          queueTimeout: 60000,
-          pollPingInterval: 60, // 每隔60秒连接
-          pollTimeout: 60, // 连接有效60秒
-        },
+        // extra: {
+        //   poolMax: 32,
+        //   poolMin: 16,
+        //   queueTimeout: 60000,
+        //   pollPingInterval: 60, // 每隔60秒连接
+        //   pollTimeout: 60, // 连接有效60秒
+        // },
       }),
     }),
     ScheduleModule.forRoot(),
     ApiModule,
     SharedModule,
     PluginModule,
+     WxchatModule,
   ],
   providers: [
-    Logger,TasksService,
+    Logger,TasksService,WxchatService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,

@@ -5,6 +5,7 @@ import { IsInt, IsMobilePhone, IsNotEmpty, IsOptional, MaxLength, Min } from 'cl
 export class TenantDto {
   @MaxLength(50, { message: '商户名称最大长度50' })
   @IsNotEmpty({ message: '商户名称不能为空' })
+
   name!: string;
 
   @MaxLength(50, { message: '商户联系人最大长度50' })

@@ -43,7 +43,7 @@ export class RedisCacheInterceptor implements NestInterceptor {
       }
       const redisData = await this.redisService.get(redisKey);
       if (redisData) {
-        console.log('redis直接返回');
+        console.log(redisData,'redis直接返回');
         return of(redisData);
       } else {
         console.log('走后端');

@@ -16,7 +16,12 @@ datasource:
   loc: Asia/Shanghai
   logging: true
 
-
+#企业微信配置
+wxChat:
+  corpsecret: YbF5JHEjAKWuO5-5nLf5xuH2R1wFc8pGBWTq0fyE12s
+  CorpID: ww97588d93c357248d
+  AgentId: 1000004
+  
 # 腾讯地图api
 lbsKey: LW7BZ-NB7C5-QNDSX-VCZVT-D7FQ4
 
