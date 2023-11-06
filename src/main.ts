@@ -14,7 +14,7 @@ import fastifyCookie from '@fastify/cookie';
 
 
 export const config = getConfig();
-const PORT = config.PORT || 9001;
+const PORT = config.PORT || 9089;
 const PREFIX = config.PREFIX || '/';
 async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
@@ -41,10 +41,8 @@ async function bootstrap() {
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
-  // app.register(helmet);
   app.register(
     helmet,
-    // Example disables the `contentSecurityPolicy` middleware but keeps the rest.
     { contentSecurityPolicy: false }
   )
   app.register(fastifyCsrf);
@@ -58,6 +56,8 @@ async function bootstrap() {
     .setDescription('')
     .setVersion('1.0')
     .build();
+    const fastifyInstance = app.getHttpAdapter().getInstance();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(PORT, '0.0.0.0', () => {
