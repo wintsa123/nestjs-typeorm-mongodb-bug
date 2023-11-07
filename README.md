@@ -65,11 +65,4 @@
 
 ## 三、技术解答
 
-> 本项目还在持续集成新功能进来,最后会加上前端做一个`cms`系统的`api`,后期会拉分支使用`graphql`提供`api`
 
-
-
-  <img src="https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/wx.jpg" width="200" height="220" style="margin-left:0" />
-
-- 1、如果你觉得本项目对你帮助很大,**给一个赞**
-- 2、最近正在搞`Nestjs`微服务训练营，训练营后打算重构一版
