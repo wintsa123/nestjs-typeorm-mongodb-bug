@@ -4,7 +4,7 @@ import axios from 'axios';
 @Injectable()
 export class TasksService {
     private readonly logger = new Logger(TasksService.name);
-    private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=aebfebdd-779c-460f-8838-d06bb51e51ab`;
+    private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=291dfc0c-3545-41e3-a355-6fb592f7c766`;
     // private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4db5544c-1ac9-42ea-8661-fe8b55051002`; //信息部群
 
     @Cron('40 08 * * *')
