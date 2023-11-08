@@ -10,7 +10,7 @@ export class TasksService {
     @Cron('40 08 * * *')
     // @Cron(CronExpression.EVERY_5_SECONDS)
     async weatherFun() {
-        if (process.env.NODE_APP_INSTANCE !== '0') return
+        // if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
             //天气api，地址广州，具体citycode可以查询文件/网络
             const url = `http://t.weather.sojson.com/api/weather/city/101280101`;
@@ -48,7 +48,7 @@ export class TasksService {
     // @Cron(CronExpression.EVERY_5_SECONDS)
 
     async newsFun() {
-        if (process.env.NODE_APP_INSTANCE !== '0') return
+        // if (process.env.NODE_APP_INSTANCE !== '0') return
 
         try {
             const newsUrl = `https://api.oioweb.cn/api/common/HotList`
