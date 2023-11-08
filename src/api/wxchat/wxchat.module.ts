@@ -7,7 +7,7 @@ import { RouterModule } from '@nestjs/core';
   imports: [
     RouterModule.register([
       {
-        path: 'wxchat', // 指定项目名称
+        path: '', // 指定项目名称
         module: WxchatModule,
       },
     ]),

@@ -8,15 +8,18 @@ import { RedisCacheApi } from '@src/decorators';
 @Controller('wxchat')
 export class WxchatController {
   constructor(private readonly wxchatService: WxchatService) {}
-  @Post()
+  @Post('/sendMessage')
   sendMsg(@Body() msg: WxchatDto) {
     return this.wxchatService.sendMessage(msg.msg);
   }
 
 
-  @Get()
+  @Get('/getToken')
   getToken() {
     return this.wxchatService.getAssesstToken();
   }
-
+  @Get('/getMessage')
+  getMessage() {
+    return this.wxchatService.getAssesstToken();
+  }
 }

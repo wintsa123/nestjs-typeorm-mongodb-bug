@@ -7,7 +7,9 @@ module.exports = {
       cwd: './', // 根目录
       args: '', // 传递给脚本的参数
       watch: true, // 开启监听文件变动重启
-      ignore_watch: ['node_modules', 'logs'], // 不用监听的文件
+      
+      watch: ["dist/main.js"],
+      ignore_watch: ['node_modules', 'dist/public','logs'], // 不用监听的文件
       exec_mode: 'cluster_mode',
       instances: '1', // max表示最大的 应用启动实例个数，仅在 cluster 模式有效 默认为 fork
       autorestart: true, // 默认为 true, 发生异常的情况下自动重启
