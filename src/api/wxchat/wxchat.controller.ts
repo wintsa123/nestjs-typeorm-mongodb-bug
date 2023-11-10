@@ -26,8 +26,9 @@ export class WxchatController {
   }
   @Post('/getMsg')
   async getMsg(@Body() data, @Query() query, @Res() res: FastifyReply) {
-    res.type('application/xml')
     let result = await this.wxchatService.getMsg(data, query);
+    res.type('application/xml')
+    res.code(200);
     res.send(result)
   }
 
