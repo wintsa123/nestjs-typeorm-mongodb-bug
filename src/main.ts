@@ -8,6 +8,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
 import helmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
+import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
 import fastifyCsrf from 'fastify-csrf';
 import fastifyCookie from '@fastify/cookie';
@@ -26,7 +27,10 @@ async function bootstrap() {
     "origin": "*",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
-    "optionsSuccessStatus": 204
+    "optionsSuccessStatus": 204,
+    "credentials":true,
+    allowedHeaders: '*', // 允许所有的请求头
+    exposedHeaders: '*', // 允许所有的响应头
   });
   // 启动版本管理
   app.enableVersioning({
@@ -37,7 +41,8 @@ async function bootstrap() {
     root: join(__dirname, 'public'),
     prefix: '/', // optional: default '/'
   })
-  
+  app.register(fastifyXmlBody);
+
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
@@ -45,7 +50,7 @@ async function bootstrap() {
     helmet,
     { contentSecurityPolicy: false }
   )
-  app.register(fastifyCsrf);
+  // app.register(fastifyCsrf);
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);

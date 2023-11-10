@@ -1,12 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WxchatDto } from './dto/wxchat.dto';
-import winston from 'winston';
-const crypto = require('crypto');
-
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
-import WXBizMsgCrypt from 'wxmsgcrypt';
+import WXBizMsgCrypt from '@wintsa/wxmsgcrypt';
 
 
 @Injectable()
@@ -32,7 +29,6 @@ export class WxchatService {
     const access_token = await this.redisService.get('assess_token');
     if (access_token) return access_token
     const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.corpsecret}`)
-    console.log(data.access_token, 'token')
     await this.redisService.set('assess_token', data.access_token, data.expires_in)
     return data.access_token
   }
@@ -49,7 +45,7 @@ export class WxchatService {
         },
         safe: 0
       })
-     
+
       if (data.errcode) {
         return '失败'
       } else {
@@ -57,26 +53,54 @@ export class WxchatService {
       }
     } catch (error) {
       throw error;
-      
+
     }
-   
+
   }
   // 验证
   async validate(msg_signature?: string, timestamp?: any, nonce?: any, echostr?: any) {
     let echostr1 = String(echostr).replace(' ', '+')
-    console.log(msg_signature, timestamp, nonce, echostr1)
-
     const signature = this.wxBizMsgCrypt.GetSignature(timestamp, nonce, echostr1)
     if (signature !== msg_signature) {
       this.logger.warn('签名不正确');
       return false
     }
-
     const reult = this.wxBizMsgCrypt.VerifyURL(msg_signature, timestamp, nonce, echostr); // 会将密文 echostr 解密出来，在返回企业欸新即可
-
     return reult
+  }
+  //正式接受
+  async getMsg(data: any, query: any) {
+    const { msg_signature, timestamp, nonce } = query;
+    let recivedMsg = this.wxBizMsgCrypt.DecryptMsg(msg_signature, timestamp, nonce, data);
+    console.log(recivedMsg)
+    const testXmlData = MessageHandle.textXml({
+      toUser: recivedMsg.FromUserName, // 员工号?或者账号就是 userid
+      fromUser: this.CorpID, // 此处固定为 企业CorpID
+      content: 'hello'  // 我们要发送的内容
+    })
+    // 加密消息体
+    let sendReplyMsg = this.wxBizMsgCrypt.EncryptMsg(testXmlData);
+    console.log(testXmlData)
+
+    return sendReplyMsg
   }
 
 
 
+
+
+}
+/**
+ * @description: 为了演示，我们构建一个明文的文本消息结构
+ * @param {type} 
+ * @return: 
+ */
+class MessageHandle {
+  static textXml({ toUser, fromUser, content }) {
+    const sTimeStamp = parseInt(String(new Date().valueOf() / 1000));
+    return {
+      sReplyMsg: `<xml><ToUserName><![CDATA[${toUser}]]></ToUserName><FromUserName><![CDATA[${fromUser}]]></FromUserName><CreateTime>${sTimeStamp}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`,
+      sTimeStamp
+    }
+  }
 }
