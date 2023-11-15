@@ -80,7 +80,6 @@ export class WxchatService {
     })
     // 加密消息体
     let sendReplyMsg = this.wxBizMsgCrypt.EncryptMsg(testXmlData);
-    console.log(testXmlData)
 
     return sendReplyMsg
   }

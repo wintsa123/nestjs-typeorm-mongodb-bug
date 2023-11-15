@@ -50,7 +50,7 @@ async function bootstrap() {
     helmet,
     { contentSecurityPolicy: false }
   )
-  // app.register(fastifyCsrf);
+  app.register(fastifyCsrf);
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);

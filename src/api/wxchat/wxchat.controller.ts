@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Res,Header,HttpCode } from '@nestjs/common';
 import { WxchatService } from './wxchat.service';
 import { WxchatDto } from './dto/wxchat.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -25,11 +25,10 @@ export class WxchatController {
     return this.wxchatService.validate(msg_signature, timestamp, nonce, echostr);
   }
   @Post('/getMsg')
-  async getMsg(@Body() data, @Query() query, @Res() res: FastifyReply) {
-    let result = await this.wxchatService.getMsg(data, query);
-    res.type('application/xml')
-    res.code(200);
-    res.send(result)
+  @Header('Content-Type', 'application/xml')
+  @HttpCode(200)
+  async getMsg(@Body() data, @Query() query) {
+  return this.wxchatService.getMsg(data, query)
   }
 
 }
