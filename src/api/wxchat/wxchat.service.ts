@@ -10,8 +10,6 @@ import WXBizMsgCrypt from '@wintsa/wxmsgcrypt';
 export class WxchatService {
   private corpsecret = this.configService.get('wxChat.corpsecret')
   private CorpID = this.configService.get('wxChat.CorpID')
-  // private CorpID = 5629502985612755
-
   private AgentId = this.configService.get('wxChat.AgentId')
   private readonly logger = new Logger(WxchatService.name);
   private token = 'KxvcyR3SQqTIzAVyIQTn2'

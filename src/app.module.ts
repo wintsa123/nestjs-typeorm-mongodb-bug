@@ -20,6 +20,8 @@ import { PluginModule } from './plugin/plugin.module';
 import { TasksService } from './corn/robot';
 import { WxchatModule } from './api/wxchat/wxchat.module';
 import { WxchatService } from './api/wxchat/wxchat.service';
+import { FadadaModule } from './api/fadada/fadada.module';
+import { Fadada } from './api/fadada/entities/fadada.entity';
 
 
 @Module({
@@ -40,7 +42,7 @@ import { WxchatService } from './api/wxchat/wxchat.service';
         username: String(configService.get('datasource.username')),
         password: String(configService.get('datasource.password')),
         database: String(configService.get('datasource.database')),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}',!__dirname + '/api/fadada/**/*.{entity}.{ts,js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
         cache: {
@@ -55,14 +57,24 @@ import { WxchatService } from './api/wxchat/wxchat.service';
         // },
       }),
     }),
+    // TypeOrmModule.forRoot({
+    //   type: 'oracle',
+    //   host: '192.168.1.170',
+    //   port: 1521,
+    //   username: 'ecology',
+    //   password: 'ecology',
+    //   database: 'ecology',
+    //   entities: [Fadada],
+    // }),
     ScheduleModule.forRoot(),
     ApiModule,
     SharedModule,
     PluginModule,
-     WxchatModule,
+    WxchatModule,
+    FadadaModule,
   ],
   providers: [
-    Logger,TasksService,WxchatService,
+    Logger, TasksService, WxchatService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
@@ -99,4 +111,4 @@ import { WxchatService } from './api/wxchat/wxchat.service';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
