@@ -226,6 +226,22 @@ export class FadadaService {
   }
   /**
    * @Author: wintsa
+   * @Date: 2023-11-17 14:42:22
+   * @LastEditors: wintsa
+   * @Description: 通过网络文件地址上传
+   * @return {*}
+   */
+  async uploadFileByUrl(data) {
+    const Client = new fascOpenApi.docClient.Client(await this.init())
+    let result: any = await Client.uploadFileByUrl(data)
+    if (result.status !== 200) {
+      this.logger.error('uploadFileByUrl')
+      return '错误'
+    }
+    return result.data
+  }
+  /**
+   * @Author: wintsa
    * @Date: 2023-11-16 13:57:34
    * @LastEditors: wintsa
    * @Description: 文件上传后，文件处理

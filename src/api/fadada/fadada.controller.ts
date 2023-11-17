@@ -69,9 +69,13 @@ export class FadadaController {
   }
   @Post('/doc/getUploadLink')
   @ApiOperation({ summary: '获取上传连接', description: '获取上传连接' })
-
-  userGetIdentity1(@Body() data: UploadFadadaDto) {
+  getUploadLink(@Body() data: UploadFadadaDto) {
     return this.fadadaService.uploadDoc(data);
+  }
+  @Post('/doc/uploadFileByUrl')
+  @ApiOperation({ summary: '获取上传连接', description: '获取上传连接' })
+  uploadFileByUrl(@Body() data: UploadFadadaDto) {
+    return this.fadadaService.uploadFileByUrl(data);
   }
   @Post('/doc/fileProcess')
   @ApiOperation({ summary: '文件处理', description: '文件上传后处理' })
