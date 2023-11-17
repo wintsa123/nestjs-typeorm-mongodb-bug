@@ -26,6 +26,8 @@ wxChat:
   corpsecret: YbF5JHEjAKWuO5-5nLf5xuH2R1wFc8pGBWTq0fyE12s
   CorpID: ww97588d93c357248d
   AgentId: 1000004
+  Token: KxvcyR3SQqTIzAVyIQTn2
+  Key: Fc3rx5pyQ4BePDDT7t5jHOvTzfdVbBDgySDhbebWDAq
 
 
 # 腾讯地图api
@@ -40,3 +42,10 @@ aliyunOss:
   bucketName: 'an-jia-shop'
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
+
+#法大大
+fadada:
+  appId: 80000470
+  appSecret: FQCLPQRNNIZXVLX1NQDBS10DUZJ8HNFQ
+  serverUrl: https://uat-api.fadada.com/api/v5
+  opencorpId: b665596642694fa39a11e22ca5cdc704

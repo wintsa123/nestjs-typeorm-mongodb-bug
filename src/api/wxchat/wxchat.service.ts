@@ -12,8 +12,8 @@ export class WxchatService {
   private CorpID = this.configService.get('wxChat.CorpID')
   private AgentId = this.configService.get('wxChat.AgentId')
   private readonly logger = new Logger(WxchatService.name);
-  private token = 'KxvcyR3SQqTIzAVyIQTn2'
-  private Key = 'Fc3rx5pyQ4BePDDT7t5jHOvTzfdVbBDgySDhbebWDAq'
+  private token = this.configService.get('wxChat.Token')
+  private Key = this.configService.get('wxChat.Key')
 
   private wxBizMsgCrypt = new WXBizMsgCrypt(this.token, this.Key, this.CorpID); // 会自动解构
 
