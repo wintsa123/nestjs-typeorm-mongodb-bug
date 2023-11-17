@@ -73,7 +73,7 @@ export class FadadaController {
     return this.fadadaService.uploadDoc(data);
   }
   @Post('/doc/uploadFileByUrl')
-  @ApiOperation({ summary: '获取上传连接', description: '获取上传连接' })
+  @ApiOperation({ summary: '获取上传连接', description: '通过网络连接上传' })
   uploadFileByUrl(@Body() data: UploadFadadaDto) {
     return this.fadadaService.uploadFileByUrl(data);
   }
