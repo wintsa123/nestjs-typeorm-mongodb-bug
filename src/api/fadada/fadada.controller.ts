@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -37,6 +37,16 @@ export class FadadaController {
 
   userAuthUrl(@Body() data: UpdateFadadaDto) {
     return this.fadadaService.getUserAuthUrl(data);
+  }
+  @Get('/user/GetAuthUrl')
+  @ApiOperation({ summary: '验证用户绑定回调' })
+  AuthUrl(@Query() data) {
+    return this.fadadaService.UserAuthUrl(data);
+  }
+  @Get('/user/AuthOk')
+  @ApiOperation({ summary: '验证用户绑定是否成功' })
+  AuthUrlOk(@Query() data) {
+    return this.fadadaService.UserAuthUrl(data);
   }
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })

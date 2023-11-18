@@ -5,11 +5,10 @@ import { SharedEntity } from '@src/shared/entities/base.entity';
 
 export class Fadada extends SharedEntity {
     @Column()
-    APPSECRET?: string;
+    clientUserId!: string;
 
     @Column()
-    APPID?: string;
+    openUserId!: string;
 
-    @Column()
-    SERVERURL?: string;
+    
 }

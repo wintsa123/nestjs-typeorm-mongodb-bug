@@ -130,6 +130,22 @@ export class FadadaService {
   }
   /**
    * @Author: wintsa
+   * @Date: 2023-11-18 11:22:14
+   * @LastEditors: wintsa
+   * @Description: 验证回调地址
+   * @return {*}
+   */
+  async UserAuthUrl(data) {
+   
+    // if (result.status !== 200) {
+    //   this.logger.error('userAuthUrl获取失败')
+    //   return '错误'
+    // }
+    return data
+  }
+
+  /**
+   * @Author: wintsa
    * @Date: 2023-11-16 11:52:57
    * @LastEditors: wintsa
    * @Description: 将已添加的用户暂时禁用。禁用后，该用户暂时不能通过该应用系统使用法大大平台服务

@@ -57,15 +57,7 @@ import { Fadada } from './api/fadada/entities/fadada.entity';
         // },
       }),
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'oracle',
-    //   host: '192.168.1.170',
-    //   port: 1521,
-    //   username: 'ecology',
-    //   password: 'ecology',
-    //   database: 'ecology',
-    //   entities: [Fadada],
-    // }),
+    
     ScheduleModule.forRoot(),
     ApiModule,
     SharedModule,
