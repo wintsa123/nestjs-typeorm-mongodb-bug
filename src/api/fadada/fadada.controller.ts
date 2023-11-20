@@ -40,13 +40,13 @@ export class FadadaController {
   }
   @Get('/user/GetAuthUrl')
   @ApiOperation({ summary: '验证用户绑定回调' })
-  AuthUrl(@Query() data) {
-    return this.fadadaService.UserAuthUrl(data);
+  AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string,@Query('authFailedReason') authFailedReason: string) {
+    return this.fadadaService.UserAuthUrl(clientUserId,openUserId,authResult,authFailedReason);
   }
   @Get('/user/AuthOk')
   @ApiOperation({ summary: '验证用户绑定是否成功' })
   AuthUrlOk(@Query() data) {
-    return this.fadadaService.UserAuthUrl(data);
+    return data;
   }
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })

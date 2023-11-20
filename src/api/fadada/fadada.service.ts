@@ -134,13 +134,13 @@ export class FadadaService {
    * @Description: 验证回调地址
    * @return {*}
    */
-  async UserAuthUrl(data) {
-   
-    // if (result.status !== 200) {
-    //   this.logger.error('userAuthUrl获取失败')
-    //   return '错误'
-    // }
-    return data
+  async UserAuthUrl(clientUserId,openUserId,authResult,authFailedReason) {
+    if (authResult !== 'successs') {
+      this.logger.error(authFailedReason)
+      return authFailedReason
+    }
+
+    return true
   }
 
   /**
