@@ -119,9 +119,8 @@ export class FadadaService {
    */
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
-    console.log(data)
+    console.log(data,'data')
     let result: any = await euiClient.getUserAuthUrl(data)
-    console.log(result,1111)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
       return '错误'

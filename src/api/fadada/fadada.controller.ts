@@ -34,8 +34,8 @@ export class FadadaController {
 
   @Post('/user/GetAuthUrl')
   @ApiOperation({ summary: '获取用户绑定链接' })
-
   userAuthUrl(@Body() data: UpdateFadadaDto) {
+  
     return this.fadadaService.getUserAuthUrl(data);
   }
   @Get('/user/GetAuthUrl')
