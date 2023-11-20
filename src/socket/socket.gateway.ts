@@ -3,7 +3,9 @@ import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websock
 import { SocketService } from './socket.service';
 import { CreateSocketDto } from './dto/create-socket.dto';
 import { UpdateSocketDto } from './dto/update-socket.dto';
-@WebSocketGateway()
+@WebSocketGateway(9088, {
+  transports: ['websocket']
+})
 export class SocketGateway {
   constructor(private readonly socketService: SocketService) {}
 
