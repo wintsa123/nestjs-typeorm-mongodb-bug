@@ -22,6 +22,7 @@ import { WxchatModule } from './api/wxchat/wxchat.module';
 import { WxchatService } from './api/wxchat/wxchat.service';
 import { FadadaModule } from './api/fadada/fadada.module';
 import { Fadada } from './api/fadada/entities/fadada.entity';
+import { SocketModule } from './socket/socket.module';
 
 
 @Module({
@@ -64,6 +65,7 @@ import { Fadada } from './api/fadada/entities/fadada.entity';
     PluginModule,
     WxchatModule,
     FadadaModule,
+    SocketModule,
   ],
   providers: [
     Logger, TasksService, WxchatService,
