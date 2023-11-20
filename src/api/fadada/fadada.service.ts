@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
@@ -16,6 +17,9 @@ export class FadadaService {
   constructor(
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    @InjectRepository(Fadada)
+    private readonly fadadaRepository: Repository<Fadada>,
+
   ) { }
   /**
    * @Author: wintsa
@@ -119,7 +123,7 @@ export class FadadaService {
    */
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
-    console.log(data,'data')
+    console.log(data, 'data')
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
@@ -134,13 +138,28 @@ export class FadadaService {
    * @Description: 验证回调地址
    * @return {*}
    */
-  async UserAuthUrl(clientUserId,openUserId,authResult,authFailedReason) {
+  async UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason) {
     if (authResult !== 'successs') {
       this.logger.error(authFailedReason)
       return authFailedReason
     }
+    try {
+      let existingData = await this.fadadaRepository.findOne({ where: { clientUserId } });
+      if (existingData) {
+        // 如果已存在，更新记录
+        await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId });
+      } else {
+        // 如果不存在，创建新记录
+        const newData = this.fadadaRepository.create({ clientUserId, openUserId });
+        await this.fadadaRepository.save(newData);
+      }
 
-    return true
+      return true;
+    } catch (error) {
+      this.logger.error('Error:', error);
+      return false
+    }
+
   }
 
   /**
