@@ -25,7 +25,7 @@ export class SocketGateway {
     client.join(clientUserId)
     return true;
   }
-  sendMessageToClient(clientId: string, message: string) {
+  sendMessageToClient(clientId: string, message) {
     this.server?.to(clientId).emit('message', message);
   }
 }

@@ -143,6 +143,8 @@ export class FadadaService {
     console.log(authResult)
     if (authResult !== 'success') {
       this.logger.error(authFailedReason)
+      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'nopass',message:authFailedReason})
+
       return authFailedReason
     }
     try {
@@ -156,11 +158,12 @@ export class FadadaService {
         const newData = this.fadadaRepository.create({ clientUserId, openUserId });
         await this.fadadaRepository.save(newData);
       }
-      // await this.SocketGateway.sendMessageToClient(clientUserId, 'pass')
-      console.log('true')
+      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'pass'})
       return true;
     } catch (error) {
       this.logger.error('Error:', error);
+      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'nopass',message:error})
+
       return false
     }
 
