@@ -125,9 +125,6 @@ export class FadadaService {
    */
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
-    console.log(data, 'data')
-        await this.SocketGateway.sendMessageToClient('268','msgtest')
-
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
@@ -143,12 +140,14 @@ export class FadadaService {
    * @return {*}
    */
   async UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason) {
-    if (authResult !== 'successs') {
+    console.log(authResult)
+    if (authResult !== 'success') {
       this.logger.error(authFailedReason)
       return authFailedReason
     }
     try {
       let existingData = await this.fadadaRepository.findOne({ where: { clientUserId } });
+
       if (existingData) {
         // 如果已存在，更新记录
         await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId });
@@ -157,7 +156,8 @@ export class FadadaService {
         const newData = this.fadadaRepository.create({ clientUserId, openUserId });
         await this.fadadaRepository.save(newData);
       }
-
+      // await this.SocketGateway.sendMessageToClient(clientUserId, 'pass')
+      console.log('true')
       return true;
     } catch (error) {
       this.logger.error('Error:', error);

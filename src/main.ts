@@ -6,8 +6,8 @@ import { getConfig, IS_DEV } from './utils';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
-import helmet from '@fastify/helmet';
-import fastifyStatic from '@fastify/static';
+import { fastifyHelmet } from '@fastify/helmet';
+import { fastifyStatic } from '@fastify/static';
 import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
 import fastifyCsrf from 'fastify-csrf';
@@ -28,7 +28,7 @@ async function bootstrap() {
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
     "optionsSuccessStatus": 204,
-    "credentials":true,
+    "credentials": true,
     allowedHeaders: '*', // 允许所有的请求头
     exposedHeaders: '*', // 允许所有的响应头
   });
@@ -47,21 +47,25 @@ async function bootstrap() {
     secret: 'zw', // for cookies signature
   });
   app.register(
-    helmet,
-    { contentSecurityPolicy: false }
+    fastifyHelmet,
+    {
+      contentSecurityPolicy: false,
+
+    },
+
   )
   app.register(fastifyCsrf);
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
-  
+
 
   const config = new DocumentBuilder()
     .setTitle('Api example')
     .setDescription('')
     .setVersion('1.0')
     .build();
-    const fastifyInstance = app.getHttpAdapter().getInstance();
+  const fastifyInstance = app.getHttpAdapter().getInstance();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
