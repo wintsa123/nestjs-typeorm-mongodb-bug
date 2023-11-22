@@ -1,10 +1,11 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { WsServiceResponseInterceptor } from "src/interceptors/websock.interceptor";
 import { SocketService } from './socket.service';
 import { CreateSocketDto } from './dto/create-socket.dto';
 import { UpdateSocketDto } from './dto/update-socket.dto';
 import { UseFilters, UseInterceptors } from '@nestjs/common';
 import { WsServiceExceptionFilter } from '@src/filters/socket.filter';
+import { Socket, Server } from 'socket.io';
 @UseInterceptors(new WsServiceResponseInterceptor())
 @UseFilters(new WsServiceExceptionFilter())
 
@@ -16,29 +17,14 @@ import { WsServiceExceptionFilter } from '@src/filters/socket.filter';
 })
 export class SocketGateway {
   constructor(private readonly socketService: SocketService) {}
-
-  @SubscribeMessage('createSocket')
-  create(@MessageBody() createSocketDto: CreateSocketDto) {
-    return this.socketService.create(createSocketDto);
+  @WebSocketServer()
+  server?: Server;
+  @SubscribeMessage('clientUserId')
+  create(@MessageBody() clientUserId: string,@ConnectedSocket() client: Socket) {
+    client.join(clientUserId)
+    return true;
   }
-
-  @SubscribeMessage('findAllSocket')
-  findAll() {
-    return this.socketService.findAll();
-  }
-
-  @SubscribeMessage('findOneSocket')
-  findOne(@MessageBody() id: number) {
-    return this.socketService.findOne(id);
-  }
-
-  @SubscribeMessage('updateSocket')
-  update(@MessageBody() updateSocketDto: UpdateSocketDto) {
-    return this.socketService.update(updateSocketDto.id, updateSocketDto);
-  }
-
-  @SubscribeMessage('removeSocket')
-  remove(@MessageBody() id: number) {
-    return this.socketService.remove(id);
+  sendMessageToClient(clientId: string, message: string) {
+    this.server?.to(clientId).emit('message', message);
   }
 }

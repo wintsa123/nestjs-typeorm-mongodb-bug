@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSocketDto } from './dto/create-socket.dto';
 import { UpdateSocketDto } from './dto/update-socket.dto';
+import { WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 
 @Injectable()
 export class SocketService {
-  create(createSocketDto) {
-    return createSocketDto;
-  }
+  
+  @WebSocketServer()
+  server?: Server ;
+  
+  sendNotificationToClients(msg,@ConnectedSocket() client: Socket) {
+    console.log(this.server,111)
+    client.broadcast.emit('message', msg);
+    
+    // client.to('268').emit('message', msg);
 
-  findAll() {
-    return `This action returns all socket`;
   }
+ 
 
-  findOne(id: number) {
-    return `This action returns a #${id} socket`;
-  }
+ 
 
-  update(id: number, updateSocketDto: UpdateSocketDto) {
-    return `This action updates a #${id} ${updateSocketDto}socket`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} socket`;
-  }
+  
 }

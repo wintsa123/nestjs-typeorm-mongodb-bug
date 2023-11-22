@@ -1,17 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { UploadFadadaDto } from './dto/fadadaUpload';
 import { FileProcess } from './dto/fileProcess';
 import { fileVerify } from './dto/fileVerifySignDto';
+import { SocketService } from 'src/socket/socket.service';
 
-import { ApiTags,ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('fadada')
 @Controller('fadada')
 export class FadadaController {
-  constructor(private readonly fadadaService: FadadaService) { }
+  constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }
 
   @Post('/getToken')
   getToken() {
@@ -34,20 +35,16 @@ export class FadadaController {
 
   @Post('/user/GetAuthUrl')
   @ApiOperation({ summary: '获取用户绑定链接' })
-  userAuthUrl(@Body() data: UpdateFadadaDto) {
-  
+  async  userAuthUrl(@Body() data: UpdateFadadaDto) {
+
     return this.fadadaService.getUserAuthUrl(data);
   }
   @Get('/user/GetAuthUrl')
   @ApiOperation({ summary: '验证用户绑定回调' })
-  AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string,@Query('authFailedReason') authFailedReason: string) {
-    return this.fadadaService.UserAuthUrl(clientUserId,openUserId,authResult,authFailedReason);
+  AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string, @Query('authFailedReason') authFailedReason: string) {
+    return this.fadadaService.UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason);
   }
-  @Get('/user/AuthOk')
-  @ApiOperation({ summary: '验证用户绑定是否成功' })
-  AuthUrlOk(@Query() data) {
-    return data;
-  }
+
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
 
@@ -78,7 +75,7 @@ export class FadadaController {
     return this.fadadaService.userGetIdentity(data);
   }
   @Post('/doc/getUploadLink')
-  @ApiOperation({ summary: '获取上传连接'})
+  @ApiOperation({ summary: '获取上传连接' })
   getUploadLink(@Body() data: UploadFadadaDto) {
     return this.fadadaService.uploadDoc(data);
   }
@@ -96,7 +93,7 @@ export class FadadaController {
 
   @Post('/doc/fileVerifySign')
   @ApiOperation({ summary: '文件验签', description: '文件验签' })
-  fileVerifySign(@Body() data:fileVerify) {
+  fileVerifySign(@Body() data: fileVerify) {
     return this.fadadaService.fileVerifySign(data);
   }
 

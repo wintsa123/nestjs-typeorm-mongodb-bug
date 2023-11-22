@@ -9,12 +9,14 @@ import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 // import  clientConfig  from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
+import { SocketGateway } from 'src/socket/socket.gateway';
 
 @Injectable()
 export class FadadaService {
   private logger = new Logger(FadadaService.name);
 
   constructor(
+    private readonly SocketGateway: SocketGateway,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
     @InjectRepository(Fadada)
@@ -124,6 +126,8 @@ export class FadadaService {
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
     console.log(data, 'data')
+        await this.SocketGateway.sendMessageToClient('268','msgtest')
+
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
