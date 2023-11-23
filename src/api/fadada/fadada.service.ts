@@ -125,6 +125,7 @@ export class FadadaService {
    */
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
+    data['freeSignInfo']['businessId']=this.configService.get('fadada.businessId') as string
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
