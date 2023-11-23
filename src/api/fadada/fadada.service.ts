@@ -125,12 +125,16 @@ export class FadadaService {
    */
   async getUserAuthUrl(data) {
     const euiClient = new fascOpenApi.euiClient.Client(await this.init())
-    data['freeSignInfo']['businessId']=this.configService.get('fadada.businessId') as string
+    if (!data['freeSignInfo']) {
+      data['freeSignInfo']={}
+    }
+    data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200) {
       this.logger.error('userAuthUrl获取失败')
       return '错误'
     }
+    await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${data.clientUserId}`)
     return result.data
   }
   /**
@@ -144,7 +148,7 @@ export class FadadaService {
     console.log(authResult)
     if (authResult !== 'success') {
       this.logger.error(authFailedReason)
-      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'nopass',message:authFailedReason})
+      await this.SocketGateway.sendMessageToClient(clientUserId, { status: 'nopass', message: authFailedReason })
 
       return authFailedReason
     }
@@ -159,11 +163,11 @@ export class FadadaService {
         const newData = this.fadadaRepository.create({ clientUserId, openUserId });
         await this.fadadaRepository.save(newData);
       }
-      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'pass'})
+      await this.SocketGateway.sendMessageToClient(clientUserId, { status: 'pass' })
       return true;
     } catch (error) {
       this.logger.error('Error:', error);
-      await this.SocketGateway.sendMessageToClient(clientUserId, {status:'nopass',message:error})
+      await this.SocketGateway.sendMessageToClient(clientUserId, { status: 'nopass', message: error })
 
       return false
     }
@@ -184,6 +188,8 @@ export class FadadaService {
       this.logger.error('userDisable获取失败')
       return '错误'
     }
+    await this.fadadaRepository.softDelete({ openUserId: data });
+
     return result.data
   }
   /**
@@ -200,6 +206,9 @@ export class FadadaService {
       this.logger.error('userEnable获取失败')
       return '错误'
     }
+
+    await this.fadadaRepository.restore({ openUserId: data });
+
     return result.data
   }
 
@@ -217,6 +226,8 @@ export class FadadaService {
       this.logger.error('userunbind获取失败')
       return '错误'
     }
+    await this.fadadaRepository.softDelete({ openUserId: data });
+
     return result.data
   }
   /**
@@ -235,7 +246,21 @@ export class FadadaService {
     }
     return result.data
   }
-
+  /**
+   * @Author: wintsa
+   * @Date: 2023-11-23 15:35:06
+   * @LastEditors: wintsa
+   * @Description: 获取激活状态的openUserId
+   * @return {*}
+   */
+  async getopenUserId(clientUserId) {
+    let result = await this.fadadaRepository.findOne({ where: { clientUserId } });
+    if (result) {
+      return result.openUserId
+    } else {
+      return "false"
+    }
+  }
   /**
      * @Author: wintsa
      * @Date: 2023-11-16 11:52:57

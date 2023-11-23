@@ -7,7 +7,7 @@ import {
 
 interface IParams {
   /** 过期时间 单位为妙*/
-  exSecond?: number;
+  exSecond?: number|null;
   /**是否要区分用户 */
   isDiffUser?: boolean;
 }

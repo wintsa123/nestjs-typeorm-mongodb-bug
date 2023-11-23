@@ -21,6 +21,7 @@ export class RedisCacheInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     console.log('缓存拦截器');
     const request: IRequest = context.switchToHttp().getRequest();
+console.log(request.method+':'+request.url)
     const isCacheApi =
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getHandler()) ||
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getClass());

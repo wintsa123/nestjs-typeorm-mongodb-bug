@@ -39,6 +39,7 @@ export class SharedEntity extends BaseEntity {
     name: 'deleted_at',
     select: false,
     comment: '软删除时间',
+    default: null,
   })
-  deletedAt!: Date;
+  deletedAt!: Date | null;
 }

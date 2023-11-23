@@ -8,6 +8,8 @@ import { fileVerify } from './dto/fileVerifySignDto';
 import { SocketService } from 'src/socket/socket.service';
 
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { query } from 'express';
+import { RedisCacheApi } from '@src/decorators';
 
 @ApiTags('fadada')
 @Controller('fadada')
@@ -35,8 +37,7 @@ export class FadadaController {
 
   @Post('/user/GetAuthUrl')
   @ApiOperation({ summary: '获取用户绑定链接' })
-  async  userAuthUrl(@Body() data: UpdateFadadaDto) {
-
+  async userAuthUrl(@Body() data: UpdateFadadaDto) {
     return this.fadadaService.getUserAuthUrl(data);
   }
   @Get('/user/GetAuthUrl')
@@ -48,29 +49,33 @@ export class FadadaController {
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
 
-  userdisable(@Body() data: CreateFadadaDto) {
+  userdisable(@Body() data) {
     return this.fadadaService.userDisable(data);
   }
   @Post('/user/Enable')
   @ApiOperation({ summary: '开启用户' })
-
-  userEnable(@Body() data: CreateFadadaDto) {
+  userEnable(@Body() data) {
     return this.fadadaService.userEnable(data);
   }
   @Post('/user/Unbind')
   @ApiOperation({ summary: '解绑用户' })
-
-  userUnbind(@Body() data: CreateFadadaDto) {
+  userUnbind(@Body() data) {
     return this.fadadaService.userUnbind(data);
   }
 
   @Post('/user/Get')
   @ApiOperation({ summary: '获取用户信息' })
-
   userGet(@Body() data: CreateFadadaDto) {
     return this.fadadaService.userGet(data);
   }
+  @Get('/user/GetByClientUserId')
+  @RedisCacheApi({ exSecond: null })
+  @ApiOperation({ summary: '获取openUserId' })
+  GetByClientUserId(@Query('ClientUserId') ClientUserId: string) {
+    return this.fadadaService.getopenUserId(ClientUserId);
+  }
   @Post('/user/GetIdentity')
+  @ApiOperation({ summary: '获取用户授权信息' })
   userGetIdentity(@Body() data: CreateFadadaDto) {
     return this.fadadaService.userGetIdentity(data);
   }
