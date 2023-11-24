@@ -23,6 +23,7 @@ import { WxchatService } from './api/wxchat/wxchat.service';
 import { FadadaModule } from './api/fadada/fadada.module';
 import { Fadada } from './api/fadada/entities/fadada.entity';
 import { SocketModule } from './socket/socket.module';
+import { TmpRedisModule } from './api/tmp-redis/tmp-redis.module';
 
 
 @Module({
@@ -66,6 +67,7 @@ import { SocketModule } from './socket/socket.module';
     WxchatModule,
     FadadaModule,
     SocketModule,
+    TmpRedisModule,
   ],
   providers: [
     Logger, TasksService, WxchatService,
