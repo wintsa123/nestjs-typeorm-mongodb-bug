@@ -258,7 +258,7 @@ export class FadadaService {
     if (result) {
       return result.openUserId
     } else {
-      return "false"
+      return false
     }
   }
   /**

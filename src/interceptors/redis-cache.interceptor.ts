@@ -42,6 +42,8 @@ console.log(request.method+':'+request.url)
           `${request.user.username}_${request.user.id}`
         );
       }
+
+      console.log(redisKey,'redisKey')
       const redisData = await this.redisService.get(redisKey);
       if (redisData) {
         console.log(redisData,'redis直接返回');
