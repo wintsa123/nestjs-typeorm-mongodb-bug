@@ -324,7 +324,7 @@ export class FadadaService {
       this.logger.error('fileProcess')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
   /**
    * @Author: wintsa
