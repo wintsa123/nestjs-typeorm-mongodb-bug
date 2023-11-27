@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import {pickBy} from 'lodash';
 
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -351,12 +352,22 @@ export class FadadaService {
    */
   async signCreate(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    data.actors=data.actors.map(e=>{
+      return {actor:pickBy(e.actor,value => value !== null && value !== undefined),signConfigInfo:pickBy(e.signConfigInfo,value => value !== null && value !== undefined)
+      }
+    })
+    if (data['initiator']['idType']=='corp') {
+      data['initiator']['openId']=this.configService.get('fadada.opencorpId')
+    }
+    if (data['businessId']) {
+      data['businessId']=this.configService.get('fadada.businessId')
+    }
     let result: any = await Client.create(data)
     if (result.status !== 200) {
       this.logger.error('signCreate')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
 
   /**
@@ -549,7 +560,7 @@ export class FadadaService {
       this.logger.error('getSignTaskEditUrl')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
 
   /**
