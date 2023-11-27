@@ -301,13 +301,14 @@ export class FadadaService {
    * @return {*}
    */
   async uploadFileByUrl(data) {
+    console.log(data)
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.uploadFileByUrl(data)
     if (result.status !== 200) {
       this.logger.error('uploadFileByUrl')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
   /**
    * @Author: wintsa
