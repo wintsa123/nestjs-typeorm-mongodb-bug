@@ -83,7 +83,7 @@ export class FadadaService {
       this.logger.error('Corp获取失败')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
   /**
    * @Author: wintsa
