@@ -176,17 +176,17 @@ export class FadadaController {
   }
   @Post('/sign/getActorUrl')
   @ApiOperation({ summary: '获取参与方签署链接' })
-  getActorUrl(@Body() data) {
+  getActorUrl(@Body() data:SignTask) {
     return this.fadadaService.getActorUrl(data);
   }
   @Post('/sign/getActorBatchSignTaskUrl')
   @ApiOperation({ summary: '获取参与方批量签署链接' })
-  getActorBatchSignTaskUrl(@Body() data) {
+  getActorBatchSignTaskUrl(@Body() data:SignTask) {
     return this.fadadaService.getActorBatchSignTaskUrl(data);
   }
   @Post('/sign/getV3ActorSignTaskUrl')
   @ApiOperation({ summary: '获取参与方签署链接（API3.0任务专属）' })
-  getV3ActorSignTaskUrl(@Body() data) {
+  getV3ActorSignTaskUrl(@Body() data:SignTask) {
     return this.fadadaService.getV3ActorSignTaskUrl(data);
   }
   @Post('/sign/Start')
