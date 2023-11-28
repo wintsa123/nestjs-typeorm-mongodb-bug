@@ -325,6 +325,7 @@ export class FadadaService {
       this.logger.error('fileProcess')
       return '错误'
     }
+    console.log(result.data)
     return result.data.data
   }
   /**
