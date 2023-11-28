@@ -5,6 +5,8 @@ import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { UploadFadadaDto } from './dto/fadadaUpload';
 import { FileProcess } from './dto/fileProcess';
 import { fileVerify } from './dto/fileVerifySignDto';
+import { SignTask } from './dto/fadadaSignTask.dto';
+
 import { SocketService } from 'src/socket/socket.service';
 
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -164,12 +166,12 @@ export class FadadaController {
   }
   @Post('/sign/getSignTaskEditUrl')
   @ApiOperation({ summary: '获取签署任务编辑链接' })
-  getSignTaskEditUrl(@Body() data) {
+  getSignTaskEditUrl(@Body() data:SignTask) {
     return this.fadadaService.getSignTaskEditUrl(data);
   }
   @Post('/sign/getSignTaskPreviewUrl')
   @ApiOperation({ summary: '获取签署任务预览链接' })
-  getSignTaskPreviewUrl(@Body() data) {
+  getSignTaskPreviewUrl(@Body() data:SignTask) {
     return this.fadadaService.getSignTaskPreviewUrl(data);
   }
   @Post('/sign/getActorUrl')
@@ -189,7 +191,7 @@ export class FadadaController {
   }
   @Post('/sign/Start')
   @ApiOperation({ summary: '提交签署任务' })
-  signStart(@Body() data) {
+  signStart(@Body() data:SignTask) {
     return this.fadadaService.signStart(data);
   }
   @Post('/sign/Cancel')

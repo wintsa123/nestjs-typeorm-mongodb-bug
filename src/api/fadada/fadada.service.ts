@@ -577,8 +577,9 @@ export class FadadaService {
       this.logger.error('getSignTaskPreviewUrl')
       return '错误'
     }
-    return result.data
+    return result.data.data
   }
+ 
   /**
       * @Author: wintsa
       * @Date: 2023-11-17 10:46:59
@@ -641,7 +642,7 @@ export class FadadaService {
       this.logger.error('start')
       return '错误'
     }
-    return result.data
+    return result.data.msg
   }
 
   /**
