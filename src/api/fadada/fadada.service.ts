@@ -292,7 +292,8 @@ export class FadadaService {
       this.logger.error('uploadDoc')
       return '错误'
     }
-    return result.data
+    console.log(result.data)
+    return result.data.data
   }
   /**
    * @Author: wintsa
