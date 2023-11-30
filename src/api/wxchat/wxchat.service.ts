@@ -10,6 +10,7 @@ import WXBizMsgCrypt from '@wintsa/wxmsgcrypt';
 export class WxchatService {
   private corpsecret = this.configService.get('wxChat.corpsecret')
   private dakaSecret = this.configService.get('wxChat.dakaSecret')
+  private tongXunSecret = this.configService.get('wxChat.tongXunSecret')
 
   private CorpID = this.configService.get('wxChat.CorpID')
   private AgentId = this.configService.get('wxChat.AgentId')
@@ -32,6 +33,10 @@ export class WxchatService {
     switch (params) {
       case 'daka':
         data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.dakaSecret}`)
+        break;
+      case 'tongxun':
+        data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.tongXunSecret}`)
+
         break;
       default:
         data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.corpsecret}`)
@@ -92,6 +97,39 @@ export class WxchatService {
     return sendReplyMsg
   }
 
+  //正式接受
+  async getDakaData(data: any) {
+    console.log(data)
+    function formatDateToUnixTimestamp(dateString) {
+      // 将不同格式的日期字符串转换为 Date 对象
+      const date = new Date(dateString);
+
+      // 获取 UNIX 时间戳（单位：毫秒）
+      const unixTimestamp = date.getTime();
+
+      // 将毫秒转换为秒
+      const unixTimestampInSeconds = Math.floor(unixTimestamp / 1000);
+
+      return unixTimestampInSeconds;
+    }
+    const assess_token = await this.getAssesstToken('daka')
+    let useridlist
+    if (data.useridlist) {
+      useridlist = data.useridlist
+    } else {
+      const assess_token1 = await this.getAssesstToken('tongxun')
+      const { data: result } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=${assess_token1}`)
+      console.log(result)
+    }
+    let prams = {
+      "access_token": assess_token,
+      "opencheckindatatype": data.opencheckindatatype,
+      "starttime": formatDateToUnixTimestamp(data.starttime),
+      "endtime": formatDateToUnixTimestamp(data.endtime),
+      "useridlist": data.useridlist ? data.useridlist : ''
+    }
+    return ''
+  }
 
 
 
