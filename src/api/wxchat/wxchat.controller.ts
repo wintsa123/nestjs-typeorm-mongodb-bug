@@ -40,10 +40,16 @@ export class WxchatController {
   async getMsg(@Body() data, @Query() query) {
     return this.wxchatService.getMsg(data, query)
   }
-  
+
   @Post('/getDakaData')
   @ApiOperation({ summary: '获取打卡数据' })
   async getDakaData(@Body() data: daka) {
     return this.wxchatService.getDakaData(data)
+  }
+  
+  @Post('/getcorpcheckinoption')
+  @ApiOperation({ summary: '获取打卡所有规则' })
+  async getcorpcheckinoption() {
+    return this.wxchatService.getcorpcheckinoption()
   }
 }

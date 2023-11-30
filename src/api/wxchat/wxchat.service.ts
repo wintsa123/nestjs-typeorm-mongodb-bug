@@ -28,7 +28,7 @@ export class WxchatService {
   ) { }
 
   async getAssesstToken(params = 'default') {
-    const access_token = await this.redisService.get('assess_token');
+    const access_token = await this.redisService.get(`${params}:assess_token`);
     if (access_token) return access_token
     let data
     switch (params) {
@@ -43,7 +43,7 @@ export class WxchatService {
         data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.corpsecret}`)
         break;
     }
-    await this.redisService.set('assess_token', data.access_token, data.expires_in)
+    await this.redisService.set(`${params}:assess_token`, data.access_token, data.expires_in)
     return data.data.access_token
   }
   // 发送企业微信消息
@@ -98,7 +98,13 @@ export class WxchatService {
     return sendReplyMsg
   }
 
-  //正式接受
+  /**
+   * @Author: wintsa
+   * @Date: 2023-11-30 16:33:17
+   * @LastEditors: wintsa
+   * @Description: 获取打卡数据
+   * @return {*}
+   */
   async getDakaData(data: any) {
     function formatDateToUnixTimestamp(dateString) {
       // 将不同格式的日期字符串转换为 Date 对象
@@ -137,7 +143,7 @@ export class WxchatService {
           responseType: 'json'
         });
       }))
-      let checkindata = done.map(e => {console.log(e);return e.data.checkindata}).flat()
+      let checkindata = done.map(e => { console.log(e); return e.data.checkindata }).flat()
       results = {
         errcode: 0,
         errmsg: 'ok',
@@ -150,18 +156,29 @@ export class WxchatService {
         "endtime": formatDateToUnixTimestamp(data.endtime),
         "useridlist": useridlist
       };
-      const {data:done1} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${assess_token}`, params, {
+      const { data: done1 } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${assess_token}`, params, {
         responseType: 'json'
       });
-      results=done1
+      results = done1
     }
     console.log('result', results)
     return results.checkindata
   }
 
+  /**
+ * @Author: wintsa
+ * @Date: 2023-11-30 16:34:16
+ * @LastEditors: wintsa
+ * @Description: 获取打卡所有规则
+ * @return {*}
+ */
+  async getcorpcheckinoption() {
+    const assess_token = await this.getAssesstToken('daka')
 
+    const {data:result} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcorpcheckinoption?access_token=${assess_token}`, {})
+    return result
+  }
 }
-
 
 
 /**
