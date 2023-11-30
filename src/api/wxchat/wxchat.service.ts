@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import WXBizMsgCrypt from '@wintsa/wxmsgcrypt';
+import { chunk } from 'lodash';
 
 
 @Injectable()
@@ -99,7 +100,6 @@ export class WxchatService {
 
   //正式接受
   async getDakaData(data: any) {
-    console.log(data)
     function formatDateToUnixTimestamp(dateString) {
       // 将不同格式的日期字符串转换为 Date 对象
       const date = new Date(dateString);
@@ -118,23 +118,52 @@ export class WxchatService {
       useridlist = data.useridlist
     } else {
       const assess_token1 = await this.getAssesstToken('tongxun')
-      const { data: result } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=${assess_token1}`)
-      console.log(result)
+      const { data: result } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=${assess_token1}`, {})
+      useridlist = result['dept_user'].map(e => e.userid)
     }
-    let prams = {
-      "access_token": assess_token,
-      "opencheckindatatype": data.opencheckindatatype,
-      "starttime": formatDateToUnixTimestamp(data.starttime),
-      "endtime": formatDateToUnixTimestamp(data.endtime),
-      "useridlist": data.useridlist ? data.useridlist : ''
+    let results
+    if (useridlist.length > 99) {
+      const useridChunks = chunk(useridlist, 99);
+
+      // 使用Promise.all并行发送多个请求
+      let done = await Promise.all(useridChunks.map((chunk) => {
+        const params = {
+          "opencheckindatatype": data.opencheckindatatype,
+          "starttime": formatDateToUnixTimestamp(data.starttime),
+          "endtime": formatDateToUnixTimestamp(data.endtime),
+          "useridlist": chunk
+        };
+        return axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${assess_token}`, params, {
+          responseType: 'json'
+        });
+      }))
+      let checkindata = done.map(e => {console.log(e);return e.data.checkindata}).flat()
+      results = {
+        errcode: 0,
+        errmsg: 'ok',
+        checkindata: checkindata
+      }
+    } else {
+      const params = {
+        "opencheckindatatype": data.opencheckindatatype,
+        "starttime": formatDateToUnixTimestamp(data.starttime),
+        "endtime": formatDateToUnixTimestamp(data.endtime),
+        "useridlist": useridlist
+      };
+      const {data:done1} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${assess_token}`, params, {
+        responseType: 'json'
+      });
+      results=done1
     }
-    return ''
+    console.log('result', results)
+    return results.checkindata
   }
 
 
-
-
 }
+
+
+
 /**
  * @description: 为了演示，我们构建一个明文的文本消息结构
  * @param {type} 
