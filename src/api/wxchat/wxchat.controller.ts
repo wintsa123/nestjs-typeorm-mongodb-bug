@@ -20,20 +20,18 @@ export class WxchatController {
 
   @Get('/getToken')
   @ApiOperation({ summary: '获取微信accessToken' })
-
   getToken() {
     return this.wxchatService.getAssesstToken();
   }
 
   @Get('/getMsg')
   @ApiOperation({ summary: '应用验证接口' })
-
   validate(@Query('msg_signature') msg_signature: string, @Query('timestamp') timestamp: string, @Query('nonce') nonce: string, @Query('echostr') echostr: string) {
     return this.wxchatService.validate(msg_signature, timestamp, nonce, echostr);
   }
+  
   @Post('/getMsg')
   @ApiOperation({ summary: '获取应用信息并返回信息' })
-
   @Header('Content-Type', 'application/xml')
   @HttpCode(200)
   async getMsg(@Body() data, @Query() query) {

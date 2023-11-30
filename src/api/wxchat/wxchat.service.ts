@@ -9,6 +9,8 @@ import WXBizMsgCrypt from '@wintsa/wxmsgcrypt';
 @Injectable()
 export class WxchatService {
   private corpsecret = this.configService.get('wxChat.corpsecret')
+  private dakaSecret = this.configService.get('wxChat.dakaSecret')
+
   private CorpID = this.configService.get('wxChat.CorpID')
   private AgentId = this.configService.get('wxChat.AgentId')
   private readonly logger = new Logger(WxchatService.name);
@@ -23,12 +25,20 @@ export class WxchatService {
 
   ) { }
 
-  async getAssesstToken() {
+  async getAssesstToken(params = 'default') {
     const access_token = await this.redisService.get('assess_token');
     if (access_token) return access_token
-    const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.corpsecret}`)
+    let data
+    switch (params) {
+      case 'daka':
+        data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.dakaSecret}`)
+        break;
+      default:
+        data = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${this.CorpID}&corpsecret=${this.corpsecret}`)
+        break;
+    }
     await this.redisService.set('assess_token', data.access_token, data.expires_in)
-    return data.access_token
+    return data.data.access_token
   }
   // 发送企业微信消息
   async sendMessage(message?: string) {
