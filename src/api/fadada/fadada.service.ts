@@ -136,7 +136,7 @@ export class FadadaService {
       return '错误'
     }
     await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${data.clientUserId}`)
-    return result.data
+    return result.data.data
   }
   /**
    * @Author: wintsa
