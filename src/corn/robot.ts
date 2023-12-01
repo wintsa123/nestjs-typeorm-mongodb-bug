@@ -84,10 +84,82 @@ export class TasksService {
 
     }
     @Cron('35 8 * * 1-5') // 8:35 AM
-    @Cron('55 11 * * 1-5') // 11:55 AM
-    @Cron('35 13 * * 1-5') // 1:35 PM
-    @Cron('35 17 * * 1-5') // 5:35 PM
     async dakatiXin() {
+        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        try {
+
+            let newObj = {
+                "msgtype": "text",
+                "text": {
+                    "content": "打卡时间快到咯，兄弟姐妹们要记得打卡",
+                    "mentioned_list": ["@all"],
+                }
+            }
+            const { data: result } = await axios.post(this.robot, newObj);
+            console.log(result)
+            if (result.errcode == 0) {
+                this.logger.warn(result.errmsg)
+                return
+            }
+
+        } catch (error) {
+            this.logger.error(error)
+
+        }
+
+    }
+    @Cron('55 11 * * 1-5') // 11:55 AM
+    async dakatiXin2() {
+        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        try {
+
+            let newObj = {
+                "msgtype": "text",
+                "text": {
+                    "content": "打卡时间快到咯，兄弟姐妹们要记得打卡",
+                    "mentioned_list": ["@all"],
+                }
+            }
+            const { data: result } = await axios.post(this.robot, newObj);
+            console.log(result)
+            if (result.errcode == 0) {
+                this.logger.warn(result.errmsg)
+                return
+            }
+
+        } catch (error) {
+            this.logger.error(error)
+
+        }
+
+    }
+    @Cron('35 13 * * 1-5') // 1:35 PM
+    async dakatiXin3() {
+        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        try {
+
+            let newObj = {
+                "msgtype": "text",
+                "text": {
+                    "content": "打卡时间快到咯，兄弟姐妹们要记得打卡",
+                    "mentioned_list": ["@all"],
+                }
+            }
+            const { data: result } = await axios.post(this.robot, newObj);
+            console.log(result)
+            if (result.errcode == 0) {
+                this.logger.warn(result.errmsg)
+                return
+            }
+
+        } catch (error) {
+            this.logger.error(error)
+
+        }
+
+    }
+    @Cron('35 17 * * 1-5') // 5:35 PM
+    async dakatiXin4() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
 
