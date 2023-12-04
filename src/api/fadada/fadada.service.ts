@@ -369,6 +369,7 @@ export class FadadaService {
       this.logger.error('signCreate')
       return '错误'
     }
+    console.log(result.data)
     return result.data.data
   }
 
