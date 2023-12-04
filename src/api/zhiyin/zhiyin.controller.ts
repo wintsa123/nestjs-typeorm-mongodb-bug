@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ZhiyinService } from './zhiyin.service';
 import { CreateZhiyinDto } from './dto/create-zhiyin.dto';
 import { UpdateZhiyinDto } from './dto/update-zhiyin.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 @ApiTags('zhiyin')
 @Controller('zhiyin')
 export class ZhiyinController {
@@ -13,23 +13,10 @@ export class ZhiyinController {
     return this.zhiyinService.create();
   }
 
-  @Get()
-  findAll() {
-    return this.zhiyinService.findAll();
+  @Get('/getToken')
+  @ApiOperation({ summary: '获取豸印accessToken' })
+  getToken() {
+    return this.zhiyinService.getAssesstToken({});
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.zhiyinService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.zhiyinService.update(+id );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.zhiyinService.remove(+id);
-  }
 }

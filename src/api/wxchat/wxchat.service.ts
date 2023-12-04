@@ -178,6 +178,35 @@ export class WxchatService {
     const {data:result} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcorpcheckinoption?access_token=${assess_token}`, {})
     return result
   }
+/**
+ * @Author: wintsa
+ * @Date: 2023-12-04 14:18:32
+ * @LastEditors: wintsa
+ * @Description: 获取打卡员工规则
+ * @return {*}
+ */
+  async getcheckinoption(params) {
+    const assess_token = await this.getAssesstToken('daka')
+    function formatDateToUnixTimestamp(dateString) {
+      // 将不同格式的日期字符串转换为 Date 对象
+      const date = new Date(dateString);
+
+      // 获取 UNIX 时间戳（单位：毫秒）
+      const unixTimestamp = date.getTime();
+
+      // 将毫秒转换为秒
+      const unixTimestampInSeconds = Math.floor(unixTimestamp / 1000);
+
+      return unixTimestampInSeconds;
+    }
+    const data = {
+      
+      "datetime": formatDateToUnixTimestamp(params.datetime),
+      "useridlist": params.useridlist
+    };
+    const {data:result} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckinoption?access_token=${assess_token}`, data)
+    return result
+  }
 }
 
 

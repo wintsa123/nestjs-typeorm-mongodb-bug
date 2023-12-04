@@ -6,6 +6,7 @@ import { daka } from './dto/daka.dto';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { RedisCacheApi } from '@src/decorators';
 import { FastifyReply } from 'fastify';
+import { dakaRule } from './dto/dakaRule.dto';
 
 @ApiTags('wxchat')
 @Controller('wxchat')
@@ -51,5 +52,10 @@ export class WxchatController {
   @ApiOperation({ summary: '获取打卡所有规则' })
   async getcorpcheckinoption() {
     return this.wxchatService.getcorpcheckinoption()
+  }
+  @Post('/getcheckinoption')
+  @ApiOperation({ summary: '获取打卡员工规则' })
+  async getcheckinoption(@Body() data: dakaRule) {
+    return this.wxchatService.getcheckinoption(data)
   }
 }
