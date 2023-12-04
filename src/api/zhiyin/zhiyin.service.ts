@@ -4,44 +4,76 @@ import { UpdateZhiyinDto } from './dto/update-zhiyin.dto';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 const crypto = require('crypto');
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 @Injectable()
 export class ZhiyinService {
   private logger = new Logger(ZhiyinService.name);
   private appId = this.configService.get('zhiyin.appId')
   private appKey = this.configService.get('zhiyin.appKey')
+  private url = this.configService.get('zhiyin.url')
+
   constructor(
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) { }
 
-  create() {
-    return 'This action adds a new zhiyin';
-  }
 
-  getAssesstToken(params) {
+
+  Sign(params) {
     function generateSignature(params, appKey) {
-      // 步骤 1: 将参数按字母顺序排序
-      const sortedParams = Object.keys(params).sort();
+      const queryParamStr = Object.entries(params)
+        .filter(([key, value]) => key && value !== undefined)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+      console.log(params)
+      const appKeySuffix = `&appKey=${appKey}`;
 
-      // 步骤 2: 将排序后的参数拼接成一个字符串
-      const paramsString = sortedParams.map(key => `${key}=${params[key]}`).join('&');
+      const fullQueryParamStr = queryParamStr + appKeySuffix;
+      console.log(fullQueryParamStr)
+      return crypto.createHash('md5').update(fullQueryParamStr).digest('hex').toUpperCase();
 
-      // 步骤 3: 在字符串末尾追加 AppKey
-      const paramsWithKey = paramsString + appKey;
-
-      // 步骤 4: 对追加 AppKey 后的字符串进行 MD5 32 位加密
-      const md5Hash = crypto.createHash('md5').update(paramsWithKey).digest('hex');
-
-      // 步骤 5: 将加密后的结果转换为大写，得到最终的签名值
-      const signature = md5Hash.toUpperCase();
-
-      return signature;
     }
     const signature = generateSignature(params, this.appKey);
     console.log(signature)
-    return signature;
+    params['sign'] = signature
+    return params;
+  }
+  async getDriveList() {
+    let objTmp = {
+      traceId: 'zw' + uuidv4(),
+      appId: this.appId,
+      timestamp: Date.now()
+    }
+    let result = this.Sign(objTmp)
+    let url = `${this.url}oa/device/list?appId=${this.appId}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
+    try {
+      const { data: done } = await axios.get(url)
+      if (done.success) {
+        return done.data
+      } else {
+        this.logger.error(done.msg)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
 
+  async push(params) {
+    let objTmp = {
+      traceId: 'zw' + uuidv4(),
+      appId: this.appId,
+      timestamp: Date.now()
+    }
+    const mergedObj = { ...objTmp, ...params };
+    console.log(mergedObj)
+
+    let result=this.Sign(mergedObj)
+    const url=`${this.url}oa/apply/sync?appId=${this.appId}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
+    console.log(url)
+    return url
+  }
 
 }

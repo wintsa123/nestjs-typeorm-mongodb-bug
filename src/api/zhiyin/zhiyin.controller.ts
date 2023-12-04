@@ -1,22 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ZhiyinService } from './zhiyin.service';
 import { CreateZhiyinDto } from './dto/create-zhiyin.dto';
-import { UpdateZhiyinDto } from './dto/update-zhiyin.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { pushDto } from './dto/push.dto';
+import { ApiBody, ApiOperation, ApiParam, ApiTags, } from '@nestjs/swagger';
+import { query } from 'express';
 @ApiTags('zhiyin')
 @Controller('zhiyin')
 export class ZhiyinController {
   constructor(private readonly zhiyinService: ZhiyinService) {}
 
-  @Post()
-  create() {
-    return this.zhiyinService.create();
+  
+
+  @Get('/getDriveList')
+  @ApiOperation({ summary: '印章列表查询接口'})
+  getDriveList() {
+    return this.zhiyinService.getDriveList();
   }
 
-  @Get('/getToken')
-  @ApiOperation({ summary: '获取豸印accessToken' })
-  getToken() {
-    return this.zhiyinService.getAssesstToken({});
+  @Post('/push')
+  @ApiOperation({ summary: 'OA审批单据推送接口',description:'供企业群体推送用印审批单据，用于在Saas平台驱动印章'  })
+
+ push(@Body()data :pushDto) {
+    return this.zhiyinService.push(data);
   }
 
 }

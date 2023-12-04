@@ -1,13 +1,8 @@
 PORT: 9089
 PREFIX: api
 
-# 正常token2小时
-tokenExpire: 2
-# 刷新过期时间为7天
-refreshTokenExpire: 7
-
-# 默认密码
-defaultPassword: 123456
+# token过期时间为7天
+tokenExpire: 7
 
 # 数据库配置
 datasource:
@@ -30,10 +25,8 @@ wxChat:
   Key: Fc3rx5pyQ4BePDDT7t5jHOvTzfdVbBDgySDhbebWDAq
   dakaSecret: 06J216adGcxmj2YaDiUI7F2bwGWBiaS6XcMuYwVbMZI
   tongXunSecret: -dAuFs4uhcyOjpkHgxDrvPV8gdNb7OPvJW3odGeCua4
-
-
 # 腾讯地图api
-lbsKey: LW7BZ-NB7C5--QNDSX-VCZVT-D7FQ4
+lbsKey: LW7BZ-NB7C5-QNDSX-VCZVT-D7FQ4
 
 # 阿里oss存储(可直接使用)
 aliyunOss:
@@ -44,7 +37,6 @@ aliyunOss:
   bucketName: 'an-jia-shop'
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
-
 #法大大
 fadada:
   appId: 80000470
@@ -52,8 +44,8 @@ fadada:
   serverUrl: https://uat-api.fadada.com/api/v5
   opencorpId: b665596642694fa39a11e22ca5cdc704
   businessId: 3b68a1ff1e851c69ba4c70c2b1997421
-
 #豸印
 zhiyin:
+  url: https://dev.zhiyinseal.com/smartsealservice/
   appId: tbdudnj23zdxfizwvb2exw8vgp2f4f1r
   appKey: lgt0ax3q39gx0fm1t9h7dz6oys9el46j

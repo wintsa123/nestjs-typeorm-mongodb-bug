@@ -108,7 +108,7 @@ export class TasksService {
         }
 
     }
-    @Cron('00 12 * * 1-5') // 11:55 AM
+    @Cron('05 12 * * 1-5') // 11:55 AM
     async dakatiXin2() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
@@ -158,7 +158,7 @@ export class TasksService {
         }
 
     }
-    @Cron('40 17 * * 1-5') // 5:35 PM
+    @Cron('45 17 * * 1-5') // 5:35 PM
     async dakatiXin4() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
