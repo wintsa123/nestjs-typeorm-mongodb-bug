@@ -15,15 +15,10 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { ValidationPipe } from './pipe/validation.pipe';
 import { getConfig } from './utils';
 import { ApiModule } from './api/api.module';
-import { SharedModule } from './shared/shared.module';
 import { PluginModule } from './plugin/plugin.module';
 import { TasksService } from './corn/robot';
-import { WxchatModule } from './api/wxchat/wxchat.module';
 import { WxchatService } from './api/wxchat/wxchat.service';
-import { FadadaModule } from './api/fadada/fadada.module';
-import { Fadada } from './api/fadada/entities/fadada.entity';
 import { SocketModule } from './socket/socket.module';
-import { TmpRedisModule } from './api/tmp-redis/tmp-redis.module';
 
 
 @Module({
@@ -59,15 +54,10 @@ import { TmpRedisModule } from './api/tmp-redis/tmp-redis.module';
         // },
       }),
     }),
-    
     ScheduleModule.forRoot(),
     ApiModule,
-    SharedModule,
     PluginModule,
-    WxchatModule,
-    FadadaModule,
     SocketModule,
-    TmpRedisModule,
   ],
   providers: [
     Logger, TasksService, WxchatService,

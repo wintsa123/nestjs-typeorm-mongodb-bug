@@ -6,7 +6,6 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { LoginTokenDataVo } from '@src/api/login/vo/login.vo';
 import { AccountTypeEnum } from '@src/enums/account.type.enum';
 import { Observable } from 'rxjs';
 
@@ -20,7 +19,7 @@ export class ApiInterceptor implements NestInterceptor {
     const method = request.method;
     /**当前请求路径 */
     const url = request.url;
-    const user = request.user as LoginTokenDataVo;
+    const user = request.user ;
     const newUrl = url
       .replace('//', '/') // 去除双//
       .replace('/api/v1/admin', '') // 去除双//

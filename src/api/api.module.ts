@@ -1,29 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TenantModule } from './tenant/tenant.module';
-import { AreaModule } from './area/area.module';
-import { AccountModule } from './account/account.module';
-import { RoleModule } from './role/role.module';
-import { AccountRoleModule } from './accountRole/accountRole.module';
-import { LoginModule } from './login/login.module';
-import { MenusModule } from './menus/menus.module';
-import { ResourcesModule } from './resources/resources.module';
-import { RoleResourcesModule } from './roleResources/role.resources.module';
-import { DepartmentModule } from './department/department.module';
 import { WxchatModule } from './wxchat/wxchat.module';
+import { ZhiyinModule } from './zhiyin/zhiyin.module';
+import { FadadaModule } from './fadada/fadada.module';
+import { TmpRedisModule } from './tmp-redis/tmp-redis.module';
 
 @Module({
   imports: [
-    TenantModule,
-    AreaModule,
-    AccountModule,
-    RoleModule,
-    AccountRoleModule,
-    LoginModule,
-    MenusModule,
-    ResourcesModule,
-    RoleResourcesModule,
-    DepartmentModule,
-    WxchatModule
+    FadadaModule,
+    WxchatModule,
+    ZhiyinModule,
+    TmpRedisModule
   ],
 })
 export class ApiModule {}
