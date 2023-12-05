@@ -196,42 +196,42 @@ export class FadadaController {
   }
   @Post('/sign/Cancel')
   @ApiOperation({ summary: '撤销签署任务' })
-  signCancel(@Body() data) {
+  signCancel(@Body() data:SignTask) {
     return this.fadadaService.signCancel(data);
   }
   @Post('/sign/finalizeDoc')
   @ApiOperation({ summary: '定稿签署任务' })
-  finalizeDoc(@Body() data) {
+  finalizeDoc(@Body() data:SignTask) {
     return this.fadadaService.finalizeDoc(data);
   }
   @Post('/sign/urgeSignTask')
   @ApiOperation({ summary: '催办签署任务' })
-  urgeSignTask(@Body() data) {
+  urgeSignTask(@Body() data:SignTask) {
     return this.fadadaService.urgeSignTask(data);
   }
   @Post('/sign/block')
   @ApiOperation({ summary: '阻塞签署任务' })
-  signblock(@Body() data) {
+  signblock(@Body() data:SignTask) {
     return this.fadadaService.signblock(data);
   }
   @Post('/sign/Unblock')
   @ApiOperation({ summary: '解阻签署任务' })
-  signUnblock(@Body() data) {
+  signUnblock(@Body() data:SignTask) {
     return this.fadadaService.signUnblock(data);
   }
   @Post('/sign/finish')
   @ApiOperation({ summary: '结束签署任务' })
-  signfinish(@Body() data) {
+  signfinish(@Body() data:SignTask) {
     return this.fadadaService.signfinish(data);
   }
   @Post('/sign/Abolish')
   @ApiOperation({ summary: '作废签署任务' })
-  signAbolish(@Body() data) {
+  signAbolish(@Body() data:SignTask) {
     return this.fadadaService.signAbolish(data);
   }
   @Post('/sign/GetDetail')
   @ApiOperation({ summary: '查询签署任务详情' })
-  signGetDetail(@Body() data) {
+  signGetDetail(@Body() data:SignTask) {
     return this.fadadaService.signGetDetail(data);
   }
   @Post('/sign/GetOwnerList')
