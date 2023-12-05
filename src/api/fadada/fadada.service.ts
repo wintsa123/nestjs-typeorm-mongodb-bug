@@ -135,6 +135,7 @@ export class FadadaService {
       this.logger.error('userAuthUrl获取失败')
       return '错误'
     }
+    console.log(result)
     await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${data.clientUserId}`)
     return result.data.data
   }
@@ -156,6 +157,7 @@ export class FadadaService {
     try {
       let existingData = await this.fadadaRepository.findOne({ where: { clientUserId } });
 
+      console.log(existingData,openUserId)
       if (existingData) {
         // 如果已存在，更新记录
         await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId });

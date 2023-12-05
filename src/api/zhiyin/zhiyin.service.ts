@@ -21,15 +21,21 @@ export class ZhiyinService {
   ) { }
 
 
-
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 11:16:03
+   * @LastEditors: wintsa
+   * @Description: 根据对象签名
+   * @return {*}
+   */
   Sign(params) {
     function generateSignature(params, appKey) {
       const queryParamStr = Object.entries(params)
         .filter(([key, value]) => key && value !== undefined)
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => {console.log(a);return a[0].localeCompare(b[0])})
         .map(([key, value]) => `${key}=${value}`)
         .join('&');
-      console.log(params)
+      console.log(queryParamStr)
       const appKeySuffix = `&appKey=${appKey}`;
 
       const fullQueryParamStr = queryParamStr + appKeySuffix;
@@ -42,6 +48,13 @@ export class ZhiyinService {
     params['sign'] = signature
     return params;
   }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 11:16:23
+   * @LastEditors: wintsa
+   * @Description: 获取印章设备列表
+   * @return {*}
+   */
   async getDriveList() {
     let objTmp = {
       traceId: 'zw' + uuidv4(),
@@ -62,6 +75,13 @@ export class ZhiyinService {
     }
   }
 
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 11:16:36
+   * @LastEditors: wintsa
+   * @Description: oa审批单据推送
+   * @return {*}
+   */
   async push(params) {
     let objTmp = {
       traceId: 'zw' + uuidv4(),
@@ -70,13 +90,11 @@ export class ZhiyinService {
     }
     const mergedObj = { ...objTmp, ...params };
     let result = this.Sign(mergedObj)
-    console.log(result)
     const url = `${this.url}oa/apply/sync`
-    console.log(url)
     try {
       const { data: done } = await axios.post(url, result)
       if (done.success) {
-        return done.data
+        return done
       } else {
         this.logger.error(done)
       }
@@ -84,8 +102,48 @@ export class ZhiyinService {
       this.logger.error(error)
     }
   }
+
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 11:16:48
+   * @LastEditors: wintsa
+   * @Description: 撤销单据推送
+   * @return {*}
+   */
+  async cancel(code:string) {
+    let objTmp = {
+      code,
+      appId: this.appId,
+      timestamp: getTime(),
+    }
+    let result = this.Sign(objTmp)
+    console.log(result)
+
+    const url1 = `${this.url}oa/apply/cancel?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
+
+    try {
+      console.log(url1)
+
+      const { data: done } = await axios.get(url1)
+      console.log(done)
+      if (done.success) {
+        return done
+      } else {
+        this.logger.error(done)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 11:16:57
+   * @LastEditors: wintsa
+   * @Description: 回调地址
+   * @return {*}
+   */
   callback(data) {
-    console.log(data)
+    console.log(data, 'callback')
     return data
   }
 }

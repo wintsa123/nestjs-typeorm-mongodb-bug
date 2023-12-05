@@ -2,11 +2,10 @@ import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsOptional, MaxLength, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import internal from 'stream';
+import { CreateZhiyinDto } from "./create-zhiyin.dto";
 
-export class pushDto {
-    @ApiProperty({ description: '单据编号(OA系统单据的唯一标识)',required: true })
-    @IsNotEmpty()
-    code!: string
+export class pushDto extends CreateZhiyinDto{
+    
 
     @ApiProperty({  description: '印章mac',required: true})
     @IsNotEmpty()

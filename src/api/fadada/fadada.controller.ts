@@ -50,7 +50,6 @@ export class FadadaController {
 
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
-
   userdisable(@Body() data) {
     return this.fadadaService.userDisable(data);
   }
