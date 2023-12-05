@@ -45,6 +45,35 @@ import { SocketModule } from './socket/socket.module';
         cache: {
           duration: 60000, // 1分钟的缓存
         },
+        extra: {
+          poolMax: 40,
+          poolMin: 20,
+        },
+      }),
+    }),
+      TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'oracle',
+        host: "192.168.2.222",
+        username: String(configService.get('datasourceOracle.username')),
+        password: String(configService.get('datasourceOracle.password')),
+        port: Number(configService.get('datasourceOracle.port')),
+        sid: String(configService.get('datasourceOracle.sid')),
+        synchronize:false,
+        extra: {
+          poolMax: 40,
+          poolMin: 20,
+        },
+        logging: configService.get('datasourceOracle.logging'),
+        cache: {
+          duration: 60000, // 1分钟的缓存
+        },
+
+        // entities: [__dirname + '/**/*.entity{.ts,.js}',!__dirname + '/api/fadada/**/*.{entity}.{ts,js}'],
+        
+    
         // extra: {
         //   poolMax: 32,
         //   poolMin: 16,

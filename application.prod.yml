@@ -16,6 +16,19 @@ datasource:
   loc: Asia/Shanghai
   logging: true
 
+datasourceOracle:
+  driverName: oracle
+  host: 192.168.2.222
+  port: 1521
+  database: ecology
+  username: ecology
+  password: ecology
+  sid: ecology
+  charset: utf8
+  loc: Asia/Shanghai
+  logging: true
+
+
 #企业微信配置
 wxChat:
   corpsecret: YbF5JHEjAKWuO5-5nLf5xuH2R1wFc8pGBWTq0fyE12s
