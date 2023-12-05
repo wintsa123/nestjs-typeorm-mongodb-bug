@@ -32,7 +32,7 @@ export class ZhiyinService {
     function generateSignature(params, appKey) {
       const queryParamStr = Object.entries(params)
         .filter(([key, value]) => key && value !== undefined)
-        .sort((a, b) => {console.log(a);return a[0].localeCompare(b[0])})
+        .sort((a, b) => { console.log(a); return a[0].localeCompare(b[0]) })
         .map(([key, value]) => `${key}=${value}`)
         .join('&');
       console.log(queryParamStr)
@@ -110,7 +110,7 @@ export class ZhiyinService {
    * @Description: 撤销单据推送
    * @return {*}
    */
-  async cancel(code:string) {
+  async cancel(code: string) {
     let objTmp = {
       code,
       appId: this.appId,
@@ -145,5 +145,37 @@ export class ZhiyinService {
   callback(data) {
     console.log(data, 'callback')
     return data
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-05 17:52:19
+   * @LastEditors: wintsa
+   * @Description: 主动获取数据
+   * @return {*}
+   */
+  async info(code) {
+    let objTmp = {
+      traceId: 'zw' + uuidv4(),
+      code,
+      appId: this.appId,
+      timestamp: getTime(),
+    }
+    let result = this.Sign(objTmp)
+    console.log(result)
+
+    const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
+    try {
+      console.log(url1)
+
+      const { data: done } = await axios.get(url1)
+      console.log(done)
+      if (done.success) {
+        return done
+      } else {
+        this.logger.error(done)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
 }
