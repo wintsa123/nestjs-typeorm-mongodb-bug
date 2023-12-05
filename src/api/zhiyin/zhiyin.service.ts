@@ -68,12 +68,23 @@ export class ZhiyinService {
       timestamp: Date.now()
     }
     const mergedObj = { ...objTmp, ...params };
-    console.log(mergedObj)
-
-    let result=this.Sign(mergedObj)
-    const url=`${this.url}oa/apply/sync?appId=${this.appId}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
+    let result = this.Sign(mergedObj)
+    console.log(result)
+    const url = `${this.url}oa/apply/sync`
     console.log(url)
-    return url
+    try {
+      const { data: done } = await axios.post(url, result)
+      if (done.success) {
+        return done.data
+      } else {
+        this.logger.error(done)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
-
+  callback(data) {
+    console.log(data)
+    return data
+  }
 }

@@ -46,7 +46,6 @@ export class TasksService {
     }
     @Cron('40 08 * * *')
     // @Cron(CronExpression.EVERY_5_SECONDS)
-
     async newsFun() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
 
@@ -83,6 +82,7 @@ export class TasksService {
         }
 
     }
+
     @Cron('35 8 * * 1-5') // 8:35 AM
     async dakatiXin() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
@@ -108,6 +108,7 @@ export class TasksService {
         }
 
     }
+
     @Cron('05 12 * * 1-5') // 11:55 AM
     async dakatiXin2() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
@@ -133,6 +134,7 @@ export class TasksService {
         }
 
     }
+    
     @Cron('35 13 * * 1-5') // 1:35 PM
     async dakatiXin3() {
         // if (process.env.NODE_APP_INSTANCE !== '0') return
