@@ -39,16 +39,13 @@ import { SocketModule } from './socket/socket.module';
         username: String(configService.get('datasource.username')),
         password: String(configService.get('datasource.password')),
         database: String(configService.get('datasource.database')),
-        entities: [__dirname + '/**/*.entity{.ts,.js}',!__dirname + '/api/fadada/**/*.{entity}.{ts,js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
         cache: {
           duration: 60000, // 1分钟的缓存
         },
-        extra: {
-          poolMax: 40,
-          poolMin: 20,
-        },
+      
       }),
     }),
       TypeOrmModule.forRootAsync({
@@ -66,6 +63,8 @@ import { SocketModule } from './socket/socket.module';
           poolMax: 40,
           poolMin: 20,
         },
+        entities: [__dirname + '/**/*.ORLentity{.ts,.js}'],
+
         logging: configService.get('datasourceOracle.logging'),
         cache: {
           duration: 60000, // 1分钟的缓存

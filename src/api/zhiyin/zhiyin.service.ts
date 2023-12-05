@@ -4,6 +4,7 @@ import { UpdateZhiyinDto } from './dto/update-zhiyin.dto';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 const crypto = require('crypto');
+import { getTime } from "@src/utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
@@ -45,7 +46,7 @@ export class ZhiyinService {
     let objTmp = {
       traceId: 'zw' + uuidv4(),
       appId: this.appId,
-      timestamp: Date.now()
+      timestamp: getTime()
     }
     let result = this.Sign(objTmp)
     let url = `${this.url}oa/device/list?appId=${this.appId}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
@@ -65,7 +66,7 @@ export class ZhiyinService {
     let objTmp = {
       traceId: 'zw' + uuidv4(),
       appId: this.appId,
-      timestamp: Date.now()
+      timestamp: getTime()
     }
     const mergedObj = { ...objTmp, ...params };
     let result = this.Sign(mergedObj)
