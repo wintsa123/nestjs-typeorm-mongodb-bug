@@ -7,6 +7,12 @@ const crypto = require('crypto');
 import { getTime } from "@src/utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
+import { StampRecordEntity } from './entities/StampRecord.Entity';
+import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
+import { Repository } from 'typeorm';
+import { uniqBy } from 'lodash';
 
 @Injectable()
 export class ZhiyinService {
@@ -16,6 +22,12 @@ export class ZhiyinService {
   private url = this.configService.get('zhiyin.url')
 
   constructor(
+    @InjectRepository(ApplyDetailEntity)
+    private readonly applyDetailRepository: Repository<ApplyDetailEntity>,
+    @InjectRepository(StampRecordEntity)
+    private readonly stampRecordRepository: Repository<StampRecordEntity>,
+    @InjectRepository(StampRecordDetailEntity)
+    private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) { }
@@ -142,9 +154,27 @@ export class ZhiyinService {
    * @Description: 回调地址
    * @return {*}
    */
-  callback(data) {
-    console.log(data, 'callback')
-    return data
+  async callback(data) {
+    const { opApplyDetailRequest, opStampRecordRequest } = data
+    const tmp1 = opStampRecordRequest.map((e: any) => { return { stampRecordId: e.stampRecordId, ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
+    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = e.applyId; return new StampRecordEntity(e) })
+    let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
+    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = e.applyId; return new StampRecordDetailEntity(e) })
+    const all = new ApplyDetailEntity(opApplyDetailRequest)
+    all['details'] = StampRecordDetails
+    all['records'] = StampRecords
+    console.log(all)
+    try {
+      await this.stampRecordDetailRepository.save(StampRecordDetails);
+      await this.stampRecordRepository.save(StampRecords);
+      const newApplyDetail = await this.applyDetailRepository.save(opApplyDetailRequest);
+      return '请求成功'
+
+    } catch (error) {
+      return error
+
+    }
+
   }
   /**
    * @Author: wintsa
@@ -170,7 +200,8 @@ export class ZhiyinService {
       const { data: done } = await axios.get(url1)
       console.log(done)
       if (done.success) {
-        return done
+
+        return done.data
       } else {
         this.logger.error(done)
       }

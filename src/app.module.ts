@@ -21,6 +21,7 @@ import { WxchatService } from './api/wxchat/wxchat.service';
 import { SocketModule } from './socket/socket.module';
 
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -42,46 +43,40 @@ import { SocketModule } from './socket/socket.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
+        autoLoadEntities: true, // 每个通过forFeature()注册的实体都会自动添加到配置对象的entities数组中
+// synchronize:true,
         cache: {
           duration: 60000, // 1分钟的缓存
         },
+        // synchronize:true
       
       }),
     }),
-      TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'oracle',
-        host: "192.168.2.222",
-        username: String(configService.get('datasourceOracle.username')),
-        password: String(configService.get('datasourceOracle.password')),
-        port: Number(configService.get('datasourceOracle.port')),
-        sid: String(configService.get('datasourceOracle.sid')),
-        synchronize:false,
-        extra: {
-          poolMax: 40,
-          poolMin: 20,
-        },
-        entities: [__dirname + '/**/*.ORLentity{.ts,.js}'],
+      // TypeOrmModule.forRootAsync({
+      // imports: [ConfigModule],
+      // inject: [ConfigService],
+      // useFactory: (configService: ConfigService) => ({
+      //   type: 'oracle',
+      //   host: "192.168.2.222",
+      //   username: String(configService.get('datasourceOracle.username')),
+      //   password: String(configService.get('datasourceOracle.password')),
+      //   port: Number(configService.get('datasourceOracle.port')),
+      //   sid: String(configService.get('datasourceOracle.sid')),
+      //   synchronize:false,
+      //   extra: {
+      //     poolMax: 40,
+      //     poolMin: 20,
+      //   },
+      //   entities: [__dirname + '/**/*.ORLentity{.ts,.js}'],
 
-        logging: configService.get('datasourceOracle.logging'),
-        cache: {
-          duration: 60000, // 1分钟的缓存
-        },
+      //   logging: configService.get('datasourceOracle.logging'),
+      //   cache: {
+      //     duration: 60000, // 1分钟的缓存
+      //   },
 
-        // entities: [__dirname + '/**/*.entity{.ts,.js}',!__dirname + '/api/fadada/**/*.{entity}.{ts,js}'],
-        
-    
-        // extra: {
-        //   poolMax: 32,
-        //   poolMin: 16,
-        //   queueTimeout: 60000,
-        //   pollPingInterval: 60, // 每隔60秒连接
-        //   pollTimeout: 60, // 连接有效60秒
-        // },
-      }),
-    }),
+       
+      // }),
+    // }),
     ScheduleModule.forRoot(),
     ApiModule,
     PluginModule,

@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { ZhiyinService } from './zhiyin.service';
 import { ZhiyinController } from './zhiyin.controller';
 import { RouterModule } from '@nestjs/core';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
+import { StampRecordEntity } from './entities/StampRecord.entity';
+import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 @Module({
   imports: [
     RouterModule.register([
@@ -11,6 +14,7 @@ import { RouterModule } from '@nestjs/core';
         module: ZhiyinModule,
       },
     ]),
+    TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity])
   ],
   controllers: [ZhiyinController],
   providers: [ZhiyinService],
