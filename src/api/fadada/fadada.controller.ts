@@ -13,7 +13,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { query } from 'express';
 import { RedisCacheApi } from '@src/decorators';
 
-@ApiTags('fadada')
+@ApiTags('法大大电子签章')
 @Controller('fadada')
 export class FadadaController {
   constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }

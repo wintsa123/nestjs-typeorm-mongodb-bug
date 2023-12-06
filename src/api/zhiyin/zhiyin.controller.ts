@@ -7,7 +7,7 @@ import { callback } from './dto/callback.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags, } from '@nestjs/swagger';
 import { query } from 'express';
 
-@ApiTags('zhiyin')
+@ApiTags('豸印')
 @Controller('zhiyin')
 export class ZhiyinController {
   constructor(private readonly zhiyinService: ZhiyinService) { }

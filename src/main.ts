@@ -62,8 +62,10 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Api example')
-    .setDescription('')
+    .setDescription('临时接口调试')
     .setVersion('1.0')
+      .setLicense('Apache 2.0', 'http://www.apache.org/licenses/LICENSE-2.0.html')
+
     .build();
 
     

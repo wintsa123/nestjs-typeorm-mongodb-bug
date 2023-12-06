@@ -8,7 +8,7 @@ import { RedisCacheApi } from '@src/decorators';
 import { FastifyReply } from 'fastify';
 import { dakaRule } from './dto/dakaRule.dto';
 
-@ApiTags('wxchat')
+@ApiTags('企业微信')
 @Controller('wxchat')
 
 export class WxchatController {
