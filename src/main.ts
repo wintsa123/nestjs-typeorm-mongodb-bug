@@ -65,10 +65,22 @@ async function bootstrap() {
     .setDescription('')
     .setVersion('1.0')
     .build();
+
+    
+
   const fastifyInstance = app.getHttpAdapter().getInstance();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      plugins: [
+        {
+          // 启用导出插件
+          'export-to': {}
+        },
+      ],
+    },
+  });
   await app.listen(PORT, '0.0.0.0', () => {
     logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
   });
