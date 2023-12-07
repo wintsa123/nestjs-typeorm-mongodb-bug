@@ -157,21 +157,21 @@ export class ZhiyinService {
   async callback(data) {
     const { opApplyDetailRequest, opStampRecordRequest } = data
     const tmp1 = opStampRecordRequest.map((e: any) => { return { stampRecordId: e.stampRecordId, ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = e.applyId; return new StampRecordEntity(e) })
+    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordEntity(e) })
     let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = e.applyId; return new StampRecordDetailEntity(e) })
+    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordDetailEntity(e) })
     const all = new ApplyDetailEntity(opApplyDetailRequest)
     all['details'] = StampRecordDetails
     all['records'] = StampRecords
     console.log(all)
     try {
+      await this.applyDetailRepository.save(opApplyDetailRequest);
       await this.stampRecordDetailRepository.save(StampRecordDetails);
       await this.stampRecordRepository.save(StampRecords);
-      const newApplyDetail = await this.applyDetailRepository.save(opApplyDetailRequest);
-      return '请求成功'
+      return true
 
     } catch (error) {
-      return error
+      throw error
 
     }
 
@@ -198,11 +198,12 @@ export class ZhiyinService {
       console.log(url1)
 
       const { data: done } = await axios.get(url1)
-      console.log(done)
+      console.log(done.success)
       if (done.success) {
 
         return done.data
       } else {
+        return done.msg
         this.logger.error(done)
       }
     } catch (error) {

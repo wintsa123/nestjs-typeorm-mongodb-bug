@@ -48,7 +48,6 @@ import { SocketModule } from './socket/socket.module';
         cache: {
           duration: 60000, // 1分钟的缓存
         },
-        // synchronize:true
       
       }),
     }),

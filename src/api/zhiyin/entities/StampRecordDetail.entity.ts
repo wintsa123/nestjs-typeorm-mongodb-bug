@@ -33,7 +33,7 @@ export class StampRecordDetailEntity {
     })
     updateTime!: Date;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar' , nullable: true})
     serialNumber?: string;
 
     @ManyToOne(() => ApplyDetailEntity, applyDetail => applyDetail.details)
