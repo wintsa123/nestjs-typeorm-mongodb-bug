@@ -61,5 +61,7 @@ export class StampRecordDetailEntity {
     apply?: ApplyDetailEntity;
 
   
-   
+    @Column({  type: 'int' })    
+    startId?: number;
+    
 }
