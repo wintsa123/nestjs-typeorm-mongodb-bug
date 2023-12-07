@@ -53,11 +53,13 @@ export class WxchatService {
 
 
 
-  async getUserid(){
+  async getUserid() {
     try {
       const assess_token = await this.getAssesstToken()
-      const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=${assess_token}&userid=ZW001-202206-0143`)
-console.log(data)
+      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid?access_token=${assess_token}`, {
+        "userid": "ZW001-202206-0143"
+      })
+      console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
@@ -68,7 +70,7 @@ console.log(data)
 
     }
 
-  }  
+  }
   // 发送企业微信消息
   async sendMessage(message?: string) {
     try {
@@ -198,16 +200,16 @@ console.log(data)
   async getcorpcheckinoption() {
     const assess_token = await this.getAssesstToken('daka')
 
-    const {data:result} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcorpcheckinoption?access_token=${assess_token}`, {})
+    const { data: result } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcorpcheckinoption?access_token=${assess_token}`, {})
     return result
   }
-/**
- * @Author: wintsa
- * @Date: 2023-12-04 14:18:32
- * @LastEditors: wintsa
- * @Description: 获取打卡员工规则
- * @return {*}
- */
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-04 14:18:32
+   * @LastEditors: wintsa
+   * @Description: 获取打卡员工规则
+   * @return {*}
+   */
   async getcheckinoption(params) {
     const assess_token = await this.getAssesstToken('daka')
     function formatDateToUnixTimestamp(dateString) {
@@ -223,11 +225,11 @@ console.log(data)
       return unixTimestampInSeconds;
     }
     const data = {
-      
+
       "datetime": formatDateToUnixTimestamp(params.datetime),
       "useridlist": params.useridlist
     };
-    const {data:result} = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckinoption?access_token=${assess_token}`, data)
+    const { data: result } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckinoption?access_token=${assess_token}`, data)
     return result
   }
 }
