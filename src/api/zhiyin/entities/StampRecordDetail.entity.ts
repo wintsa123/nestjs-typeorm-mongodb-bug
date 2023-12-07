@@ -1,6 +1,6 @@
 // StampRecordDetailEntity.ts
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { StampRecordEntity } from './StampRecord.Entity';
+import { StampRecordEntity } from './StampRecord.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { ApplyDetailEntity } from './ApplyDetail.entity';
 
@@ -36,11 +36,7 @@ export class StampRecordDetailEntity {
     @Column({ type: 'varchar' , nullable: true})
     serialNumber?: string;
 
-    @ManyToOne(() => ApplyDetailEntity, applyDetail => applyDetail.details)
-    apply?: ApplyDetailEntity;
-
-    @Column({  type: 'int' })
-    startId?: number;
+   
 
     @Column({  type: 'int' })
     sealId?: number;
@@ -61,7 +57,9 @@ export class StampRecordDetailEntity {
     stampTime?: Date;
 
  
-  
+    @ManyToOne(() => ApplyDetailEntity, applyDetail => applyDetail.details)
+    apply?: ApplyDetailEntity;
 
-    
+  
+   
 }

@@ -14,8 +14,7 @@ export class StampRecordEntity {
         comment: '主键id',
     })
     id!: number;
-    @Column({  type: 'int' })
-    stampRecordId?: number;
+    
 
     @Column({  type: 'json', nullable: true })
     opStampRecordImages?: string;
@@ -37,8 +36,7 @@ export class StampRecordEntity {
     })
     updateTime!: Date;
 
-    @ManyToOne(() => ApplyDetailEntity, e => e.records)
-    apply?: ApplyDetailEntity;
+
 
     @Column({ type: 'varchar', nullable: true })
     facePhotoUrl?: string;
@@ -73,8 +71,8 @@ export class StampRecordEntity {
     @Column({  type: 'boolean' })
     isSublicense?: boolean;
 
-    // @ManyToOne(() => ApplyDetailEntity, e => e.records)
-    // @JoinColumn({ name: 'applyId' }) // 添加此行来明确外键
-    // apply?: ApplyDetailEntity;
+    @ManyToOne(() => ApplyDetailEntity, e => e.records)
+    apply?: ApplyDetailEntity;
+  
 
 }
