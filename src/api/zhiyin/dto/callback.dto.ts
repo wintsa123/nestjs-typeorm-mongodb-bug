@@ -139,7 +139,8 @@ export class StampRecordDetailDto {
   stampNo? :number;
 
   @ApiProperty({ type: 'string', description: '盖章时间', required: true })
-  @IsNotEmpty()
+    @IsNotEmpty()
+
   stampTime? :string;
 }
 // StampRecordRequest DTO
