@@ -4,7 +4,7 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import { StampRecordDetailEntity } from './StampRecordDetail.entity';
 import { StampRecordEntity } from './StampRecord.entity';
 
-@Entity({ name: 'zhiyinVetting', database: 'nestapi' })
+@Entity({ name: 'zhiyinvetting', database: 'nestapi' })
 
 export class ApplyDetailEntity {
   constructor(props: Partial<ApplyDetailEntity>) {

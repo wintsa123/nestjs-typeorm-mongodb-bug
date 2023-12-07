@@ -11,8 +11,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { uniqBy } from 'lodash';
+import { devicesEntity } from './entities/deviceList.entity';
 
 @Injectable()
 export class ZhiyinService {
@@ -28,6 +29,8 @@ export class ZhiyinService {
     private readonly stampRecordRepository: Repository<StampRecordEntity>,
     @InjectRepository(StampRecordDetailEntity)
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
+    @InjectRepository(devicesEntity)
+    private readonly devicesRepository: Repository<devicesEntity>,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) { }
@@ -78,6 +81,18 @@ export class ZhiyinService {
     try {
       const { data: done } = await axios.get(url)
       if (done.success) {
+        for (const item of done.data) {
+          const existingData = await this.devicesRepository.findOne({ where: { mac: item.mac } });
+    
+          if (!existingData) {
+            await this.devicesRepository.save(item);
+          }else{
+            await this.devicesRepository.update({ mac: item.mac }, item);
+
+          }
+        }
+
+
         return done.data
       } else {
         this.logger.error(done.msg)
@@ -86,6 +101,8 @@ export class ZhiyinService {
       this.logger.error(error)
     }
   }
+
+
 
   /**
    * @Author: wintsa
