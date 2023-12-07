@@ -56,12 +56,12 @@ export class WxchatService {
   async getUserid(){
     try {
       const assess_token = await this.getAssesstToken()
-      const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${assess_token}&userid=ZW001-202206-0143`)
+      const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=${assess_token}&userid=ZW001-202206-0143`)
 console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
-        return '成功'
+        return data
       }
     } catch (error) {
       throw error;
