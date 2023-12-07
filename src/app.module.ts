@@ -44,7 +44,7 @@ import { SocketModule } from './socket/socket.module';
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
         autoLoadEntities: true, // 每个通过forFeature()注册的实体都会自动添加到配置对象的entities数组中
-synchronize:true,
+// synchronize:true,
         cache: {
           duration: 60000, // 1分钟的缓存
         },

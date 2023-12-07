@@ -27,6 +27,9 @@ export class WxchatService {
 
   ) { }
 
+
+
+
   async getAssesstToken(params = 'default') {
     const access_token = await this.redisService.get(`${params}:assess_token`);
     if (access_token) return access_token
@@ -46,6 +49,26 @@ export class WxchatService {
     await this.redisService.set(`${params}:assess_token`, data.access_token, data.expires_in)
     return data.data.access_token
   }
+
+
+
+
+  async getUserid(){
+    try {
+      const assess_token = await this.getAssesstToken()
+      const { data } = await axios.get(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${assess_token}&userid=ZW001-202206-0143`)
+console.log(data)
+      if (data.errcode) {
+        return '失败'
+      } else {
+        return '成功'
+      }
+    } catch (error) {
+      throw error;
+
+    }
+
+  }  
   // 发送企业微信消息
   async sendMessage(message?: string) {
     try {

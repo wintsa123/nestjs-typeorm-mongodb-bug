@@ -11,10 +11,5 @@ export class devicesEntity extends baseEntity {
     @Column({ type: 'timestamp', default: null, nullable: true  })
     serviceTime?: Date|null;
 
-    @BeforeUpdate()
-    checkExpirationDate() {
-        if (this.serviceTime && this.serviceTime < new Date()) {
-            this.deletedAt = new Date();
-        }
-    }
+   
 }

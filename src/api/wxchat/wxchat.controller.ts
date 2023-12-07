@@ -21,7 +21,11 @@ export class WxchatController {
     return this.wxchatService.sendMessage(msg.msg);
   }
 
-
+  @Get('/getUserid')
+  @ApiOperation({ summary: '调用该接口可获取userid' })
+  getUserid( ) {
+    return this.wxchatService.getUserid();
+  }
   @Get('/getToken')
   @ApiOperation({ summary: '获取微信accessToken' })
   getToken() {
