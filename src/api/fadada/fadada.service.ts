@@ -79,7 +79,7 @@ export class FadadaService {
   async corpGet() {
     const client = new fascOpenApi.corpClient.Client(await this.init())
     let result: any = await client.get({ openCorpId: this.configService.get('fadada.opencorpId') as string })
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('Corp获取失败')
       return result.data.msg
     }
@@ -95,7 +95,7 @@ export class FadadaService {
   async corpGetIdentity() {
     const client = new fascOpenApi.corpClient.Client(await this.init())
     let result: any = await client.getIdentityInfo({ openCorpId: this.configService.get('fadada.opencorpId') as string })
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('corpGetIdentity获取失败')
       return result.data.msg
     }
@@ -111,7 +111,7 @@ export class FadadaService {
   async corpGetList() {
     const client = new fascOpenApi.orgClient.Client(await this.init())
     let result: any = await client.getMemberList({ openCorpId: this.configService.get('fadada.opencorpId') as string })
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('corpGetIdentity获取失败')
       return result.data.msg
     }
@@ -131,7 +131,7 @@ export class FadadaService {
     }
     data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
     let result: any = await euiClient.getUserAuthUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userAuthUrl获取失败')
       return result.data.msg
     }
@@ -187,7 +187,7 @@ export class FadadaService {
   async userDisable(data) {
     const Client = new fascOpenApi.userClient.Client(await this.init())
     let result: any = await Client.disableUser(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userDisable获取失败')
       return result.data.msg
     }
@@ -205,7 +205,7 @@ export class FadadaService {
   async userEnable(data) {
     const Client = new fascOpenApi.userClient.Client(await this.init())
     let result: any = await Client.enableUser(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userEnable获取失败')
       return result.data.msg
     }
@@ -225,7 +225,7 @@ export class FadadaService {
   async userUnbind(data) {
     const Client = new fascOpenApi.userClient.Client(await this.init())
     let result: any = await Client.unbindUser(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userunbind获取失败')
       return result.data.msg
     }
@@ -243,7 +243,7 @@ export class FadadaService {
   async userGet(data) {
     const Client = new fascOpenApi.userClient.Client(await this.init())
     let result: any = await Client.getUserInfo(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userGet')
       return result.data.msg
     }
@@ -274,7 +274,7 @@ export class FadadaService {
   async userGetIdentity(data) {
     const Client = new fascOpenApi.userClient.Client(await this.init())
     let result: any = await Client.getIdentInfo(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userGetIdentity')
       return result.data.msg
     }
@@ -290,7 +290,7 @@ export class FadadaService {
   async uploadDoc(data) {
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.getUploadUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('uploadDoc')
       return result.data.msg
     }
@@ -308,7 +308,7 @@ export class FadadaService {
     console.log(data)
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.uploadFileByUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('uploadFileByUrl')
       return result.data.msg
     }
@@ -324,7 +324,7 @@ export class FadadaService {
   async fileProcess(data) {
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.fileProcess(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('fileProcess')
       return result.data.msg
     }
@@ -341,7 +341,7 @@ export class FadadaService {
   async fileVerifySign(data) {
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.fileVerifySign(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('fileVerifySign')
       return result.data.msg
     }
@@ -367,7 +367,7 @@ export class FadadaService {
       data['businessId']=this.configService.get('fadada.businessId')
     }
     let result: any = await Client.create(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('signCreate')
       return result.data.msg
     }
@@ -385,7 +385,7 @@ export class FadadaService {
   async signCreateWithTemple(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.createWithTemplate(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('createWithTemplate')
       return result.data.msg
     }
@@ -401,7 +401,7 @@ export class FadadaService {
   async signAddDoc(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.addDoc(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('signAddDoc')
       return result.data.msg
     }
@@ -417,7 +417,7 @@ export class FadadaService {
   async signdeleteDoc(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.deleteDoc(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('signdeleteDoc')
       return result.data.msg
     }
@@ -433,7 +433,7 @@ export class FadadaService {
   async signaddFiele(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.addField(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('addField')
       return result.data.msg
     }
@@ -449,7 +449,7 @@ export class FadadaService {
   async signdeleteFiele(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.deleteField(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('deleteField')
       return result.data.msg
     }
@@ -465,7 +465,7 @@ export class FadadaService {
   async fillFieldValues(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.fillFieldValues(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('fillFieldValues')
       return result.data.msg
     }
@@ -481,7 +481,7 @@ export class FadadaService {
   async addAttach(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.addAttach(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('addAttach')
       return result.data.msg
     }
@@ -497,7 +497,7 @@ export class FadadaService {
   async deleteAttach(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.deleteAttach(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('deleteAttach')
       return result.data.msg
     }
@@ -513,7 +513,7 @@ export class FadadaService {
   async addActor(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.addActor(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('addActor')
       return result.data.msg
     }
@@ -529,7 +529,7 @@ export class FadadaService {
   async deleteActor(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.deleteActor(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('deleteActor')
       return result.data.msg
     }
@@ -545,7 +545,7 @@ export class FadadaService {
   async modifyActor(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.modifyActor(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('modifyActor')
       return result.data.msg
     }
@@ -561,7 +561,8 @@ export class FadadaService {
   async getSignTaskEditUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getSignTaskEditUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+
+    if (result.status !== 200 || result.data.code !==100000) {
       this.logger.error('getSignTaskEditUrl')
       return result.data.msg
     }
@@ -578,7 +579,7 @@ export class FadadaService {
   async getSignTaskPreviewUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getSignTaskPreviewUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getSignTaskPreviewUrl')
       return result.data.msg
     }
@@ -595,7 +596,7 @@ export class FadadaService {
   async getActorUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getActorUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getActorUrl')
       return result.data.msg
     }
@@ -611,7 +612,7 @@ export class FadadaService {
   async getActorBatchSignTaskUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getActorBatchSignTaskUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getActorBatchSignTaskUrl')
       return result.data.msg
     }
@@ -627,7 +628,7 @@ export class FadadaService {
   async getV3ActorSignTaskUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getV3ActorSignTaskUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getV3ActorSignTaskUrl')
       return result.data.msg
     }
@@ -643,7 +644,7 @@ export class FadadaService {
   async signStart(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.start(data)
-    if (result.status !== 200 || result.data.code!==100000 ) {
+    if (result.status !== 200 || result.data.code!=='100000' ) {
       this.logger.error('start')
       return result.data.msg
     }else{
@@ -662,7 +663,7 @@ export class FadadaService {
   async signCancel(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.cancel(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('cancel')
       return result.data.msg
     }
@@ -678,7 +679,7 @@ export class FadadaService {
   async finalizeDoc(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.finalizeDoc(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('finalizeDoc')
       return result.data.msg
     }
@@ -694,7 +695,7 @@ export class FadadaService {
   async urgeSignTask(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.urgeSignTask(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('urgeSignTask')
       return result.data.msg
     }
@@ -711,7 +712,7 @@ export class FadadaService {
   async signblock(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.block(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('block')
       return result.data.msg
     }
@@ -727,7 +728,7 @@ export class FadadaService {
   async signUnblock(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.unblock(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('unblock')
       return result.data.msg
     }
@@ -743,7 +744,7 @@ export class FadadaService {
   async signfinish(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.finish(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('finish')
       return result.data.msg
     }
@@ -759,7 +760,7 @@ export class FadadaService {
   async signAbolish(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.abolish(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('abolish')
       return result.data.msg
     }
@@ -775,7 +776,7 @@ export class FadadaService {
   async signGetDetail(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getDetail(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getDetail')
       return result.data.msg
     }
@@ -792,7 +793,7 @@ export class FadadaService {
   async signGetOwnerList(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getOwnerList(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getOwnerList')
       return result.data.msg
     }
@@ -808,7 +809,7 @@ export class FadadaService {
   async signGetOwnerDownLoadUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getOwnerDownLoadUrl(data)
-    if (result.status !== 200 || result.data.code!==100000) {
+    if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('getOwnerDownLoadUrl')
       return result.data.msg
     }
