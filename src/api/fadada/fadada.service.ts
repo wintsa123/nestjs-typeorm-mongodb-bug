@@ -51,22 +51,29 @@ export class FadadaService {
    * @return Token
    */
   async getToken() {
-    let fadadaToken = await this.redisService.get('fadadaToken')
-    if (fadadaToken) return fadadaToken
+    try {
+      let fadadaToken = await this.redisService.get('fadadaToken')
+      if (fadadaToken) return fadadaToken
+  
+      let client = new fascOpenApi.serviceClient.Client({
+        credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
+        serverUrl: this.configService.get('fadada.serverUrl') as string,
+      })
+      const token: any = await client.getAccessToken()
+      if (token.status !== 200) {
+        this.logger.error('Token获取失败')
+  
+        return token.data
+      }
+      await this.redisService.set('fadadaToken', token.data.data.accessToken, 7200)
+      return token.data.data.accessToken;
 
-    let client = new fascOpenApi.serviceClient.Client({
-      credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
-      serverUrl: this.configService.get('fadada.serverUrl') as string,
-    })
-    const token: any = await client.getAccessToken()
-    if (token.status !== 200) {
-      this.logger.error('Token获取失败')
-
-      return token.data
+    } catch (error) {
+      this.logger.error(error)
+      throw error
     }
-    await this.redisService.set('fadadaToken', token.data.data.accessToken, 7200)
+   
 
-    return token.data.data.accessToken;
   }
 
   /**
@@ -562,7 +569,7 @@ export class FadadaService {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getSignTaskEditUrl(data)
 
-    if (result.status !== 200 || result.data.code !==100000) {
+    if (result.status !== 200 || result.data.code !=='100000') {
       this.logger.error('getSignTaskEditUrl')
       return result.data.msg
     }
