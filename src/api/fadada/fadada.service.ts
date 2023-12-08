@@ -678,7 +678,7 @@ export class FadadaService {
       this.logger.error('cancel')
       return result.data.msg
     }
-    return result.data.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
