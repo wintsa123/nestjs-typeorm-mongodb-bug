@@ -136,10 +136,10 @@ export class FadadaService {
     if (!data['freeSignInfo']) {
       data['freeSignInfo']={}
     }
-    if ( data['freeSignInfo']['businessId']) {
       data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
 
-    }
+    
+    console.log
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userAuthUrl获取失败')
@@ -367,7 +367,7 @@ export class FadadaService {
   async signCreate(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     data.actors=data.actors.map(e=>{
-      return {actor:pickBy(e.actor,value => value !== null && value !== undefined),signConfigInfo:pickBy(e.signConfigInfo,value => value !== null && value !== undefined)
+      return {actor:pickBy(e.actor,value => value.length>0 && value !== null && value !== undefined),signConfigInfo:pickBy(e.signConfigInfo,value =>value.length>0 && value !== null && value !== undefined)
       }
     })
     if (data['initiator']['idType']=='corp') {
@@ -376,6 +376,7 @@ export class FadadaService {
     if (data['businessId']) {
       data['businessId']=this.configService.get('fadada.businessId')
     }
+    console.log(data)
     let result: any = await Client.create(data)
     if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('signCreate')

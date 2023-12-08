@@ -105,7 +105,7 @@ export class FadadaController {
 
   @Post('/sign/Create')
   @ApiOperation({ summary: '创建签署任务' })
-  signCreate(@Body() data) {
+  signCreate(@Body() data:fileVerify) {
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')
