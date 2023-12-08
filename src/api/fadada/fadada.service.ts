@@ -136,7 +136,10 @@ export class FadadaService {
     if (!data['freeSignInfo']) {
       data['freeSignInfo']={}
     }
-    data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
+    if ( data['freeSignInfo']['businessId']) {
+      data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
+
+    }
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200 || result.data.code!=='100000') {
       this.logger.error('userAuthUrl获取失败')
