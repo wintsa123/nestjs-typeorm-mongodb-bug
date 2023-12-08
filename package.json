@@ -24,7 +24,7 @@
     "pm2:dev": "yarn run build && pm2 start ecosystem.config.js --env development",
     "pm2:test": "yarn run build && pm2 start ecosystem.config.js --env test",
     "update": "git pull &&yarn install &&yarn build &&pm2 restart zw-nestjs &&pm2 log",
-    "gitpush": "git add . && git commit -m \"backup $(Get-Date -Format 'yyyy-MM-dd HH:mm')\" && git push"
+    "gitpush": "git add . && git commit -m \"backup  %DATE% %TIME%\" && git push"
   },
   "dependencies": {
     "@fastify/cookie": "6.0.0",
