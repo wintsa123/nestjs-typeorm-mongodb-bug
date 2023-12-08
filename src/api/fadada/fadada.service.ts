@@ -375,6 +375,8 @@ export class FadadaService {
     }
     if (data['businessId']) {
       data['businessId']=this.configService.get('fadada.businessId')
+    }else{
+      delete data['businessId']
     }
     console.log(data)
     let result: any = await Client.create(data)
