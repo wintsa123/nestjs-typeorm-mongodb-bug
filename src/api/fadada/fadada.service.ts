@@ -62,7 +62,7 @@ export class FadadaService {
     if (token.status !== 200) {
       this.logger.error('Token获取失败')
 
-      return '错误'
+      return token.data
     }
     await this.redisService.set('fadadaToken', token.data.data.accessToken, 7200)
 
@@ -81,7 +81,7 @@ export class FadadaService {
     let result: any = await client.get({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('Corp获取失败')
-      return '错误'
+      return result.data.msg
     }
     return result.data.data
   }
@@ -97,7 +97,7 @@ export class FadadaService {
     let result: any = await client.getIdentityInfo({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('corpGetIdentity获取失败')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -113,7 +113,7 @@ export class FadadaService {
     let result: any = await client.getMemberList({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('corpGetIdentity获取失败')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -133,7 +133,7 @@ export class FadadaService {
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userAuthUrl获取失败')
-      return '错误'
+      return result.data.msg
     }
     console.log(result)
     await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${data.clientUserId}`)
@@ -189,7 +189,7 @@ export class FadadaService {
     let result: any = await Client.disableUser(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userDisable获取失败')
-      return '错误'
+      return result.data.msg
     }
     await this.fadadaRepository.softDelete({ openUserId: data });
 
@@ -207,7 +207,7 @@ export class FadadaService {
     let result: any = await Client.enableUser(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userEnable获取失败')
-      return '错误'
+      return result.data.msg
     }
 
     await this.fadadaRepository.restore({ openUserId: data });
@@ -227,7 +227,7 @@ export class FadadaService {
     let result: any = await Client.unbindUser(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userunbind获取失败')
-      return '错误'
+      return result.data.msg
     }
     await this.fadadaRepository.softDelete({ openUserId: data });
 
@@ -245,7 +245,7 @@ export class FadadaService {
     let result: any = await Client.getUserInfo(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userGet')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -276,7 +276,7 @@ export class FadadaService {
     let result: any = await Client.getIdentInfo(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('userGetIdentity')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -292,7 +292,7 @@ export class FadadaService {
     let result: any = await Client.getUploadUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('uploadDoc')
-      return '错误'
+      return result.data.msg
     }
     console.log(result.data)
     return result.data.data
@@ -310,7 +310,7 @@ export class FadadaService {
     let result: any = await Client.uploadFileByUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('uploadFileByUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data.data
   }
@@ -326,7 +326,7 @@ export class FadadaService {
     let result: any = await Client.fileProcess(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('fileProcess')
-      return '错误'
+      return result.data.msg
     }
     console.log(result.data)
     return result.data.data
@@ -343,7 +343,7 @@ export class FadadaService {
     let result: any = await Client.fileVerifySign(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('fileVerifySign')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -369,7 +369,7 @@ export class FadadaService {
     let result: any = await Client.create(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('signCreate')
-      return '错误'
+      return result.data.msg
     }
     console.log(result.data)
     return result.data.data
@@ -387,7 +387,7 @@ export class FadadaService {
     let result: any = await Client.createWithTemplate(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('createWithTemplate')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -403,7 +403,7 @@ export class FadadaService {
     let result: any = await Client.addDoc(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('signAddDoc')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -419,7 +419,7 @@ export class FadadaService {
     let result: any = await Client.deleteDoc(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('signdeleteDoc')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -435,7 +435,7 @@ export class FadadaService {
     let result: any = await Client.addField(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('addField')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -451,7 +451,7 @@ export class FadadaService {
     let result: any = await Client.deleteField(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('deleteField')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -467,7 +467,7 @@ export class FadadaService {
     let result: any = await Client.fillFieldValues(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('fillFieldValues')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -483,7 +483,7 @@ export class FadadaService {
     let result: any = await Client.addAttach(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('addAttach')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -499,7 +499,7 @@ export class FadadaService {
     let result: any = await Client.deleteAttach(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('deleteAttach')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -515,7 +515,7 @@ export class FadadaService {
     let result: any = await Client.addActor(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('addActor')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -531,7 +531,7 @@ export class FadadaService {
     let result: any = await Client.deleteActor(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('deleteActor')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -547,7 +547,7 @@ export class FadadaService {
     let result: any = await Client.modifyActor(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('modifyActor')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -563,7 +563,7 @@ export class FadadaService {
     let result: any = await Client.getSignTaskEditUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getSignTaskEditUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data.data
   }
@@ -580,7 +580,7 @@ export class FadadaService {
     let result: any = await Client.getSignTaskPreviewUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getSignTaskPreviewUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data.data
   }
@@ -597,7 +597,7 @@ export class FadadaService {
     let result: any = await Client.getActorUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getActorUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -613,7 +613,7 @@ export class FadadaService {
     let result: any = await Client.getActorBatchSignTaskUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getActorBatchSignTaskUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -629,7 +629,7 @@ export class FadadaService {
     let result: any = await Client.getV3ActorSignTaskUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getV3ActorSignTaskUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -664,7 +664,7 @@ export class FadadaService {
     let result: any = await Client.cancel(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('cancel')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -680,7 +680,7 @@ export class FadadaService {
     let result: any = await Client.finalizeDoc(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('finalizeDoc')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -696,7 +696,7 @@ export class FadadaService {
     let result: any = await Client.urgeSignTask(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('urgeSignTask')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -713,7 +713,7 @@ export class FadadaService {
     let result: any = await Client.block(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('block')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -729,7 +729,7 @@ export class FadadaService {
     let result: any = await Client.unblock(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('unblock')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -745,7 +745,7 @@ export class FadadaService {
     let result: any = await Client.finish(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('finish')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -761,7 +761,7 @@ export class FadadaService {
     let result: any = await Client.abolish(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('abolish')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -777,7 +777,7 @@ export class FadadaService {
     let result: any = await Client.getDetail(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getDetail')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -794,7 +794,7 @@ export class FadadaService {
     let result: any = await Client.getOwnerList(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getOwnerList')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
@@ -810,7 +810,7 @@ export class FadadaService {
     let result: any = await Client.getOwnerDownLoadUrl(data)
     if (result.status !== 200 || result.data.code!==100000) {
       this.logger.error('getOwnerDownLoadUrl')
-      return '错误'
+      return result.data.msg
     }
     return result.data
   }
