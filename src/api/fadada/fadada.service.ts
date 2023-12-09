@@ -702,7 +702,7 @@ export class FadadaService {
       this.logger.error('finalizeDoc')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
@@ -718,7 +718,7 @@ export class FadadaService {
       this.logger.error('urgeSignTask')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
 
   /**
@@ -735,7 +735,7 @@ export class FadadaService {
       this.logger.error('block')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
@@ -751,7 +751,7 @@ export class FadadaService {
       this.logger.error('unblock')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
@@ -767,7 +767,7 @@ export class FadadaService {
       this.logger.error('finish')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
@@ -783,7 +783,7 @@ export class FadadaService {
       this.logger.error('abolish')
       return result.data.msg
     }
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
