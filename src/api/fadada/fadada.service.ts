@@ -187,8 +187,8 @@ export class FadadaService {
    * @Description: 提交成功的回调，调用socket让流程提交
    * @return {*}
    */
-  async submitCallback(data){
-    console.log(data,'submit')
+  async submitCallback(clientId){
+    console.log(clientId,'submit')
       return ''
   }
   /**

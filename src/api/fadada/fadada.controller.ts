@@ -49,8 +49,8 @@ export class FadadaController {
   }
   @Get('/submitCallback')
   @ApiOperation({ summary: '验证用户绑定回调' })
-  submitCallback(@Query() data) {
-    return this.fadadaService.submitCallback(data);
+  submitCallback(@Query('clientId') clientId:string) {
+    return this.fadadaService.submitCallback(clientId);
   }
 
   @Post('/user/disable')
