@@ -188,8 +188,9 @@ export class FadadaService {
    * @return {*}
    */
   async submitCallback(clientId){
-    console.log(clientId,'submit')
-      return ''
+    await this.SocketGateway.sendMessageToClient(clientId, { status: 'pass' })
+
+      return true
   }
   /**
    * @Author: wintsa
