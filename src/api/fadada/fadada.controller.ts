@@ -47,6 +47,11 @@ export class FadadaController {
   AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string, @Query('authFailedReason') authFailedReason: string) {
     return this.fadadaService.UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason);
   }
+  @Get('/submitCallback')
+  @ApiOperation({ summary: '验证用户绑定回调' })
+  submitCallback(@Query() data) {
+    return this.fadadaService.submitCallback(data);
+  }
 
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
@@ -105,7 +110,7 @@ export class FadadaController {
 
   @Post('/sign/Create')
   @ApiOperation({ summary: '创建签署任务' })
-  signCreate(@Body() data:fileVerify) {
+  signCreate(@Body() data: fileVerify) {
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')
@@ -165,73 +170,73 @@ export class FadadaController {
   }
   @Post('/sign/getSignTaskEditUrl')
   @ApiOperation({ summary: '获取签署任务编辑链接' })
-  getSignTaskEditUrl(@Body() data:SignTask) {
+  getSignTaskEditUrl(@Body() data: SignTask) {
     return this.fadadaService.getSignTaskEditUrl(data);
   }
   @Post('/sign/getSignTaskPreviewUrl')
   @ApiOperation({ summary: '获取签署任务预览链接' })
-  getSignTaskPreviewUrl(@Body() data:SignTask) {
+  getSignTaskPreviewUrl(@Body() data: SignTask) {
     return this.fadadaService.getSignTaskPreviewUrl(data);
   }
   @Post('/sign/getActorUrl')
   @ApiOperation({ summary: '获取参与方签署链接' })
-  getActorUrl(@Body() data:SignTask) {
+  getActorUrl(@Body() data: SignTask) {
     return this.fadadaService.getActorUrl(data);
   }
   @Post('/sign/getActorBatchSignTaskUrl')
   @ApiOperation({ summary: '获取参与方批量签署链接' })
-  getActorBatchSignTaskUrl(@Body() data:SignTask) {
+  getActorBatchSignTaskUrl(@Body() data: SignTask) {
     return this.fadadaService.getActorBatchSignTaskUrl(data);
   }
   @Post('/sign/getV3ActorSignTaskUrl')
   @ApiOperation({ summary: '获取参与方签署链接（API3.0任务专属）' })
-  getV3ActorSignTaskUrl(@Body() data:SignTask) {
+  getV3ActorSignTaskUrl(@Body() data: SignTask) {
     console.log(data)
     return this.fadadaService.getV3ActorSignTaskUrl(data);
   }
   @Post('/sign/Start')
   @ApiOperation({ summary: '提交签署任务' })
-  signStart(@Body() data:SignTask) {
+  signStart(@Body() data: SignTask) {
     return this.fadadaService.signStart(data);
   }
   @Post('/sign/Cancel')
   @ApiOperation({ summary: '撤销签署任务' })
-  signCancel(@Body() data:SignTask) {
+  signCancel(@Body() data: SignTask) {
     return this.fadadaService.signCancel(data);
   }
   @Post('/sign/finalizeDoc')
   @ApiOperation({ summary: '定稿签署任务' })
-  finalizeDoc(@Body() data:SignTask) {
+  finalizeDoc(@Body() data: SignTask) {
     return this.fadadaService.finalizeDoc(data);
   }
   @Post('/sign/urgeSignTask')
   @ApiOperation({ summary: '催办签署任务' })
-  urgeSignTask(@Body() data:SignTask) {
+  urgeSignTask(@Body() data: SignTask) {
     return this.fadadaService.urgeSignTask(data);
   }
   @Post('/sign/block')
   @ApiOperation({ summary: '阻塞签署任务' })
-  signblock(@Body() data:SignTask) {
+  signblock(@Body() data: SignTask) {
     return this.fadadaService.signblock(data);
   }
   @Post('/sign/Unblock')
   @ApiOperation({ summary: '解阻签署任务' })
-  signUnblock(@Body() data:SignTask) {
+  signUnblock(@Body() data: SignTask) {
     return this.fadadaService.signUnblock(data);
   }
   @Post('/sign/finish')
   @ApiOperation({ summary: '结束签署任务' })
-  signfinish(@Body() data:SignTask) {
+  signfinish(@Body() data: SignTask) {
     return this.fadadaService.signfinish(data);
   }
   @Post('/sign/Abolish')
   @ApiOperation({ summary: '作废签署任务' })
-  signAbolish(@Body() data:SignTask) {
+  signAbolish(@Body() data: SignTask) {
     return this.fadadaService.signAbolish(data);
   }
   @Post('/sign/GetDetail')
   @ApiOperation({ summary: '查询签署任务详情' })
-  signGetDetail(@Body() data:SignTask) {
+  signGetDetail(@Body() data: SignTask) {
     return this.fadadaService.signGetDetail(data);
   }
   @Post('/sign/GetOwnerList')
