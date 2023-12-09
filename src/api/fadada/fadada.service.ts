@@ -613,7 +613,7 @@ export class FadadaService {
       this.logger.error('getActorUrl')
       return result.data.msg
     }
-    return result.data
+    return result.data.data
   }
   /**
       * @Author: wintsa
