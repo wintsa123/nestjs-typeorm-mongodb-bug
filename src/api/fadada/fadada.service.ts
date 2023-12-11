@@ -82,8 +82,17 @@ export class FadadaService {
    * @Description: 回调数据
    * @return {*}
    */
-  async callback(data,headers) {
-    console.log(data, 'callback',headers)
+  async callback(data, headers) {
+    console.log(data, 'callback', headers)
+    const { 'x-fasc-timestamp': timestamp } = headers
+    const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
+
+    const upperLimit = currentTimestamp + 300000; // 上限时间戳
+    const lowerLimit = currentTimestamp - 300000; // 下限时间戳
+
+    if (timestamp < lowerLimit || timestamp > upperLimit) {
+      throw 'errorTime'
+    }
     return 'success'
   }
   /**
