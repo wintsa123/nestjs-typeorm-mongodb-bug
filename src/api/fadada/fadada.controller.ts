@@ -236,6 +236,11 @@ export class FadadaController {
   signfinish(@Body() data: SignTask) {
     return this.fadadaService.signfinish(data);
   }
+  @Post('/sign/delete')
+  @ApiOperation({ summary: '结束签署任务' })
+  signdelete(@Body() data: SignTask) {
+    return this.fadadaService.signdelete(data);
+  }
   @Post('/sign/Abolish')
   @ApiOperation({ summary: '作废签署任务' })
   signAbolish(@Body() data: SignTask) {

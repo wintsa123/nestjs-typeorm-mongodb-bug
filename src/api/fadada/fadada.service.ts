@@ -820,6 +820,22 @@ export class FadadaService {
   }
   /**
    * @Author: wintsa
+   * @Date: 2023-12-11 09:58:12
+   * @LastEditors: wintsa
+   * @Description: 删除任务
+   * @return {string}
+   */
+  async signdelete(data) {
+    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    let result: any = await Client.delete(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('finish')
+      return result.data.msg
+    }
+    return result.data.msg
+  }
+  /**
+   * @Author: wintsa
    * @Date: 2023-11-17 10:58:05
    * @LastEditors: wintsa
    * @Description: 作废签署任务
