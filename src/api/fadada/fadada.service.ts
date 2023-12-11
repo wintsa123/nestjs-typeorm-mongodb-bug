@@ -86,11 +86,13 @@ export class FadadaService {
     console.log(data, 'callback', headers)
     const { 'x-fasc-timestamp': timestamp } = headers
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
+    console.log(timestamp)
 
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
 
     if (timestamp < lowerLimit || timestamp > upperLimit) {
+      console.log('errorTime')
       throw 'errorTime'
     }
     return 'success'
