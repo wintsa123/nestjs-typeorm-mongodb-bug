@@ -75,7 +75,17 @@ export class FadadaService {
 
 
   }
-
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-11 08:49:27
+   * @LastEditors: wintsa
+   * @Description: 回调数据
+   * @return {*}
+   */
+  async callback(data) {
+    console.log(data, 'callback')
+    return true
+  }
   /**
    * @Author: wintsa
    * @Date: 2023-11-16 11:06:37
@@ -187,10 +197,10 @@ export class FadadaService {
    * @Description: 提交成功的回调，调用socket让流程提交
    * @return {*}
    */
-  async submitCallback(clientId){
+  async submitCallback(clientId) {
     await this.SocketGateway.sendMessageToClient(clientId, { status: 'pass' })
 
-      return true
+    return true
   }
   /**
    * @Author: wintsa

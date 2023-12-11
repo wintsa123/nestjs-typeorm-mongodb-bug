@@ -22,6 +22,11 @@ export class FadadaController {
   getToken() {
     return this.fadadaService.getToken();
   }
+  @Post('/callback')
+  @ApiOperation({ summary: '回调数据' })
+  callback(@Body() data) {
+    return this.fadadaService.callback(data);
+  }
   @Post('/corp/get')
   getCorp() {
     return this.fadadaService.corpGet();
