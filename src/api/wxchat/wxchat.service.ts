@@ -53,11 +53,11 @@ export class WxchatService {
 
 
 
-  async getUserid() {
+  async getUserid(id) {
     try {
       const assess_token = await this.getAssesstToken()
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid?access_token=${assess_token}`, {
-        "userid": "ZW001-202206-0143"
+        "userid": id
       })
       console.log(data)
       if (data.errcode) {
