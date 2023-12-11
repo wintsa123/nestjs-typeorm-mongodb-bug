@@ -84,7 +84,7 @@ export class FadadaService {
    */
   async callback(data) {
     console.log(data, 'callback')
-    return true
+    return 'success'
   }
   /**
    * @Author: wintsa
