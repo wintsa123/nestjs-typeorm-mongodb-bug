@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers, UseGuards } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -12,6 +12,7 @@ import { SocketService } from 'src/socket/socket.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { query } from 'express';
 import { RedisCacheApi } from '@src/decorators';
+import { ipWhitelist } from '@src/guard/ip.guard';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
@@ -24,8 +25,8 @@ export class FadadaController {
   }
   @Post('/callback')
   @HttpCode(200)
-  
   @ApiOperation({ summary: '回调数据' })
+  @UseGuards( ipWhitelist)
   callback(@Body() data,@Headers() headers: any) {
     return this.fadadaService.callback(data,headers);
   }

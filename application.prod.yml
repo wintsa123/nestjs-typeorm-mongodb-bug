@@ -62,3 +62,4 @@ zhiyin:
   url: https://dev.zhiyinseal.com/smartsealservice/
   appId: tbdudnj23zdxfizwvb2exw8vgp2f4f1r
   appKey: lgt0ax3q39gx0fm1t9h7dz6oys9el46j
+ipWhitelist: ['111.229.217.225','111.231.141.181','118.89.112.13','115.159.196.132','127.0.0.1','192.168.2.1','192.168.2.221']

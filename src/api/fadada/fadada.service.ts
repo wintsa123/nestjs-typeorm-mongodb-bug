@@ -104,6 +104,14 @@ export class FadadaService {
       const tmp = JSON.parse(data.bizContent)
       if (tmp.authResult !== 'success') {
         this.logger.error('user-authorize')
+        this.logger.error(tmp.authFailedReason)
+
+        return false
+      }
+      if (tmp.identProcessStatus !== 'success') {
+        this.logger.error('user-authorize')
+        this.logger.error(tmp.identFailedReason)
+
         return false
       }
       try {
@@ -188,7 +196,6 @@ export class FadadaService {
     data['freeSignInfo']['businessId'] = this.configService.get('fadada.businessId') as string
 
 
-    console.log
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userAuthUrl获取失败')
