@@ -84,16 +84,44 @@ export class FadadaService {
    */
   async callback(data, headers) {
     console.log(data, 'callback', headers)
-    const { 'x-fasc-timestamp': timestamp } = headers
+    const { 'x-fasc-timestamp': timestamp, 'X-FASC-Nonce': Nonce, 'X-FASC-Event': Eventid } = headers
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
-    console.log(timestamp)
-
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
-
     if (timestamp < lowerLimit || timestamp > upperLimit) {
-      console.log('errorTime')
       throw 'errorTime'
+      return false
+    }
+    const redisResule = await this.redisService.get('X-FASC-Nonce')
+    if (redisResule == null) {
+      await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
+    } else {
+      throw 'repeat Nonce'
+      return false
+    }
+
+    if (Eventid == 'user-authorize') {
+      const tmp = JSON.parse(data.bizContent)
+      if (tmp.authResult !== 'success') {
+        this.logger.error('user-authorize')
+        return false
+      }
+      try {
+
+        let existingData = await this.fadadaRepository.findOne({ where: { clientUserId: tmp.clientUserId } });
+        if (existingData) {
+          // 如果已存在，更新记录
+          await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId: tmp.openUserId });
+        } else {
+          // 如果不存在，创建新记录
+          const newData = this.fadadaRepository.create({ clientUserId: tmp.clientUserId, openUserId: tmp.openUserId });
+          await this.fadadaRepository.save(newData);
+        }
+        return true;
+      } catch (error) {
+        this.logger.error('Error:', error);
+        return false
+      }
     }
     return 'success'
   }

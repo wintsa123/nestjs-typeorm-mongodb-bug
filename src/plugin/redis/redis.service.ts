@@ -65,8 +65,8 @@ export class RedisService {
   /**
    * @Author: 水痕
    * @Date: 2020-01-17 14:55:14
-   * @LastEditors: 水痕
-   * @Description: 设置获取redis缓存中的值
+   * @LastEditors: wintsa
+   * @Description: 获取获取redis缓存中的值
    * @param key {String}
    */
   public async get(key: string): Promise<Result<string | null, ClientContext>> {
