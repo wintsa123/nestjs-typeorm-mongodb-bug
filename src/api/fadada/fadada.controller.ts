@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -24,9 +24,10 @@ export class FadadaController {
   }
   @Post('/callback')
   @HttpCode(200)
+  
   @ApiOperation({ summary: '回调数据' })
-  callback(@Body() data) {
-    return this.fadadaService.callback(data);
+  callback(@Body() data,@Headers() headers: any) {
+    return this.fadadaService.callback(data,headers);
   }
   @Post('/corp/get')
   getCorp() {

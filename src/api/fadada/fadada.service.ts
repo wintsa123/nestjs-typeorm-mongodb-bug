@@ -82,8 +82,8 @@ export class FadadaService {
    * @Description: 回调数据
    * @return {*}
    */
-  async callback(data) {
-    console.log(data, 'callback')
+  async callback(data,headers) {
+    console.log(data, 'callback',headers)
     return 'success'
   }
   /**
