@@ -17,7 +17,7 @@ import { AuthGuard } from '@src/guard/auth.guard';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
-@UseGuards( AuthGuard)
+// @UseGuards( AuthGuard)
 export class FadadaController {
   constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }
 
