@@ -237,7 +237,7 @@ export class FadadaController {
     return this.fadadaService.signfinish(data);
   }
   @Post('/sign/delete')
-  @ApiOperation({ summary: '结束签署任务' })
+  @ApiOperation({ summary: '删除签署任务' })
   signdelete(@Body() data: SignTask) {
     return this.fadadaService.signdelete(data);
   }
