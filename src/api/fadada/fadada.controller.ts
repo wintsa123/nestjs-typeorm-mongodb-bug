@@ -13,9 +13,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { query } from 'express';
 import { RedisCacheApi } from '@src/decorators';
 import { ipWhitelist } from '@src/guard/ip.guard';
+import { AuthGuard } from '@src/guard/auth.guard';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
+@UseGuards( AuthGuard)
 export class FadadaController {
   constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }
 
@@ -50,13 +52,14 @@ export class FadadaController {
   async userAuthUrl(@Body() data: UpdateFadadaDto) {
     return this.fadadaService.getUserAuthUrl(data);
   }
+  @UseGuards()
   @Get('/user/GetAuthUrl')
   @ApiOperation({ summary: '验证用户绑定回调' })
   AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string, @Query('authFailedReason') authFailedReason: string) {
     return this.fadadaService.UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason);
   }
   @Get('/submitCallback')
-  @ApiOperation({ summary: '验证用户绑定回调' })
+  @ApiOperation({ summary: '提交时回调' })
   submitCallback(@Query('clientId') clientId:string) {
     return this.fadadaService.submitCallback(clientId);
   }
