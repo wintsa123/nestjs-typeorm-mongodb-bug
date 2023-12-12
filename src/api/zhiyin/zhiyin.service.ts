@@ -250,20 +250,32 @@ export class ZhiyinService {
       if (data.errcode) {
         return '失败'
       } else {
-        for (const item of data.userid_list) {
-          console.log(item)
-          item['userOpenid'] = item.open_userid
-          delete item['open_userid']
-          const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
+        if (data.userid_list.length > 0) {
+          for (const item of data.userid_list) {
+            console.log(item)
+            item['userOpenid'] = item.open_userid
+            delete item['open_userid']
+            const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
 
-          if (!existingData) {
-            await this.useridRepository.save(item);
-          } else {
-            await this.useridRepository.update({ userOpenid: item.open_userid }, item);
+            if (!existingData) {
+              await this.useridRepository.save(item);
+            } else {
+              await this.useridRepository.update({ userOpenid: item.open_userid }, item);
 
+            }
           }
         }
-        return 'success'
+        if (data.userid_list.length > 0 && data.invalid_open_userid_list.length > 0) {
+          return { info: 'part', invalid: data.invalid_open_userid_list }
+        }
+        else if (data.userid_list.length == 0 && data.invalid_open_userid_list.length > 0) {
+          return { info: 'error', invalid: data.invalid_open_userid_list }
+
+        }
+        if (data.userid_list.length > 0 && data.invalid_open_userid_list.length == 0) {
+          return { info: 'all', invalid: [] }
+        }
+
       }
     } catch (error) {
       throw error;
