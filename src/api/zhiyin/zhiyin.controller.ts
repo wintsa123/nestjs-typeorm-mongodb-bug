@@ -47,7 +47,7 @@ export class ZhiyinController {
   @Post('/userOpenIdCallback')
   @ApiOperation({ summary: '回调地址' , description: 'userOpenid回调'})
   userOpenIdCallback(
-    @Body() Useropenid: string[],
+    @Body('Useropenid') Useropenid: string[],
   ) {
     // 方法体
     return this.zhiyinService.userOpenIdCallback(Useropenid)
