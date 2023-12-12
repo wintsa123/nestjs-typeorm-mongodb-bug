@@ -18,7 +18,8 @@ import { zhiyinuserid } from './entities/OpenUserid.entity'
         module: ZhiyinModule,
       },
     ]),
-    TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity,devicesEntity,zhiyinuserid])
+    TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity,devicesEntity,zhiyinuserid]),
+
   ],
   controllers: [ZhiyinController],
   providers: [ZhiyinService,WxchatService],

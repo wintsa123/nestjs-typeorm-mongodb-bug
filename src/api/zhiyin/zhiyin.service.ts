@@ -10,8 +10,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
-import { Repository, getConnection } from 'typeorm';
-import { uniqBy } from 'lodash';
+import { Connection, Repository, createConnection, getConnection, getManager } from 'typeorm';
+import { isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
 import { zhiyinuserid } from './entities/OpenUserid.entity';
@@ -21,6 +21,7 @@ export class ZhiyinService {
   private appId = this.configService.get('zhiyin.appId')
   private appKey = this.configService.get('zhiyin.appKey')
   private url = this.configService.get('zhiyin.url')
+
   constructor(
     @InjectRepository(ApplyDetailEntity)
     private readonly applyDetailRepository: Repository<ApplyDetailEntity>,
@@ -32,10 +33,35 @@ export class ZhiyinService {
     private readonly devicesRepository: Repository<devicesEntity>,
     @InjectRepository(zhiyinuserid)
     private readonly useridRepository: Repository<zhiyinuserid>,
+    // @InjectRepository(hrmresourceEntity,'oracle')
+    // private readonly hrmresourceRepositor: Repository<hrmresourceEntity>,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-    private readonly WxchatService: WxchatService
-  ) { }
+    private readonly WxchatService: WxchatService,
+    private connection: Connection
+
+  ) {
+    this.initialize();
+  }
+  private async initialize() {
+    try {
+      this.connection = await createConnection({
+        type: "oracle",
+        host: "192.168.2.222",
+        port: 1521,
+        username: String(this.configService.get('datasourceOracle.username')),
+        password: String(this.configService.get('datasourceOracle.username')),
+        database: String(this.configService.get('datasourceOracle.username')),
+        sid: String(this.configService.get('datasourceOracle.sid')),
+      });
+
+      // Perform additional initialization steps with the connection if needed
+
+      this.logger.log('Database connection established');
+    } catch (error) {
+      this.logger.error('Failed to establish database connection', error);
+    }
+  }
   /**
    * @Author: wintsa
    * @Date: 2023-12-05 11:16:03
@@ -109,9 +135,29 @@ export class ZhiyinService {
       appId: this.appId,
       timestamp: getTime()
     }
-    const mergedObj = { ...objTmp, ...params };
+    let tmp = pickBy(params, (value) => !isNil(value)) as any
+    const mergedObj = { ...objTmp, ...tmp };
+    const stampUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.stampUser} `)
+    const createUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.createUser}`)
+    console.log(stampUser1, createUser1)
+    if (createUser1[0].WORKCODE == null) {
+      return '创建人不存在'
+    }
+    if (stampUser1[0].WORKCODE == null) {
+      return '创建人不存在'
+    }
+    const stampUser = await this.useridRepository.findOne({ where: { userid: stampUser1[0].WORKCODE } })
+    const createUser = await this.useridRepository.findOne({ where: { userid: createUser1[0].WORKCODE } })
+    if (createUser == null) {
+      return '创建人授权，请登录企业微信工作台小程序先授权'
+    }
+    if (stampUser == null) {
+      return '创建人授权，请登录企业微信工作台小程序先授权'
+    }
+    console.log(stampUser, createUser)
+    mergedObj.stampUser = stampUser?.userOpenid
+    mergedObj.createUser = createUser?.userOpenid
     console.log(mergedObj)
-
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
     try {
@@ -120,6 +166,7 @@ export class ZhiyinService {
         return done
       } else {
         this.logger.error(done)
+        return done.msg
       }
     } catch (error) {
       this.logger.error(error)
