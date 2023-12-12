@@ -243,7 +243,7 @@ export class ZhiyinService {
       const assess_token = await this.WxchatService.getAssesstToken()
 
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-        "open_userid_list": [Useropenid],
+        "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
 
