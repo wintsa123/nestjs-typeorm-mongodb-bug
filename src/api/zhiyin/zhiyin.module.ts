@@ -7,6 +7,7 @@ import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 import { devicesEntity } from './entities/deviceList.entity';
+import { WxchatService } from '../wxchat/wxchat.service';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { devicesEntity } from './entities/deviceList.entity';
     TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity,devicesEntity])
   ],
   controllers: [ZhiyinController],
-  providers: [ZhiyinService],
+  providers: [ZhiyinService,WxchatService],
 })
 export class ZhiyinModule {}
