@@ -8,6 +8,7 @@ import { StampRecordEntity } from './entities/StampRecord.entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from '../wxchat/wxchat.service';
+import { zhiyinuserid } from './entities/OpenUserid.entity'
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { WxchatService } from '../wxchat/wxchat.service';
         module: ZhiyinModule,
       },
     ]),
-    TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity,devicesEntity])
+    TypeOrmModule.forFeature([ApplyDetailEntity,StampRecordEntity,StampRecordDetailEntity,devicesEntity,zhiyinuserid])
   ],
   controllers: [ZhiyinController],
   providers: [ZhiyinService,WxchatService],

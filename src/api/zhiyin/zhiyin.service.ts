@@ -15,6 +15,7 @@ import { Repository, getRepository } from 'typeorm';
 import { uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
+import { zhiyinuserid } from './entities/OpenUserid.entity';
 
 @Injectable()
 export class ZhiyinService {
@@ -32,6 +33,8 @@ export class ZhiyinService {
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     @InjectRepository(devicesEntity)
     private readonly devicesRepository: Repository<devicesEntity>,
+    @InjectRepository(zhiyinuserid)
+    private readonly useridRepository: Repository<zhiyinuserid>,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
     private readonly WxchatService: WxchatService
@@ -240,7 +243,7 @@ export class ZhiyinService {
       const assess_token = await this.WxchatService.getAssesstToken()
 
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-        "open_userid_list": Useropenid,
+        "open_userid_list": [Useropenid],
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
       console.log(data)
