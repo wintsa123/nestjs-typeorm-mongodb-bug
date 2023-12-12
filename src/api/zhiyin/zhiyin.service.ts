@@ -272,10 +272,8 @@ export class ZhiyinService {
           return { info: 'error', invalid: data.invalid_open_userid_list }
 
         }
-        if (data.userid_list.length > 0 && data.invalid_open_userid_list.length == 0) {
-          return { info: 'all', invalid: [] }
-        }
-
+    
+        return { info: 'all', invalid: [] }
       }
     } catch (error) {
       throw error;
