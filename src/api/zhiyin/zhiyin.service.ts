@@ -265,7 +265,8 @@ export class ZhiyinService {
             }
           }
         }
-        const successIds=data.userid_list.map(e=>e.open_userid)
+        console.log(data.userid_list)
+        const successIds=data.userid_list.map(e=>e.userOpenid)
         
         return { successIds, invalid: data.invalid_open_userid_list}
       }
