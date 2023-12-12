@@ -23,8 +23,8 @@ export class WxchatController {
 
   @Get('/getUserid')
   @ApiOperation({ summary: '调用该接口可获取userid' })
-  getUserid( @Query('id') id:string[]) {
-    return this.wxchatService.getUserid(id);
+  getUserid( @Query('id') id:string[];@Query('agentid') agentid:string) {
+    return this.wxchatService.getUserid(id,agentid);
   }
   @Get('/getToken')
   @ApiOperation({ summary: '获取微信accessToken' })
