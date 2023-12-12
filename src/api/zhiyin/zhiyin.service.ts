@@ -238,26 +238,26 @@ export class ZhiyinService {
       } else {
         if (data.userid_list.length > 0) {
 
-          const result=await this.useridRepository
-          .createQueryBuilder()
-          .insert()
-          .into(zhiyinuserid)
-          .values(data.userid_list.map(e=>{return {userOpenid:e.open_userid,userid:e.userid}}))
-          .onConflict(`("userOpenid","userid") DO NOTHING`) // or use another conflict resolution strategy
-          .execute();
-          // for (const item of data.userid_list) {
-          //   console.log(item)
-          //   item['userOpenid'] = item.open_userid
-          //   delete item['open_userid']
-          //   const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
-          //   if (!existingData) {
-          //     await this.useridRepository.save(item);
-          //   } else {
-          //     existingData.userid = item.userid
-          //     await this.useridRepository.save(existingData);
-          //   }
-          // }
-          console.log(result)
+          // const result=await this.useridRepository
+          // .createQueryBuilder()
+          // .insert()
+          // .into(zhiyinuserid)
+          // .values(data.userid_list.map(e=>{return {userOpenid:e.open_userid,userid:e.userid}}))
+          // .onConflict(`("userOpenid","userid") DO NOTHING`) // or use another conflict resolution strategy
+          // .execute();
+          for (const item of data.userid_list) {
+            console.log(item)
+            item['userOpenid'] = item.open_userid
+            delete item['open_userid']
+            const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
+            if (!existingData) {
+              await this.useridRepository.save(item);
+            } else {
+              existingData.userid = item.userid
+              await this.useridRepository.save(existingData);
+            }
+          }
+          // console.log(result)
         }
         const successIds = data.userid_list.map(e => e.userOpenid)
         return { successIds, invalid: data.invalid_open_userid_list }
