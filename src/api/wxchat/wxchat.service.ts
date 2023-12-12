@@ -72,6 +72,24 @@ export class WxchatService {
     }
 
   }
+  async test(id) {
+    try {
+      const assess_token = await this.getAssesstToken()
+      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/userid_to_openuserid?access_token=${assess_token}`, {
+        "userid_list": id,
+      })
+      console.log(data)
+      if (data.errcode) {
+        return '失败'
+      } else {
+        return data
+      }
+    } catch (error) {
+      throw error;
+
+    }
+
+  }
   // 发送企业微信消息
   async sendMessage(message?: string) {
     try {
