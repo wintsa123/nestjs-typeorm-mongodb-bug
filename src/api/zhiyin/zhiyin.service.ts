@@ -265,15 +265,9 @@ export class ZhiyinService {
             }
           }
         }
-        if (data.userid_list.length > 0 && data.invalid_open_userid_list.length > 0) {
-          return { info: 'part', invalid: data.invalid_open_userid_list }
-        }
-        else if (data.userid_list.length == 0 && data.invalid_open_userid_list.length > 0) {
-          return { info: 'error', invalid: data.invalid_open_userid_list }
-
-        }
-    
-        return { info: 'all', invalid: [] }
+        const successIds=data.userid_list.map(e=>e.open_userid)
+        
+        return { successIds, invalid: data.invalid_open_userid_list}
       }
     } catch (error) {
       throw error;
