@@ -28,7 +28,7 @@ export class WxchatController {
   }
   @Get('/test')
   @ApiOperation({ summary: '调用该接口可获取userid' })
-  test( @Query('id') id:string[]) {
+  test( @Query('id') id:string) {
     return this.wxchatService.test(id);
   }
   @Get('/getToken')
