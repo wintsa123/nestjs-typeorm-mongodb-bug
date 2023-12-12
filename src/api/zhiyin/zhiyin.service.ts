@@ -260,7 +260,7 @@ export class ZhiyinService {
             if (!existingData) {
               await this.useridRepository.save(item);
             } else {
-              await this.useridRepository.update({ userOpenid: item.open_userid }, item);
+              await this.useridRepository.update({ userOpenid: item.userOpenid }, item);
 
             }
           }
