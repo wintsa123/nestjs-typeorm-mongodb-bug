@@ -246,11 +246,21 @@ export class ZhiyinService {
         "open_userid_list": [Useropenid],
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-      console.log(data)
+
       if (data.errcode) {
         return '失败'
       } else {
-        return data
+        for (const item of data.userid_list) {
+          const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.open_userid } });
+
+          if (!existingData) {
+            await this.useridRepository.save(item);
+          } else {
+            await this.useridRepository.update({ userOpenid: item.open_userid }, item);
+
+          }
+        }
+        return 'success'
       }
     } catch (error) {
       throw error;
