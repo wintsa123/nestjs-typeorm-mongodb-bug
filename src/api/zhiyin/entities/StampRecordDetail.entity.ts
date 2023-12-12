@@ -1,5 +1,5 @@
 // StampRecordDetailEntity.ts
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, PrimaryColumn } from 'typeorm';
 import { StampRecordEntity } from './StampRecord.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { ApplyDetailEntity } from './ApplyDetail.entity';
@@ -9,7 +9,7 @@ export class StampRecordDetailEntity {
     constructor(props: Partial<StampRecordDetailEntity>) {
         Object.assign(this, props);
       }
-    @PrimaryGeneratedColumn({
+    @PrimaryColumn({
         type: 'int',
         name: 'id',
         comment: '主键id',

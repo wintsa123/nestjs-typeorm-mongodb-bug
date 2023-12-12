@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateZhiyinDto } from './dto/create-zhiyin.dto';
-import { UpdateZhiyinDto } from './dto/update-zhiyin.dto';
+
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 const crypto = require('crypto');
@@ -11,19 +10,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
 import { zhiyinuserid } from './entities/OpenUserid.entity';
-
 @Injectable()
 export class ZhiyinService {
   private logger = new Logger(ZhiyinService.name);
   private appId = this.configService.get('zhiyin.appId')
   private appKey = this.configService.get('zhiyin.appKey')
   private url = this.configService.get('zhiyin.url')
-
   constructor(
     @InjectRepository(ApplyDetailEntity)
     private readonly applyDetailRepository: Repository<ApplyDetailEntity>,
@@ -39,8 +36,6 @@ export class ZhiyinService {
     private readonly configService: ConfigService,
     private readonly WxchatService: WxchatService
   ) { }
-
-
   /**
    * @Author: wintsa
    * @Date: 2023-12-05 11:16:03
@@ -55,16 +50,13 @@ export class ZhiyinService {
         .sort((a, b) => { console.log(a); return a[0].localeCompare(b[0]) })
         .map(([key, value]) => `${key}=${value}`)
         .join('&');
-      console.log(queryParamStr)
       const appKeySuffix = `&appKey=${appKey}`;
 
       const fullQueryParamStr = queryParamStr + appKeySuffix;
-      console.log(fullQueryParamStr)
       return crypto.createHash('md5').update(fullQueryParamStr).digest('hex').toUpperCase();
 
     }
     const signature = generateSignature(params, this.appKey);
-    console.log(signature)
     params['sign'] = signature
     return params;
   }
@@ -88,7 +80,6 @@ export class ZhiyinService {
       if (done.success) {
         for (const item of done.data) {
           const existingData = await this.devicesRepository.findOne({ where: { mac: item.mac } });
-
           if (!existingData) {
             await this.devicesRepository.save(item);
           } else {
@@ -96,8 +87,6 @@ export class ZhiyinService {
 
           }
         }
-
-
         return done.data
       } else {
         this.logger.error(done.msg)
@@ -106,8 +95,6 @@ export class ZhiyinService {
       this.logger.error(error)
     }
   }
-
-
 
   /**
    * @Author: wintsa
@@ -123,6 +110,8 @@ export class ZhiyinService {
       timestamp: getTime()
     }
     const mergedObj = { ...objTmp, ...params };
+    console.log(mergedObj)
+
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
     try {
@@ -188,8 +177,7 @@ export class ZhiyinService {
     console.log(all)
     try {
       await this.applyDetailRepository.save(all);
-      await this.stampRecordRepository.save(StampRecords);
-      await this.stampRecordDetailRepository.save(StampRecordDetails);
+
       return true
     } catch (error) {
       throw error
@@ -238,41 +226,48 @@ export class ZhiyinService {
    * @return {*}
    */
   async userOpenIdCallback(Useropenid) {
-
     try {
       const assess_token = await this.WxchatService.getAssesstToken()
-
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-
+      console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
         if (data.userid_list.length > 0) {
-          for (const item of data.userid_list) {
-            console.log(item)
-            item['userOpenid'] = item.open_userid
-            delete item['open_userid']
-            const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
 
-            if (!existingData) {
-              await this.useridRepository.save(item);
-            } else {
-              await this.useridRepository.update({ userOpenid: item.userOpenid }, item);
-
-            }
-          }
+          const result=await this.useridRepository
+          .createQueryBuilder()
+          .insert()
+          .into(zhiyinuserid)
+          .values(data.userid_list.map(e=>{return {userOpenid:e.open_userid,userid:e.userid}}))
+          .onConflict(`("userOpenid","userid") DO NOTHING`) // or use another conflict resolution strategy
+          .execute();
+          // for (const item of data.userid_list) {
+          //   console.log(item)
+          //   item['userOpenid'] = item.open_userid
+          //   delete item['open_userid']
+          //   const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
+          //   if (!existingData) {
+          //     await this.useridRepository.save(item);
+          //   } else {
+          //     existingData.userid = item.userid
+          //     await this.useridRepository.save(existingData);
+          //   }
+          // }
+          console.log(result)
         }
-        console.log(data.userid_list)
-        const successIds=data.userid_list.map(e=>e.userOpenid)
-        
-        return { successIds, invalid: data.invalid_open_userid_list}
+        const successIds = data.userid_list.map(e => e.userOpenid)
+        return { successIds, invalid: data.invalid_open_userid_list }
       }
     } catch (error) {
+      console.log(error)
       throw error;
 
     }
   }
+
+
 }

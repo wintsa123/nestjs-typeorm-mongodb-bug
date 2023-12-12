@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { StampRecordDetailEntity } from './StampRecordDetail.entity';
@@ -10,7 +10,7 @@ export class ApplyDetailEntity {
   constructor(props: Partial<ApplyDetailEntity>) {
     Object.assign(this, props);
   }
-  @PrimaryGeneratedColumn({
+  @PrimaryColumn({
     type: 'int',
     name: 'id',
     comment: '主键id',
@@ -116,10 +116,10 @@ export class ApplyDetailEntity {
 
 
 
-  @OneToMany(() => StampRecordDetailEntity, stampRecordDetail => stampRecordDetail.apply)
+  @OneToMany(() => StampRecordDetailEntity, stampRecordDetail => stampRecordDetail.apply,{cascade:true})
   details?: StampRecordDetailEntity[];
 
-  @OneToMany(() => StampRecordEntity, e => e.apply)
+  @OneToMany(() => StampRecordEntity, e => e.apply,{cascade:true})
   records?: StampRecordEntity[];
 
 }

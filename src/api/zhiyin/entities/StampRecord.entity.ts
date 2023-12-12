@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { StampRecordDetailEntity } from './StampRecordDetail.entity';
@@ -8,7 +8,7 @@ export class StampRecordEntity {
     constructor(props: Partial<StampRecordEntity>) {
         Object.assign(this, props);
       }
-    @PrimaryGeneratedColumn({
+    @PrimaryColumn({
         type: 'int',
         name: 'id',
         comment: '主键id',
