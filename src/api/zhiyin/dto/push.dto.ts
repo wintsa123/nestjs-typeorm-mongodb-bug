@@ -31,14 +31,14 @@ export class pushDto extends CreateZhiyinDto{
     @IsNotEmpty()
     "createUser": string
     @ApiProperty({ description: '盖章拍照（0：不拍照，1：拍照，默认0）',required: false })
-    "stampPhotograph": internal
+    "stampPhotograph": boolean=false
     @ApiProperty({ description: '盖章采集人脸（0：不采集，1：采集，默认0）',required: false })
-    "facePhoto": internal
+    "facePhoto": boolean=false
 
     @ApiProperty({description: 'ocr识别（0：不识别，1：识别，默认0）', required: false })
-    "ocrDistinguish": internal
+    "ocrDistinguish": boolean=false
     @ApiProperty({ description: '印章识别（0：不识别，1：识别，默认0）',required: false })
-    "sealDistinguish": internal
+    "sealDistinguish": boolean=false
 
     @ApiProperty({description: '盖章记录回调地址', required: true })
     "callbackUrl": string

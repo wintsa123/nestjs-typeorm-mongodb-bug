@@ -160,6 +160,8 @@ export class ZhiyinService {
     console.log(mergedObj)
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
+    console.log(result)
+
     try {
       const { data: done } = await axios.post(url, result)
       if (done.success) {
