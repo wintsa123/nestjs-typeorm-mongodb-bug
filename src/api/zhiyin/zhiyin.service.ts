@@ -251,7 +251,10 @@ export class ZhiyinService {
         return '失败'
       } else {
         for (const item of data.userid_list) {
-          const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.open_userid } });
+          console.log(item)
+          item['userOpenid'] = item.open_userid
+          delete item['open_userid']
+          const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
 
           if (!existingData) {
             await this.useridRepository.save(item);
