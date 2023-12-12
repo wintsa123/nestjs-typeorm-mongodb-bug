@@ -26,11 +26,7 @@ export class WxchatController {
   getUserid( @Query('id') id:string[],@Query('agentid') agentid:number) {
     return this.wxchatService.getUserid(id,agentid);
   }
-  @Get('/test')
-  @ApiOperation({ summary: '调用该接口可获取userid' })
-  test( @Query('id') id:string[]) {
-    return this.wxchatService.test(id);
-  }
+
   @Get('/getToken')
   @ApiOperation({ summary: '获取微信accessToken' })
   getToken() {

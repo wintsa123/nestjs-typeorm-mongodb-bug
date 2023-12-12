@@ -14,6 +14,7 @@ import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 import { Repository, getRepository } from 'typeorm';
 import { uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
+import { WxchatService } from "src/api/wxchat/wxchat.service";
 
 @Injectable()
 export class ZhiyinService {
@@ -33,6 +34,7 @@ export class ZhiyinService {
     private readonly devicesRepository: Repository<devicesEntity>,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    private readonly WxchatService: WxchatService
   ) { }
 
 
@@ -83,10 +85,10 @@ export class ZhiyinService {
       if (done.success) {
         for (const item of done.data) {
           const existingData = await this.devicesRepository.findOne({ where: { mac: item.mac } });
-    
+
           if (!existingData) {
             await this.devicesRepository.save(item);
-          }else{
+          } else {
             await this.devicesRepository.update({ mac: item.mac }, item);
 
           }
@@ -223,6 +225,33 @@ export class ZhiyinService {
       }
     } catch (error) {
       this.logger.error(error)
+    }
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-12 10:10:47
+   * @LastEditors: wintsa
+   * @Description: UserOpenid回调
+   * @return {*}
+   */
+  async userOpenIdCallback(Useropenid) {
+
+    try {
+      const assess_token = await this.WxchatService.getAssesstToken()
+
+      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
+        "open_userid_list": Useropenid,
+        "source_agentid": this.configService.get('zhiyin.AgentId')
+      })
+      console.log(data)
+      if (data.errcode) {
+        return '失败'
+      } else {
+        return data
+      }
+    } catch (error) {
+      throw error;
+
     }
   }
 }
