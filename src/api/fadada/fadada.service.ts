@@ -92,7 +92,8 @@ export class FadadaService {
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
     if (timestamp < lowerLimit || timestamp > upperLimit) {
-      throw 'errorTime'
+      this.logger.error('时间不正确')
+
       return false
     }
     console.log(headers)
