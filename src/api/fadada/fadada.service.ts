@@ -284,7 +284,7 @@ export class FadadaService {
       this.logger.error('userDisable获取失败')
       return result.data.msg
     }
-    await this.fadadaRepository.softDelete({ openUserId: data });
+    await this.fadadaRepository.softDelete({ openUserId: data.openUserId });
 
     return result.data
   }
@@ -303,7 +303,7 @@ export class FadadaService {
       return result.data.msg
     }
 
-    await this.fadadaRepository.restore({ openUserId: data });
+    await this.fadadaRepository.restore({ openUserId: data.openUserId });
 
     return result.data
   }
@@ -322,7 +322,7 @@ export class FadadaService {
       this.logger.error('userunbind获取失败')
       return result.data.msg
     }
-    await this.fadadaRepository.softDelete({ openUserId: data.openUserId });
+    await this.fadadaRepository.delete({ openUserId: data.openUserId })
 
     return result.data
   }
