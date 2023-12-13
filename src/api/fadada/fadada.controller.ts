@@ -73,17 +73,17 @@ export class FadadaController {
 
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
-  userdisable(@Body() data) {
+  userdisable(@Body() data:string) {
     return this.fadadaService.userDisable(data);
   }
   @Post('/user/Enable')
   @ApiOperation({ summary: '开启用户' })
-  userEnable(@Body() data) {
+  userEnable(@Body() data:string) {
     return this.fadadaService.userEnable(data);
   }
   @Post('/user/Unbind')
   @ApiOperation({ summary: '解绑用户' })
-  userUnbind(@Body() data) {
+  userUnbind(@Body() data:string) {
     return this.fadadaService.userUnbind(data);
   }
 

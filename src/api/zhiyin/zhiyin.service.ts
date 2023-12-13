@@ -291,14 +291,14 @@ export class ZhiyinService {
         return '失败'
       }
       if (data.userid_list.length > 0) {
-        const successIds=data.userid_list.map(e => {
+        const successIds = data.userid_list.map(e => {
           return this.hashString(e.userid)
 
         })
         return { successIds, invalid: data.invalid_open_userid_list }
 
-      }else{
-        return { successIds:[], invalid: data.invalid_open_userid_list }
+      } else {
+        return { successIds: [], invalid: data.invalid_open_userid_list }
 
       }
     }
