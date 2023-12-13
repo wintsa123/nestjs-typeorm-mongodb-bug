@@ -6,7 +6,6 @@ import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
-// import  clientConfig  from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';

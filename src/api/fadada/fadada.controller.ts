@@ -6,7 +6,7 @@ import { UploadFadadaDto } from './dto/fadadaUpload';
 import { FileProcess } from './dto/fileProcess';
 import { fileVerify } from './dto/fileVerifySignDto';
 import { SignTask } from './dto/fadadaSignTask.dto';
-
+import { UnbindUserRequest } from "@fddnpm/fasc-openapi-node-sdk/src/services/user/user_models";
 import { SocketService } from 'src/socket/socket.service';
 
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -73,17 +73,17 @@ export class FadadaController {
 
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
-  userdisable(@Body() data:string) {
+  userdisable(@Body() data:CreateFadadaDto) {
     return this.fadadaService.userDisable(data);
   }
   @Post('/user/Enable')
   @ApiOperation({ summary: '开启用户' })
-  userEnable(@Body() data:string) {
+  userEnable(@Body() data:CreateFadadaDto) {
     return this.fadadaService.userEnable(data);
   }
   @Post('/user/Unbind')
   @ApiOperation({ summary: '解绑用户' })
-  userUnbind(@Body() data:string) {
+  userUnbind(@Body() data:CreateFadadaDto) {
     return this.fadadaService.userUnbind(data);
   }
 
