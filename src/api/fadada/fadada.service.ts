@@ -101,12 +101,12 @@ export class FadadaService {
     const redisResule = await this.redisService.get('X-FASC-Nonce')
     console.log(redisResule)
 
-    if (redisResule == null) {
-      await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
-    } else {
-      this.logger.error('repeat Nonce')
-      return false
-    }
+    // if (redisResule == null) {
+    //   await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
+    // } else {
+    //   this.logger.error('repeat Nonce')
+    //   return false
+    // }
     // console.log(headers,Eventid)
     console.log(0)
 

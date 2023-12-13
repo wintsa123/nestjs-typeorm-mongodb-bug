@@ -32,6 +32,13 @@ export class FadadaController {
   callback(@Body() data,@Headers() headers: any) {
     return this.fadadaService.callback(data,headers);
   }
+
+  // @Post('/searchInfo')
+  // @HttpCode(200)
+  // @ApiOperation({ summary: '手动查询审批callback数据' })
+  // search(@Body() data) {
+  //   return this.fadadaService.search(data);
+  // }
   @Post('/corp/get')
   getCorp() {
     return this.fadadaService.corpGet();
