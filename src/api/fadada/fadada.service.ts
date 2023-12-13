@@ -99,38 +99,46 @@ export class FadadaService {
       throw 'repeat Nonce'
       return false
     }
+    switch (Eventid) {
+      case 'user-authorize':
+        const tmp = JSON.parse(data.bizContent)
+        if (tmp.authResult !== 'success') {
+          this.logger.error('user-authorize')
+          this.logger.error(tmp.authFailedReason)
 
-    if (Eventid == 'user-authorize') {
-      const tmp = JSON.parse(data.bizContent)
-      if (tmp.authResult !== 'success') {
-        this.logger.error('user-authorize')
-        this.logger.error(tmp.authFailedReason)
-
-        return false
-      }
-      if (tmp.identProcessStatus !== 'success') {
-        this.logger.error('user-authorize')
-        this.logger.error(tmp.identFailedReason)
-
-        return false
-      }
-      try {
-
-        let existingData = await this.fadadaRepository.findOne({ where: { clientUserId: tmp.clientUserId } });
-        if (existingData) {
-          // 如果已存在，更新记录
-          await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId: tmp.openUserId });
-        } else {
-          // 如果不存在，创建新记录
-          const newData = this.fadadaRepository.create({ clientUserId: tmp.clientUserId, openUserId: tmp.openUserId });
-          await this.fadadaRepository.save(newData);
+          return false
         }
-        return true;
-      } catch (error) {
-        this.logger.error('Error:', error);
-        return false
-      }
+        if (tmp.identProcessStatus !== 'success') {
+          this.logger.error('user-authorize')
+          this.logger.error(tmp.identFailedReason)
+
+          return false
+        }
+        try {
+
+          let existingData = await this.fadadaRepository.findOne({ where: { clientUserId: tmp.clientUserId } });
+          if (existingData) {
+            // 如果已存在，更新记录
+            await this.fadadaRepository.update({ clientUserId: existingData.clientUserId }, { openUserId: tmp.openUserId });
+          } else {
+            // 如果不存在，创建新记录
+            const newData = this.fadadaRepository.create({ clientUserId: tmp.clientUserId, openUserId: tmp.openUserId });
+            await this.fadadaRepository.save(newData);
+          }
+          return true;
+        } catch (error) {
+          this.logger.error('Error:', error);
+          return false
+        }
+        break;
+      case 'sign-task-sign-failed':
+        this.logger.debug('sign-task-sign-failed',data)
+        break;
+
+      default:
+        break;
     }
+
     return 'success'
   }
   /**
