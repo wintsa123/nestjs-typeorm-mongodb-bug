@@ -272,9 +272,8 @@ export class ZhiyinService {
   async userOpenIdCallback(Useropenid) {
     try {
       const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
-      const openid = difference(Useropenid, existingUserIds)
-      console.log(existingUserIds)
-      console.log(openid)
+      const openid = difference(Useropenid, existingUserIds.map(e=>e.userOpenid))
+      
       if (openid.length === 0) {
         return { successIds: Useropenid, invalid: [] };
       }
