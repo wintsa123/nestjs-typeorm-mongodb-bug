@@ -296,14 +296,14 @@ export class ZhiyinService {
         //   await this.useridRepository.save(item);
 
         // }
-        const entitiesToSave = data.userid_list.map(async (item) => {
+        const entitiesToSave = await Promise.all(data.userid_list.map(async (item) => {
           item['userOpenid'] = item.open_userid;
           delete item['open_userid'];
           const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
           item.id = user[0].ID
           item.name = user[0].NAME
           return item as zhiyinuserid; // Ensure item conforms to YourEntity structure
-        });
+        }))
         console.log(entitiesToSave)
       }
       const successIds = data.userid_list.map(e => e.userOpenid)
