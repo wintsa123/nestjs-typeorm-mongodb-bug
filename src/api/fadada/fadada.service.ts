@@ -83,7 +83,11 @@ export class FadadaService {
    * @return {*}
    */
   async callback(data, headers) {
+    console.log('000000000000')
+
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': Nonce, 'x-fasc-event': Eventid } = headers
+    console.log(data, 'callback', Eventid)
+
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
@@ -91,18 +95,23 @@ export class FadadaService {
       throw 'errorTime'
       return false
     }
+    console.log(headers)
+
     const redisResule = await this.redisService.get('X-FASC-Nonce')
+    console.log(redisResule)
+
     if (redisResule == null) {
       await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
     } else {
-      throw 'repeat Nonce'
+      this.logger.error('repeat Nonce')
       return false
     }
     // console.log(headers,Eventid)
-    console.log(data, 'callback', Eventid)
+    console.log(0)
 
     switch (Eventid) {
       case 'user-authorize':
+        console.log(1)
         const tmp = JSON.parse(data.bizContent)
         if (tmp.authResult !== 'success') {
           this.logger.error('user-authorize')
@@ -138,10 +147,14 @@ export class FadadaService {
         break;
 
       default:
+        console.log(3)
+
         break;
     }
+    console.log(2)
 
     return 'success'
+
   }
   /**
    * @Author: wintsa
