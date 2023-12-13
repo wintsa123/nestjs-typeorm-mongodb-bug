@@ -83,8 +83,7 @@ export class FadadaService {
    * @return {*}
    */
   async callback(data, headers) {
-    console.log(data, 'callback', headers)
-    const { 'x-fasc-timestamp': timestamp, 'X-FASC-Nonce': Nonce, 'X-FASC-Event': Eventid } = headers
+    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': Nonce, 'x-fasc-event': Eventid } = headers
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
@@ -99,6 +98,9 @@ export class FadadaService {
       throw 'repeat Nonce'
       return false
     }
+    // console.log(headers,Eventid)
+    console.log(data, 'callback', Eventid)
+
     switch (Eventid) {
       case 'user-authorize':
         const tmp = JSON.parse(data.bizContent)
