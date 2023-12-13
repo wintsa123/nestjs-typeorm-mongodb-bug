@@ -11,7 +11,7 @@ import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 import { Connection, Repository, createConnection, getConnection, getManager } from 'typeorm';
-import { isEmpty, isNil, pickBy, uniqBy } from 'lodash';
+import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
 import { zhiyinuserid } from './entities/OpenUserid.entity';
@@ -271,38 +271,43 @@ export class ZhiyinService {
    */
   async userOpenIdCallback(Useropenid) {
     try {
-      const assess_token = await this.WxchatService.getAssesstToken()
-      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-        "open_userid_list": Useropenid,
-        "source_agentid": this.configService.get('zhiyin.AgentId')
-      })
+      const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
+      const openid = difference(Useropenid, existingUserIds)
+      if (openid.length > 0) {
+        const assess_token = await this.WxchatService.getAssesstToken()
+        const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
+          "open_userid_list": openid,
+          "source_agentid": this.configService.get('zhiyin.AgentId')
+        })
 
-      if (data.errcode) {
-        return '失败'
-      } else {
-        if (data.userid_list.length > 0) {
-          for (const item of data.userid_list) {
-            item['userOpenid'] = item.open_userid
-            delete item['open_userid']
-            const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
-            const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
-            console.log(user,'user')
-              item.id=user[0].ID
-              item.name=user[0].NAME
-              console.log(item,'item')
-            if (!existingData) {
-              
-              await this.useridRepository.save(item);
-            } else {
-              existingData.userid = item.userid
-              await this.useridRepository.save(existingData);
+        if (data.errcode) {
+          return '失败'
+        } else {
+          if (data.userid_list.length > 0) {
+            for (const item of data.userid_list) {
+              item['userOpenid'] = item.open_userid
+              delete item['open_userid']
+              const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
+              const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
+              item.id = user[0].ID
+              item.name = user[0].NAME
+              if (!existingData) {
+
+                await this.useridRepository.save(item);
+              } else {
+                existingData.userid = item.userid
+                await this.useridRepository.save(existingData);
+              }
             }
+            // console.log(result)
           }
-          // console.log(result)
+          const successIds = data.userid_list.map(e => e.userOpenid)
+          return { successIds, invalid: data.invalid_open_userid_list }
         }
-        const successIds = data.userid_list.map(e => e.userOpenid)
-        return { successIds, invalid: data.invalid_open_userid_list }
+      }else{
+        return {successIds:Useropenid, invalid:[]}
       }
+
     } catch (error) {
       console.log(error)
       throw error;
