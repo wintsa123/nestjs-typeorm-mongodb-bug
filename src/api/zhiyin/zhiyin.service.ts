@@ -273,6 +273,7 @@ export class ZhiyinService {
     try {
       const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
       const openid = difference(Useropenid, existingUserIds)
+      console.log(openid)
       if (openid.length === 0) {
         return { successIds: Useropenid, invalid: [] };
       }
@@ -302,9 +303,10 @@ export class ZhiyinService {
           const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
           item.id = user[0].ID
           item.name = user[0].NAME
-          return item as zhiyinuserid; // Ensure item conforms to YourEntity structure
+          return item as zhiyinuserid; 
         }))
-        console.log(entitiesToSave)
+        await this.useridRepository.save(entitiesToSave, { chunk: 500 });
+
       }
       const successIds = data.userid_list.map(e => e.userOpenid)
       return { successIds, invalid: data.invalid_open_userid_list }
