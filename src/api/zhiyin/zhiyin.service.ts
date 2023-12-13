@@ -273,45 +273,47 @@ export class ZhiyinService {
     try {
       const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
       const openid = difference(Useropenid, existingUserIds)
-      if (openid.length > 0) {
-        const assess_token = await this.WxchatService.getAssesstToken()
-        const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-          "open_userid_list": openid,
-          "source_agentid": this.configService.get('zhiyin.AgentId')
-        })
-
-        if (data.errcode) {
-          return '失败'
-        } else {
-          if (data.userid_list.length > 0) {
-            for (const item of data.userid_list) {
-              item['userOpenid'] = item.open_userid
-              delete item['open_userid']
-              const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
-              const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
-              item.id = user[0].ID
-              item.name = user[0].NAME
-              if (!existingData) {
-
-                await this.useridRepository.save(item);
-              } else {
-                existingData.userid = item.userid
-                await this.useridRepository.save(existingData);
-              }
-            }
-            // console.log(result)
-          }
-          const successIds = data.userid_list.map(e => e.userOpenid)
-          return { successIds, invalid: data.invalid_open_userid_list }
-        }
-      }else{
-        return {successIds:Useropenid, invalid:[]}
+      if (openid.length === 0) {
+        return { successIds: Useropenid, invalid: [] };
       }
+      const assess_token = await this.WxchatService.getAssesstToken()
+      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
+        "open_userid_list": openid,
+        "source_agentid": this.configService.get('zhiyin.AgentId')
+      })
 
-    } catch (error) {
+      if (data.errcode) {
+        return '失败'
+      }
+      if (data.userid_list.length > 0) {
+        // for (const item of data.userid_list) {
+        //   item['userOpenid'] = item.open_userid
+        //   delete item['open_userid']
+        //   const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
+        //   item.id = user[0].ID
+        //   item.name = user[0].NAME
+
+        //   await this.useridRepository.save(item);
+
+        // }
+        const entitiesToSave = data.userid_list.map(async (item) => {
+          item['userOpenid'] = item.open_userid;
+          delete item['open_userid'];
+          const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
+          item.id = user[0].ID
+          item.name = user[0].NAME
+          return item as zhiyinuserid; // Ensure item conforms to YourEntity structure
+        });
+        console.log(entitiesToSave)
+      }
+      const successIds = data.userid_list.map(e => e.userOpenid)
+      return { successIds, invalid: data.invalid_open_userid_list }
+    }
+
+
+    catch (error) {
       console.log(error)
       throw error;
-
     }
   }
 
