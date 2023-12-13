@@ -273,6 +273,7 @@ export class ZhiyinService {
     try {
       const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
       const openid = difference(Useropenid, existingUserIds)
+      console.log(existingUserIds)
       console.log(openid)
       if (openid.length === 0) {
         return { successIds: Useropenid, invalid: [] };
