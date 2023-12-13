@@ -73,7 +73,7 @@ export class ZhiyinService {
     function generateSignature(params, appKey) {
       const queryParamStr = Object.entries(params)
         .filter(([key, value]) => key && value !== undefined)
-        .sort((a, b) => { console.log(a); return a[0].localeCompare(b[0]) })
+        .sort((a, b) => { return a[0].localeCompare(b[0]) })
         .map(([key, value]) => `${key}=${value}`)
         .join('&');
       const appKeySuffix = `&appKey=${appKey}`;
@@ -154,16 +154,18 @@ export class ZhiyinService {
     if (stampUser == null) {
       return '创建人授权，请登录企业微信工作台小程序先授权'
     }
-    console.log(stampUser, createUser)
     mergedObj.stampUser = stampUser?.userOpenid
     mergedObj.createUser = createUser?.userOpenid
-    console.log(mergedObj)
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
     console.log(result)
-
     try {
-      const { data: done } = await axios.post(url, result)
+      const { data: done } = await axios.post(url, result, {
+        headers: {
+          'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+        },
+      })
+      console.log(done)
       if (done.success) {
         return done
       } else {
@@ -189,15 +191,12 @@ export class ZhiyinService {
       timestamp: getTime(),
     }
     let result = this.Sign(objTmp)
-    console.log(result)
 
     const url1 = `${this.url}oa/apply/cancel?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
 
     try {
-      console.log(url1)
 
       const { data: done } = await axios.get(url1)
-      console.log(done)
       if (done.success) {
         return done
       } else {
@@ -223,7 +222,6 @@ export class ZhiyinService {
     const all = new ApplyDetailEntity(opApplyDetailRequest)
     all['details'] = StampRecordDetails
     all['records'] = StampRecords
-    console.log(all)
     try {
       await this.applyDetailRepository.save(all);
 
@@ -248,14 +246,11 @@ export class ZhiyinService {
       timestamp: getTime(),
     }
     let result = this.Sign(objTmp)
-    console.log(result)
 
     const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
-      console.log(url1)
 
       const { data: done } = await axios.get(url1)
-      console.log(done.success)
       if (done.success) {
 
         return done.data
@@ -281,7 +276,6 @@ export class ZhiyinService {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-      console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
@@ -295,7 +289,6 @@ export class ZhiyinService {
           // .onConflict(`("userOpenid","userid") DO NOTHING`) // or use another conflict resolution strategy
           // .execute();
           for (const item of data.userid_list) {
-            console.log(item)
             item['userOpenid'] = item.open_userid
             delete item['open_userid']
             const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
