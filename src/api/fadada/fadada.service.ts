@@ -324,7 +324,7 @@ export class FadadaService {
     }
     await this.fadadaRepository.delete({ openUserId: data.openUserId })
 
-    return result.data
+    return result.data.msg
   }
   /**
    * @Author: wintsa
