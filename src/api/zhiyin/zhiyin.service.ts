@@ -276,23 +276,19 @@ export class ZhiyinService {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
+
       if (data.errcode) {
         return '失败'
       } else {
         if (data.userid_list.length > 0) {
-
-          // const result=await this.useridRepository
-          // .createQueryBuilder()
-          // .insert()
-          // .into(zhiyinuserid)
-          // .values(data.userid_list.map(e=>{return {userOpenid:e.open_userid,userid:e.userid}}))
-          // .onConflict(`("userOpenid","userid") DO NOTHING`) // or use another conflict resolution strategy
-          // .execute();
           for (const item of data.userid_list) {
             item['userOpenid'] = item.open_userid
             delete item['open_userid']
             const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
             if (!existingData) {
+              const user = await this.connection.query(`select id,name from hrmresource where WORKCODE=${item.userid} `)
+              item.id=user[0].id
+              item.name=user[0].name
               await this.useridRepository.save(item);
             } else {
               existingData.userid = item.userid
