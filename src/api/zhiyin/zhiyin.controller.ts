@@ -44,13 +44,13 @@ export class ZhiyinController {
     // 方法体
     return this.zhiyinService.callback(data)
   }
-  @Post('/userOpenIdCallback')
-  @ApiOperation({ summary: '回调地址', description: 'userOpenid回调' })
-  userOpenIdCallback(
+  @Post('/convert')
+  @ApiOperation({ summary: 'userOpenid转换', description: 'userOpenid转换' })
+  convert(
     @Body() Useropenid:string[],
   ) {
     // 方法体
-    return this.zhiyinService.userOpenIdCallback(Useropenid)
+    return this.zhiyinService.convert(Useropenid)
   }
 
 }

@@ -2,7 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
-const crypto = require('crypto');
+import crypto from 'crypto';
+
 import { getTime } from "@src/utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -121,6 +122,19 @@ export class ZhiyinService {
       this.logger.error(error)
     }
   }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-13 16:36:30
+   * @LastEditors: wintsa
+   * @Description: hash计算
+   * @return {*}
+   */
+  hashString(input) {
+    const hash = crypto.createHash('sha256');
+    hash.update(input);
+    return hash.digest('hex');
+  }
+
 
   /**
    * @Author: wintsa
@@ -146,16 +160,10 @@ export class ZhiyinService {
     if (stampUser1[0].WORKCODE == null) {
       return '创建人不存在'
     }
-    const stampUser = await this.useridRepository.findOne({ where: { userid: stampUser1[0].WORKCODE } })
-    const createUser = await this.useridRepository.findOne({ where: { userid: createUser1[0].WORKCODE } })
-    if (createUser == null) {
-      return '创建人授权，请登录企业微信工作台小程序先授权'
-    }
-    if (stampUser == null) {
-      return '创建人授权，请登录企业微信工作台小程序先授权'
-    }
-    mergedObj.stampUser = stampUser?.userOpenid
-    mergedObj.createUser = createUser?.userOpenid
+    const stampUser = this.hashString(stampUser1[0].WORKCODE)
+    const createUser = this.hashString(createUser1[0].WORKCODE)
+    mergedObj.stampUser = stampUser
+    mergedObj.createUser = createUser
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
     console.log(result)
@@ -269,47 +277,30 @@ export class ZhiyinService {
    * @Description: UserOpenid回调
    * @return {*}
    */
-  async userOpenIdCallback(Useropenid) {
+  async convert(Useropenid) {
     try {
-      const existingUserIds = await this.useridRepository.find({ select: ["userOpenid"] });
-      const openid = difference(Useropenid, existingUserIds.map(e=>e.userOpenid))
-      
-      if (openid.length === 0) {
-        return { successIds: Useropenid, invalid: [] };
-      }
+
       const assess_token = await this.WxchatService.getAssesstToken()
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-        "open_userid_list": openid,
+        "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
 
       if (data.errcode) {
+        this.logger.error(data)
         return '失败'
       }
       if (data.userid_list.length > 0) {
-        // for (const item of data.userid_list) {
-        //   item['userOpenid'] = item.open_userid
-        //   delete item['open_userid']
-        //   const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
-        //   item.id = user[0].ID
-        //   item.name = user[0].NAME
+        const successIds=data.userid_list.map(e => {
+          return this.hashString(e.userid)
 
-        //   await this.useridRepository.save(item);
+        })
+        return { successIds, invalid: data.invalid_open_userid_list }
 
-        // }
-        const entitiesToSave = await Promise.all(data.userid_list.map(async (item) => {
-          item['userOpenid'] = item.open_userid;
-          delete item['open_userid'];
-          const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
-          item.id = user[0].ID
-          item.name = user[0].NAME
-          return item as zhiyinuserid; 
-        }))
-        await this.useridRepository.save(entitiesToSave, { chunk: 500 });
+      }else{
+        return { successIds:[], invalid: data.invalid_open_userid_list }
 
       }
-      const successIds = data.userid_list.map(e => e.userOpenid)
-      return { successIds, invalid: data.invalid_open_userid_list }
     }
 
 
