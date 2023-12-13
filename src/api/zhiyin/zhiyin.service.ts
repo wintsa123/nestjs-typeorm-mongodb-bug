@@ -285,10 +285,13 @@ export class ZhiyinService {
             item['userOpenid'] = item.open_userid
             delete item['open_userid']
             const existingData = await this.useridRepository.findOne({ where: { userOpenid: item.userOpenid } });
+            const user = await this.connection.query(`select id,LASTNAME as name from hrmresource where WORKCODE='${item.userid}' `)
+            console.log(user,'user')
+              item.id=user[0].ID
+              item.name=user[0].NAME
+              console.log(item,'item')
             if (!existingData) {
-              const user = await this.connection.query(`select id,name from hrmresource where WORKCODE=${item.userid} `)
-              item.id=user[0].id
-              item.name=user[0].name
+              
               await this.useridRepository.save(item);
             } else {
               existingData.userid = item.userid
