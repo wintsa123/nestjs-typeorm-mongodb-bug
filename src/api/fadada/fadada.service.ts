@@ -151,7 +151,7 @@ export class FadadaService {
         try {
 
 
-          await this.fadadaRepository.save(tmp1);
+          await this.freeIdRepository.save(tmp1);
 
           // await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
