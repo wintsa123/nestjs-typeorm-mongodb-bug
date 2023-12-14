@@ -135,7 +135,7 @@ export class FadadaService {
           }
           await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
-          return true;
+          return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
           return false
