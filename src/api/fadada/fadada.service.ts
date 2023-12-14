@@ -81,7 +81,6 @@ export class FadadaService {
    * @return {*}
    */
   async callback(data, headers) {
-    console.log('000000000000')
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': Nonce, 'x-fasc-event': Eventid } = headers
     console.log(data, 'callback', Eventid)
@@ -96,8 +95,8 @@ export class FadadaService {
     }
     console.log(headers)
 
-    const redisResule = await this.redisService.get('X-FASC-Nonce')
-    console.log(redisResule)
+    // const redisResule = await this.redisService.get('X-FASC-Nonce')
+    // console.log(redisResule)
 
     // if (redisResule == null) {
     //   await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
@@ -106,7 +105,6 @@ export class FadadaService {
     //   return false
     // }
     // console.log(headers,Eventid)
-    console.log(0)
 
     switch (Eventid) {
       case 'user-authorize':
@@ -135,6 +133,8 @@ export class FadadaService {
             const newData = this.fadadaRepository.create({ clientUserId: tmp.clientUserId, openUserId: tmp.openUserId });
             await this.fadadaRepository.save(newData);
           }
+          await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${tmp.clientUserId}`)
+
           return true;
         } catch (error) {
           this.logger.error('Error:', error);
@@ -223,15 +223,13 @@ export class FadadaService {
       this.logger.error('userAuthUrl获取失败')
       return result.data.msg
     }
-    console.log(result)
-    await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${data.clientUserId}`)
     return result.data.data
   }
   /**
    * @Author: wintsa
    * @Date: 2023-11-18 11:22:14
    * @LastEditors: wintsa
-   * @Description: 验证回调地址
+   * @Description: 验证回调地址callback
    * @return {*}
    */
   async UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason) {
@@ -251,6 +249,8 @@ export class FadadaService {
         await this.fadadaRepository.save(newData);
       }
       await this.SocketGateway.sendMessageToClient(clientUserId, { status: 'pass' })
+      await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${clientUserId}`)
+
       return true;
     } catch (error) {
       this.logger.error('Error:', error);
