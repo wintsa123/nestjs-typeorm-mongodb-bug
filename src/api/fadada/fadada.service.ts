@@ -9,6 +9,7 @@ import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
+import { fadadafree } from './entities/fadadaFree.entity';
 
 @Injectable()
 export class FadadaService {
@@ -20,7 +21,8 @@ export class FadadaService {
     private readonly configService: ConfigService,
     @InjectRepository(Fadada)
     private readonly fadadaRepository: Repository<Fadada>,
-
+    @InjectRepository(fadadafree)
+    private readonly freeIdRepository: Repository<fadadafree>,
   ) { }
   /**
    * @Author: wintsa
@@ -108,7 +110,6 @@ export class FadadaService {
 
     switch (Eventid) {
       case 'user-authorize':
-        console.log(1)
         const tmp = JSON.parse(data.bizContent)
         if (tmp.authResult !== 'success') {
           this.logger.error('user-authorize')
@@ -141,18 +142,32 @@ export class FadadaService {
           return false
         }
         break;
-      case 'sign-task-sign-failed':
-        this.logger.debug('sign-task-sign-failed',data)
+      case 'personal-seal-authorize-free-sign':
+        // {
+        //   "bizContent": { "sealId": "1698732690108149936", "eventTime": "1702536302495", "businessId": "3b68a1ff1e851c69ba4c70c2b1997421", "openUserId": "3429a2abf98f4cdebac489f0bd82c222", "expiresTime": "1734158700000", "clientUserId": "268" }
+        // }
+        const tmp1 = JSON.parse(data.bizContent)
+
+        try {
+
+
+          await this.fadadaRepository.save(tmp1);
+
+          // await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${tmp.clientUserId}`)
+
+          return 'success';
+        } catch (error) {
+          this.logger.error('Error:', error);
+          return false
+        }
         break;
 
       default:
         console.log(3)
-
+        return 'false'
         break;
     }
-    console.log(2)
 
-    return 'success'
 
   }
   /**
@@ -449,7 +464,7 @@ export class FadadaService {
    */
   async signCreate(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    
+
     if (data['initiator']['idType'] == 'corp') {
       data['initiator']['openId'] = this.configService.get('fadada.opencorpId')
     }
@@ -458,7 +473,7 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    console.log(data.actors,'signCreate0000000000000000000000')
+    console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
       if (result.status !== 200 || result.data.code !== '100000') {
@@ -470,7 +485,7 @@ export class FadadaService {
       this.logger.error(error)
       throw error
     }
-   
+
   }
 
   /**
