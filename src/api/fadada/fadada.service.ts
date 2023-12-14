@@ -444,7 +444,7 @@ export class FadadaService {
    * @Author: wintsa
    * @Date: 2023-11-17 10:14:33
    * @LastEditors: wintsa
-   * @Description: 创建签署任务
+   * @Description: 创建签署任务(基于文档) 
    * @return {*}
    */
   async signCreate(data) {
@@ -458,14 +458,21 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    console.log(data)
-    let result: any = await Client.create(data)
-    if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('signCreate')
-      return result.data.msg
+    console.log(data,'signCreate0000000000000000000000')
+    // this.logger.debug(data)
+    try {
+      let result: any = await Client.create(data)
+      if (result.status !== 200 || result.data.code !== '100000') {
+        this.logger.error('signCreate')
+        return result.data.msg
+      }
+      console.log(result)
+      return result.data.data
+    } catch (error) {
+      this.logger.error(error)
+      throw error
     }
-    console.log(result.data)
-    return result.data.data
+   
   }
 
   /**
