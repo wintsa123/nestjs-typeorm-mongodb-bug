@@ -49,8 +49,9 @@ export class FadadaController {
     return this.fadadaService.corpGetIdentity();
   }
 
-  @Post('/member/GetList')
-  corpGetIList() {
+  @Post('/corp/member/GetList')
+  @ApiOperation({ summary: '查询企业下的成员数据。' })
+  corpGetIList(@Body() data:CreateFadadaDto) {
     return this.fadadaService.corpGetList();
   }
 
