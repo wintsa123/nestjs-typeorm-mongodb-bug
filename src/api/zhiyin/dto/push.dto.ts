@@ -18,7 +18,9 @@ export class pushDto extends CreateZhiyinDto{
     @ApiProperty({ description: '申请次数',required: true })
     @IsNotEmpty()
     "applyCount": number
-
+    @ApiProperty({ description: '流程id',required: true })
+    @IsNotEmpty()
+    "requestId": string
     @ApiProperty({ description: '失效时间（格式：yyyy-MM-dd HH:mm:ss）',required: true })
     @IsNotEmpty()
     "expireTime": string

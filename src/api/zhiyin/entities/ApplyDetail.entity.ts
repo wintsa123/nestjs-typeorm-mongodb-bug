@@ -38,6 +38,8 @@ export class ApplyDetailEntity {
 
   @Column({  type: 'varchar' })
   stampCode!: string;
+  @Column({  type: 'varchar' })
+  requestId!: string;
 
   @Column({ type: 'int' })
   sealId!: number;
