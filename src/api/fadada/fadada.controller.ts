@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers, UseGuards, Head } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -129,7 +129,8 @@ export class FadadaController {
 
   @Post('/sign/Create')
   @ApiOperation({ summary: '创建签署任务' })
-  signCreate(@Body() data: fileVerify) {
+  signCreate(@Body() data: fileVerify,@Headers() header) {
+    console.log(header,'header')
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')

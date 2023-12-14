@@ -458,17 +458,13 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    console.log(data,'signCreate0000000000000000000000')
-    console.log(data.actors[1])
-
-    // this.logger.debug(data)
+    console.log(data.actors,'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
       if (result.status !== 200 || result.data.code !== '100000') {
-        this.logger.error('signCreate')
+        this.logger.error(result.headers)
         return result.data.msg
       }
-      console.log(result.data)
       return result.data.data
     } catch (error) {
       this.logger.error(error)
