@@ -175,6 +175,9 @@ export class ZhiyinService {
       if (done.success) {
         let tmpobj={}
         tmpobj['requestId']=params.requestId
+        tmpobj['code']=params.code
+        tmpobj['mac']=params.mac
+
         tmpobj['stampCode']=done.data
         await this.applyDetailRepository.save(tmpobj)
 
