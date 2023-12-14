@@ -10,7 +10,7 @@ export class Fadada extends baseEntity {
     @Column()
     openUserId!: string;
 
-    @Column({  type: 'boolean' })
+    @Column({  type: 'boolean',    default: false})
     freeStatus!: boolean;
 
     
