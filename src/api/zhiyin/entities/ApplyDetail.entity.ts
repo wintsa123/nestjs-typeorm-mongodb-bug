@@ -10,7 +10,7 @@ export class ApplyDetailEntity {
   constructor(props: Partial<ApplyDetailEntity>) {
     Object.assign(this, props);
   }
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
     name: 'id',
     comment: '主键id',
