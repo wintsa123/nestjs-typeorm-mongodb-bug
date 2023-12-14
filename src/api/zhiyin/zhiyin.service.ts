@@ -147,17 +147,17 @@ export class ZhiyinService {
       appId: this.appId,
       timestamp: getTime()
     }
-    let tmp = pickBy(params, (value) => !isNil(value)) as any
-    const mergedObj = { ...objTmp, ...tmp };
+    const mergedObj = { ...objTmp, ...params };
     const stampUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.stampUser} `)
     const createUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.createUser}`)
     console.log(stampUser1, createUser1)
     if (createUser1[0].WORKCODE == null) {
-      return '创建人不存在'
+      return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
     }
     if (stampUser1[0].WORKCODE == null) {
-      return '创建人不存在'
+      return '用印人不存在'
     }
+   
     const stampUser = this.hashString(stampUser1[0].WORKCODE)
     const createUser = this.hashString(createUser1[0].WORKCODE)
     mergedObj.stampUser = stampUser
@@ -173,9 +173,15 @@ export class ZhiyinService {
       })
       console.log(done)
       if (done.success) {
+        let tmpobj={}
+        tmpobj['requestId']=params.requestId
+        tmpobj['stampCode']=done.data
+        await this.applyDetailRepository.save(tmpobj)
+
         return done
       } else {
         this.logger.error(done)
+
         return done.msg
       }
     } catch (error) {

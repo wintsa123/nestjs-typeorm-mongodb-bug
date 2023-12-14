@@ -15,7 +15,7 @@ export class ApplyDetailEntity {
     name: 'id',
     comment: '主键id',
   })
-  id!: number;
+  id?: number;
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @CreateDateColumn({
     type: 'timestamp',
@@ -23,7 +23,7 @@ export class ApplyDetailEntity {
     name: 'createTime',
     comment: '创建时间',
   })
-  createTime!: Date;
+  createTime?: Date;
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @UpdateDateColumn({
     type: 'timestamp',
@@ -31,26 +31,27 @@ export class ApplyDetailEntity {
     name: 'updateTime',
     comment: '更新时间',
   })
-  updateTime!: Date;
+  updateTime?: Date;
 
-  @Column({ type: 'varchar', unique: true })
-  code!: string;
+  @Column({ type: 'varchar', unique: true,nullable:true })
+  code?: string;
 
-  @Column({  type: 'varchar' })
-  stampCode!: string;
-  @Column({  type: 'varchar' })
-  requestId!: string;
+  @Column({  type: 'varchar',nullable:true })
+  stampCode?: string;
 
-  @Column({ type: 'int' })
-  sealId!: number;
+  @Column({  type: 'varchar',nullable:true })
+  requestId?: string;
 
-  @Column({ type: 'varchar' })
-  mac!: string;
+  @Column({ type: 'int',nullable:true })
+  sealId?: number;
 
-  @Column({  type: 'int' })
-  companyId!: number;
+  @Column({ type: 'varchar',nullable:true })
+  mac?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({  type: 'int',nullable:true })
+  companyId?: number;
+
+  @Column({ type: 'varchar',nullable:true })
   reason?: string;
 
   @Column({ type: 'varchar', nullable: true })
@@ -65,28 +66,28 @@ export class ApplyDetailEntity {
   @Column({  type: 'varchar', nullable: true })
   fileUrl?: string;
 
-  @Column({  type: 'int' })
+  @Column({  type: 'int',nullable:true })
   applyCount?: number;
 
-  @Column({  type: 'int' })
+  @Column({  type: 'int',nullable:true })
   availableCount?: number;
 
   @Column({  type: 'timestamp', nullable: true })
   expireTime?: Date;
 
-  @Column({  type: 'boolean' })
+  @Column({  type: 'boolean',nullable:true })
   stampPhotograph?: boolean;
 
-  @Column({  type: 'boolean' })
+  @Column({  type: 'boolean',nullable:true })
   facePhoto?: boolean;
 
-  @Column({  type: 'boolean' })
+  @Column({  type: 'boolean',nullable:true })
   ocrDistinguish?: boolean;
 
-  @Column({  type: 'boolean' })
+  @Column({  type: 'boolean',nullable:true })
   sealDistinguish?: boolean;
 
-  @Column({  type: 'int' })
+  @Column({  type: 'int',nullable:true })
   approvalStatus?: number;
 
   @Column({  type: 'varchar', nullable: true })
@@ -98,19 +99,19 @@ export class ApplyDetailEntity {
   @Column({  type: 'varchar', nullable: true })
   ocrPdfUrl?: string;
 
-  @Column({  type: 'int' })
+  @Column({  type: 'int',nullable:true })
   stampUser?: number;
 
-  @Column({  type: 'varchar' })
+  @Column({  type: 'varchar',nullable:true })
   stampOpenUserId?: string;
 
-  @Column({  type: 'int' })
+  @Column({  type: 'int',nullable:true })
   createUser?: number;
 
-  @Column({  type: 'varchar' })
+  @Column({  type: 'varchar',nullable:true })
   createOpenUserId?: string;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json', nullable: true})
   imageUrls?: string[];
 
   @Column({ type: 'json', nullable: true })
