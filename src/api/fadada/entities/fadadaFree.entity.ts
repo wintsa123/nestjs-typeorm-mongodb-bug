@@ -1,16 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryColumn } from 'typeorm';
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 
 @Entity({ name: 'fadadafree', database: 'nestapi' }) 
 
 export class fadadafree  {
-    @PrimaryGeneratedColumn({
+    @PrimaryColumn({
         type: 'int',
-        name: 'id',
+        name: 'clientUserId',
         comment: '主键id',
       })
-      id!: number;
+      clientUserId!: number;
     
       @Transform((row: TransformFnParams) => +new Date(row.value))
       @CreateDateColumn({
@@ -39,8 +39,7 @@ export class fadadafree  {
         default: null,
       })
       deletedAt!: Date | null;
-    @Column({ unique: true }) // 设置唯一性约束，确保 clientUserId 是唯一的
-    clientUserId!: string;
+ 
 
     @Column()
     openUserId!: string;
