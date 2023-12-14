@@ -459,6 +459,8 @@ export class FadadaService {
       delete data['businessId']
     }
     console.log(data,'signCreate0000000000000000000000')
+    console.log(data.actors[1])
+
     // this.logger.debug(data)
     try {
       let result: any = await Client.create(data)
@@ -466,7 +468,7 @@ export class FadadaService {
         this.logger.error('signCreate')
         return result.data.msg
       }
-      console.log(result)
+      console.log(result.data)
       return result.data.data
     } catch (error) {
       this.logger.error(error)
