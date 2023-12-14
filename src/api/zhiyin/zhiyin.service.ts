@@ -32,8 +32,6 @@ export class ZhiyinService {
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     @InjectRepository(devicesEntity)
     private readonly devicesRepository: Repository<devicesEntity>,
-    @InjectRepository(zhiyinuserid)
-    private readonly useridRepository: Repository<zhiyinuserid>,
     // @InjectRepository(hrmresourceEntity,'oracle')
     // private readonly hrmresourceRepositor: Repository<hrmresourceEntity>,
     private readonly redisService: RedisService,
