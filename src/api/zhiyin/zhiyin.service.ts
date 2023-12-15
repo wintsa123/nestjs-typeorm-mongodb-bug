@@ -213,6 +213,39 @@ export class ZhiyinService {
 
       const { data: done } = await axios.get(url1)
       if (done.success) {
+        const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+        target!.status = '撤回'
+        target && await this.applyDetailRepository.save(target)
+        await this.applyDetailRepository.softDelete({ code: result.code })
+        return done
+      } else {
+        this.logger.error(done)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-15 11:00:00
+   * @LastEditors: wintsa
+   * @Description: 关闭单据
+   * @return {*}
+   */
+  async close(code: string) {
+    let objTmp = {
+      code,
+      appId: this.appId,
+      timestamp: getTime(),
+    }
+    let result = this.Sign(objTmp)
+    const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
+    try {
+      const { data: done } = await axios.get(url1)
+      if (done.success) {
+        const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+        target!.status = '完成'
+        target && await this.applyDetailRepository.save(target)
         return done
       } else {
         this.logger.error(done)
@@ -231,6 +264,9 @@ export class ZhiyinService {
   async callback(data) {
     const { opApplyDetailRequest, opStampRecordRequest } = data
     delete opApplyDetailRequest['id']
+    if (opApplyDetailRequest['availableCount'] == 0) {
+      opApplyDetailRequest['status'] = '完成'
+    }
     let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
     if (!applyDetail) return
     const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
@@ -241,7 +277,7 @@ export class ZhiyinService {
     applyDetail['details'] = StampRecordDetails
     applyDetail['records'] = StampRecords
     try {
-       await this.applyDetailRepository.save(applyDetail);
+      await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {
       throw error

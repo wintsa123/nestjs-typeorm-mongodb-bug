@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, PrimaryColumn, DeleteDateColumn } from 'typeorm';
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { StampRecordDetailEntity } from './StampRecordDetail.entity';
@@ -32,6 +32,15 @@ export class ApplyDetailEntity {
     comment: '更新时间',
   })
   updateTime?: Date;
+  @Transform((row: TransformFnParams) => +new Date(row.value))
+  @DeleteDateColumn({
+    type: 'timestamp',
+    nullable: true,
+    name: 'deleteTime',
+    comment: '删除时间',
+  })
+  deleteTime?: Date;
+
 
   @Column({ type: 'varchar', unique: true,nullable:true })
   code?: string;
@@ -47,6 +56,8 @@ export class ApplyDetailEntity {
 
   @Column({ type: 'varchar',nullable:true })
   mac?: string;
+  @Column({ type: 'varchar',nullable:true,default:'待盖章' })
+  status?: string;
 
   @Column({  type: 'int',nullable:true })
   companyId?: number;

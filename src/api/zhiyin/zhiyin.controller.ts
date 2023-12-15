@@ -29,6 +29,10 @@ export class ZhiyinController {
   @ApiOperation({ summary: 'OA审批单据撤回', description: '供企业群体撤回已推送的用印审批单据，只支持撤回未使用盖章的单据撤回' })
   cancel(@Query() data: CreateZhiyinDto) {
     return this.zhiyinService.cancel(data.code);
+  }@Get('/close')
+  @ApiOperation({ summary: 'OA审批单据完成/关闭', description: '供企业群体关闭已推送的用印审批单据' })
+  close(@Query() data: CreateZhiyinDto) {
+    return this.zhiyinService.close(data.code);
   }
   @Get('/info')
   @ApiOperation({ summary: '盖章记录查询接口 ', description: '供企业群体查询已推送的用印审批单据的盖章记录数据' })
