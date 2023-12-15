@@ -159,8 +159,8 @@ export class ZhiyinService {
 
     const stampUser = this.hashString(stampUser1[0].WORKCODE)
     const createUser = this.hashString(createUser1[0].WORKCODE)
-    mergedObj.stampUser = mergedObj.stampUser
-    mergedObj.createUser = mergedObj.createUser
+    mergedObj.stampUser = stampUser
+    mergedObj.createUser = createUser
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
     console.log(result)
