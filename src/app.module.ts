@@ -33,8 +33,10 @@ import { SocketModule } from './socket/socket.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => (
-        {
+      useFactory: (configService: ConfigService) => {
+        console.log(IS_DEV)
+        return (
+         {
         type: 'mysql',
         name: "default",
         host: String(configService.get('datasource.host')),
@@ -45,13 +47,13 @@ import { SocketModule } from './socket/socket.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
-        autoLoadEntities: ()=>{console.log(IS_DEV);return IS_DEV?true:false },
+        autoLoadEntities:  IS_DEV?true:false ,
         synchronize:true,
         cache: {
           duration: 60000, // 1分钟的缓存
         },
       }
-      ),
+      )},
     }),
     // TypeOrmModule.forRootAsync({
     //   imports: [ConfigModule],
