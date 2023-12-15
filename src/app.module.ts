@@ -13,7 +13,7 @@ import {
 } from './interceptors';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { ValidationPipe } from './pipe/validation.pipe';
-import { getConfig } from './utils';
+import { IS_DEV, getConfig } from './utils';
 import { ApiModule } from './api/api.module';
 import { PluginModule } from './plugin/plugin.module';
 import { TasksService } from './corn/robot';
@@ -45,7 +45,7 @@ import { SocketModule } from './socket/socket.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
-        autoLoadEntities: true, // 每个通过forFeature()注册的实体都会自动添加到配置对象的entities数组中
+        autoLoadEntities: IS_DEV?true:false, // 每个通过forFeature()注册的实体都会自动添加到配置对象的entities数组中
         synchronize:true,
         cache: {
           duration: 60000, // 1分钟的缓存
