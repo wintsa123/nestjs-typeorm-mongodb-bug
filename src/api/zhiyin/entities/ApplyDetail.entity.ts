@@ -121,9 +121,14 @@ export class ApplyDetailEntity {
   createOaUserName?: string;
   @Column({  type: 'int',nullable:true })
   createUser?: number;
-
   @Column({  type: 'varchar',nullable:true })
   createOpenUserId?: string;
+  
+  @Column({  type: 'varchar',nullable:true })
+  stampOaUserId?: string;
+  @Column({  type: 'varchar',nullable:true })
+  createOaUserId?: string;
+  
 
   @Column({ type: 'json', nullable: true})
   imageUrls?: string[];
