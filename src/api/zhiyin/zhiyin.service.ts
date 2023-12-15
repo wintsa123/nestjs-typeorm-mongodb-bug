@@ -270,20 +270,28 @@ export class ZhiyinService {
       }
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
       if (!applyDetail) return
-      let createOaUserName = await this.convert([opApplyDetailRequest.createOpenUserId], true)
-      let stampOAUserName = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
+      let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
+      let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
       const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
       let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
       let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
       let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
       Object.assign(applyDetail, opApplyDetailRequest)
-    
-      StampRecords['stampOaUserName']=stampOAUserName
+      const stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
+      const createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
+      console.log(stampUser1, createUser1)
+      if (createUser1[0].lastname == null) {
+        return '创建人不存在'
+      }
+      if (stampUser1[0].lastname == null) {
+        return '创建人不存在'
+      }
+      StampRecords['stampOaUserName'] = stampUser1[0].lastname
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
-      
-      applyDetail['createOaUserName']=createOaUserName
-      applyDetail['stampOaUserName']=stampOAUserName
+
+      applyDetail['createOaUserName'] = createUser1[0].lastname
+      applyDetail['stampOaUserName'] = stampUser1[0].lastname
 
       await this.applyDetailRepository.save(applyDetail);
       return true
@@ -349,8 +357,8 @@ export class ZhiyinService {
 
         })
         if (local == true) {
-          return  data.userid_list[0].userid 
-        }else{
+          return data.userid_list[0].userid
+        } else {
           return { successIds, invalid: data.invalid_open_userid_list }
 
         }
