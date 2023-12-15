@@ -15,7 +15,6 @@ import { Connection, EntityRepository, Repository, createConnection, getConnecti
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
-import { zhiyinuserid } from './entities/OpenUserid.entity';
 @EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
@@ -55,7 +54,6 @@ export class ZhiyinService {
         sid: String(this.configService.get('datasourceOracle.sid')),
       });
 
-      // Perform additional initialization steps with the connection if needed
 
       this.logger.log('Database connection established');
     } catch (error) {
@@ -262,23 +260,31 @@ export class ZhiyinService {
    * @return {*}
    */
   async callback(data) {
-    const { opApplyDetailRequest, opStampRecordRequest } = data
-    delete opApplyDetailRequest['id']
-    opApplyDetailRequest['status'] = '待盖章'
-
-    if (opApplyDetailRequest['availableCount'] == 0) {
-      opApplyDetailRequest['status'] = '完成'
-    }
-    let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
-    if (!applyDetail) return
-    const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
-    let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
-    Object.assign(applyDetail, opApplyDetailRequest)
-    applyDetail['details'] = StampRecordDetails
-    applyDetail['records'] = StampRecords
     try {
+
+      const { opApplyDetailRequest, opStampRecordRequest } = data
+      delete opApplyDetailRequest['id']
+      opApplyDetailRequest['status'] = '待盖章'
+      if (opApplyDetailRequest['availableCount'] == 0) {
+        opApplyDetailRequest['status'] = '完成'
+      }
+      let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
+      if (!applyDetail) return
+      let createOaUserName = await this.convert([opApplyDetailRequest.createOpenUserId], true)
+      let stampOAUserName = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
+      const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
+      let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
+      let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
+      let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
+      Object.assign(applyDetail, opApplyDetailRequest)
+    
+      StampRecords['stampOaUserName']=stampOAUserName
+      applyDetail['details'] = StampRecordDetails
+      applyDetail['records'] = StampRecords
+      
+      applyDetail['createOaUserName']=createOaUserName
+      applyDetail['stampOaUserName']=stampOAUserName
+
       await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {
@@ -324,7 +330,7 @@ export class ZhiyinService {
    * @Description: UserOpenid回调
    * @return {*}
    */
-  async convert(Useropenid) {
+  async convert(Useropenid, local = false) {
     try {
 
       const assess_token = await this.WxchatService.getAssesstToken()
@@ -342,7 +348,12 @@ export class ZhiyinService {
           return this.hashString(e.userid)
 
         })
-        return { successIds, invalid: data.invalid_open_userid_list }
+        if (local == true) {
+          return  data.userid_list[0].userid 
+        }else{
+          return { successIds, invalid: data.invalid_open_userid_list }
+
+        }
 
       } else {
         return { successIds: [], invalid: data.invalid_open_userid_list }

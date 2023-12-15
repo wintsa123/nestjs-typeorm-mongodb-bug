@@ -67,7 +67,8 @@ export class StampRecordEntity {
 
     @Column({  type: 'varchar' })
     stampOpenUserId?: string;
-
+    @Column({  type: 'varchar' ,nullable:true})
+    stampOaUserName?: string;
     @Column({  type: 'boolean' })
     isSublicense?: boolean;
 
