@@ -45,7 +45,7 @@ import { SocketModule } from './socket/socket.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
-        autoLoadEntities: IS_DEV?true:false, // 每个通过forFeature()注册的实体都会自动添加到配置对象的entities数组中
+        autoLoadEntities: ()=>{console.log(IS_DEV);return IS_DEV?true:false },
         synchronize:true,
         cache: {
           duration: 60000, // 1分钟的缓存
