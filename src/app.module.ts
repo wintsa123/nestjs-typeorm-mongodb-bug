@@ -34,7 +34,6 @@ import { SocketModule } from './socket/socket.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        console.log(IS_DEV)
         return (
          {
         type: 'mysql',
