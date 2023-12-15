@@ -147,8 +147,8 @@ export class ZhiyinService {
       timestamp: getTime()
     }
     const mergedObj = { ...objTmp, ...params };
-    const stampUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.stampUser} `)
-    const createUser1 = await this.connection.query(`select WORKCODE from hrmresource where id=${mergedObj.createUser}`)
+    const stampUser1 = await this.connection.query(`select WORKCODE,lastname from hrmresource where id=${mergedObj.stampUser} `)
+    const createUser1 = await this.connection.query(`select WORKCODE,lastname from hrmresource where id=${mergedObj.createUser}`)
     console.log(stampUser1, createUser1)
     if (createUser1[0].WORKCODE == null) {
       return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
@@ -173,6 +173,8 @@ export class ZhiyinService {
       console.log(done)
       if (done.success) {
         let tmpobj = {}
+        tmpobj['createOaUserName'] = createUser1[0].lastname
+        tmpobj['stampOaUserName'] = stampUser1[0].lastname
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
         tmpobj['mac'] = params.mac
@@ -269,7 +271,7 @@ export class ZhiyinService {
         opApplyDetailRequest['status'] = '完成'
       }
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
-      if (!applyDetail) return
+      if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
       let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
       let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
       const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
