@@ -11,11 +11,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
-import { Connection, Repository, createConnection, getConnection, getManager } from 'typeorm';
+import { Connection, EntityRepository, Repository, createConnection, getConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
 import { zhiyinuserid } from './entities/OpenUserid.entity';
+@EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
   private logger = new Logger(ZhiyinService.name);
@@ -157,7 +158,7 @@ export class ZhiyinService {
     if (stampUser1[0].WORKCODE == null) {
       return '用印人不存在'
     }
-   
+
     const stampUser = this.hashString(stampUser1[0].WORKCODE)
     const createUser = this.hashString(createUser1[0].WORKCODE)
     mergedObj.stampUser = stampUser
@@ -173,12 +174,11 @@ export class ZhiyinService {
       })
       console.log(done)
       if (done.success) {
-        let tmpobj={}
-        tmpobj['requestId']=params.requestId
-        tmpobj['code']=params.code
-        tmpobj['mac']=params.mac
-
-        tmpobj['stampCode']=done.data
+        let tmpobj = {}
+        tmpobj['requestId'] = params.requestId
+        tmpobj['code'] = params.code
+        tmpobj['mac'] = params.mac
+        tmpobj['stampCode'] = done.data
         await this.applyDetailRepository.save(tmpobj)
 
         return done
@@ -234,12 +234,30 @@ export class ZhiyinService {
     let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordEntity(e) })
     let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
     let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordDetailEntity(e) })
-    const all = new ApplyDetailEntity(opApplyDetailRequest)
-    all['details'] = StampRecordDetails
-    all['records'] = StampRecords
-    try {
-      await this.applyDetailRepository.save(all);
 
+    // const all = new ApplyDetailEntity(opApplyDetailRequest)
+    // delete all['id']
+    // const applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
+    // if (applyDetail) {
+    //   applyDetail['details'] = StampRecordDetails
+    //   applyDetail['records'] = StampRecords
+    // }
+    opApplyDetailRequest['details'] = StampRecordDetails
+    opApplyDetailRequest['records'] = StampRecords
+    const all = new ApplyDetailEntity(opApplyDetailRequest)
+
+    
+    try {
+      // await this.applyDetailRepository.save(applyDetail);
+      // await this.applyDetailRepository
+      // .createQueryBuilder()
+      // .update(ApplyDetailEntity)
+      // .set(opApplyDetailRequest)
+      // .where("stampCode = :stampCode", { stampCode: opApplyDetailRequest.stampCode })
+      // .execute();
+      // await this.applyDetailRepository.save(result);
+      await this.applyDetailRepository.update({ stampCode: opApplyDetailRequest.stampCode }, all)
+            await this.applyDetailRepository.save(all);
       return true
     } catch (error) {
       throw error

@@ -21,8 +21,10 @@ export class ValidationPipe implements PipeTransform<any> {
     // 将对象转换为 Class 来验证
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
-    Logger.log(errors, 'ValidationPipe中错误');
+
     if (errors.length > 0) {
+      Logger.log(errors, 'ValidationPipe中错误');
+
       // 遍历全部的错误信息,返回给前端
       // const errorMessage = errors.map((item) => {
       //   return {
