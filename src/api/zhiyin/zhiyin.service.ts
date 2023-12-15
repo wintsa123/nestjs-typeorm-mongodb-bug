@@ -230,34 +230,18 @@ export class ZhiyinService {
    */
   async callback(data) {
     const { opApplyDetailRequest, opStampRecordRequest } = data
+    delete opApplyDetailRequest['id']
+    let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
+    if (!applyDetail) return
     const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordEntity(e) })
+    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
     let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = opApplyDetailRequest.id; return new StampRecordDetailEntity(e) })
-
-    // const all = new ApplyDetailEntity(opApplyDetailRequest)
-    // delete all['id']
-    // const applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
-    // if (applyDetail) {
-    //   applyDetail['details'] = StampRecordDetails
-    //   applyDetail['records'] = StampRecords
-    // }
-    opApplyDetailRequest['details'] = StampRecordDetails
-    opApplyDetailRequest['records'] = StampRecords
-    const all = new ApplyDetailEntity(opApplyDetailRequest)
-
-    
+    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
+    Object.assign(applyDetail, opApplyDetailRequest)
+    applyDetail['details'] = StampRecordDetails
+    applyDetail['records'] = StampRecords
     try {
-      // await this.applyDetailRepository.save(applyDetail);
-      // await this.applyDetailRepository
-      // .createQueryBuilder()
-      // .update(ApplyDetailEntity)
-      // .set(opApplyDetailRequest)
-      // .where("stampCode = :stampCode", { stampCode: opApplyDetailRequest.stampCode })
-      // .execute();
-      // await this.applyDetailRepository.save(result);
-      await this.applyDetailRepository.update({ stampCode: opApplyDetailRequest.stampCode }, all)
-            await this.applyDetailRepository.save(all);
+       await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {
       throw error
