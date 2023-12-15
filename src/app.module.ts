@@ -47,8 +47,8 @@ import { SocketModule } from './socket/socket.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: configService.get('datasource.logging'),
         timezone: '+08:00', // 东八区
-        autoLoadEntities:  IS_DEV?true:false ,
-        synchronize:true,
+        autoLoadEntities:  true ,
+        synchronize:IS_DEV?true:false,
         cache: {
           duration: 60000, // 1分钟的缓存
         },
