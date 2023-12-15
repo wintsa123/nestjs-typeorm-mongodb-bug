@@ -56,7 +56,7 @@ export class ApplyDetailEntity {
 
   @Column({ type: 'varchar',nullable:true })
   mac?: string;
-  @Column({ type: 'varchar',nullable:true,default:'待盖章' })
+  @Column({ type: 'varchar',nullable:true })
   status?: string;
 
   @Column({  type: 'int',nullable:true })

@@ -264,6 +264,8 @@ export class ZhiyinService {
   async callback(data) {
     const { opApplyDetailRequest, opStampRecordRequest } = data
     delete opApplyDetailRequest['id']
+    opApplyDetailRequest['status'] = '待盖章'
+
     if (opApplyDetailRequest['availableCount'] == 0) {
       opApplyDetailRequest['status'] = '完成'
     }
