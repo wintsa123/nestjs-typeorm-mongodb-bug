@@ -367,7 +367,7 @@ export class FadadaService {
   async getopenUserId(clientUserId) {
     let result = await this.fadadaRepository.findOne({ where: { clientUserId } });
     if (result) {
-      return result.openUserId
+      return 'true'
     } else {
       return false
     }
