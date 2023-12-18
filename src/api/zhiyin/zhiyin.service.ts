@@ -147,8 +147,8 @@ export class ZhiyinService {
       timestamp: getTime()
     }
     const mergedObj = { ...objTmp, ...params };
-    const stampUser1 = await this.connection.query(`select WORKCODE,lastname from hrmresource where id=${mergedObj.stampUser} `)
-    const createUser1 = await this.connection.query(`select WORKCODE,lastname from hrmresource where id=${mergedObj.createUser}`)
+    const stampUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.stampUser} `)
+    const createUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.createUser}`)
     console.log(stampUser1, createUser1)
     if (createUser1[0].WORKCODE == null) {
       return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
@@ -173,8 +173,8 @@ export class ZhiyinService {
       console.log(done)
       if (done.success) {
         let tmpobj = {}
-        tmpobj['createOaUserId'] = createUser1[0].lastname
-        tmpobj['stampOaUserId'] = createUser1[0].lastname
+        tmpobj['createOaUserId'] = createUser1[0].id
+        tmpobj['stampOaUserId'] = createUser1[0].id
 
         tmpobj['createOaUserName'] = createUser1[0].lastname
         tmpobj['stampOaUserName'] = stampUser1[0].lastname
