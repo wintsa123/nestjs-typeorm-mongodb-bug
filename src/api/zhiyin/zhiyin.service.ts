@@ -294,6 +294,7 @@ export class ZhiyinService {
       StampRecords['stampOaUserName'] = stampUser1[0].lastname
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
+      applyDetail['status'] = '未盖章'
 
       applyDetail['createOaUserName'] = createUser1[0].lastname
       applyDetail['stampOaUserName'] = stampUser1[0].lastname

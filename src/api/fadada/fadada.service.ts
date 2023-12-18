@@ -476,6 +476,11 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
+    data['actors'].forEach(e => {
+        if (e.actor.actorType=='corp') {
+          e.actor['actorOpenId']=this.configService.get('fadada.opencorpId')
+        }
+    });
     console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
