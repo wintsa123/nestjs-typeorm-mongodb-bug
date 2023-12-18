@@ -163,7 +163,7 @@ export class ZhiyinService {
     mergedObj.createUser = createUser
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
-    console.log(result)
+    console.log(stampUser1[0].lastname)
     try {
       const { data: done } = await axios.post(url, result, {
         headers: {
