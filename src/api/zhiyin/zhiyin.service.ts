@@ -353,7 +353,7 @@ export class ZhiyinService {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-
+console.log(data,'convert')
       if (data.errcode) {
         this.logger.error(data)
         return '失败'
