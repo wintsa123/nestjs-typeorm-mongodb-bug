@@ -180,6 +180,8 @@ export class ZhiyinService {
         tmpobj['stampOaUserName'] = stampUser1[0].lastname
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
+        tmpobj['status'] = '未盖章'
+
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
         await this.applyDetailRepository.save(tmpobj)
@@ -294,7 +296,6 @@ export class ZhiyinService {
       StampRecords['stampOaUserName'] = stampUser1[0].lastname
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
-      applyDetail['status'] = '未盖章'
 
       applyDetail['createOaUserName'] = createUser1[0].lastname
       applyDetail['stampOaUserName'] = stampUser1[0].lastname
