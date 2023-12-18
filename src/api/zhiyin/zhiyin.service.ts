@@ -173,11 +173,11 @@ export class ZhiyinService {
       console.log(done)
       if (done.success) {
         let tmpobj = {}
-        tmpobj['createOaUserId'] = createUser1[0].id
-        tmpobj['stampOaUserId'] = createUser1[0].id
+        tmpobj['createOaUserId'] = createUser1[0].ID
+        tmpobj['stampOaUserId'] = createUser1[0].ID
 
-        tmpobj['createOaUserName'] = createUser1[0].lastname
-        tmpobj['stampOaUserName'] = stampUser1[0].lastname
+        tmpobj['createOaUserName'] = createUser1[0].LASTNAME
+        tmpobj['stampOaUserName'] = stampUser1[0].LASTNAME
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
         tmpobj['status'] = '未盖章'
@@ -287,18 +287,18 @@ export class ZhiyinService {
       const stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
       const createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
       console.log(stampUser1, createUser1)
-      if (createUser1[0].lastname == null) {
+      if (createUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
-      if (stampUser1[0].lastname == null) {
+      if (stampUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
-      StampRecords['stampOaUserName'] = stampUser1[0].lastname
+      StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
 
-      applyDetail['createOaUserName'] = createUser1[0].lastname
-      applyDetail['stampOaUserName'] = stampUser1[0].lastname
+      applyDetail['createOaUserName'] = createUser1[0].LASTNAME
+      applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
 
       await this.applyDetailRepository.save(applyDetail);
       return true
