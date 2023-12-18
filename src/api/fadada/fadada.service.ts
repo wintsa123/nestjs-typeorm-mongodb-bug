@@ -431,10 +431,13 @@ export class FadadaService {
    */
   async fileProcess(data) {
     const Client = new fascOpenApi.docClient.Client(await this.init())
+    console.log(data)
     let result: any = await Client.fileProcess(data)
+    console.log(result.headers)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileProcess')
-      return result.data.msg
+      throw result.data;
+      
     }
     console.log(result.data)
     return result.data.data
