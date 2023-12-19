@@ -19,7 +19,15 @@ export class ZhiyinController {
   getDriveList() {
     return this.zhiyinService.getDriveList();
   }
-
+  @Post('/deviceAdd')
+  @ApiOperation({ summary: '印章修改回调地址' })
+  // @ApiBody({ type: callback })
+  deviceAdd(
+    @Body() data: [],
+  ) {
+    // 方法体
+    return this.zhiyinService.deviceAdd(data)
+  }
   @Post('/push')
   @ApiOperation({ summary: 'OA审批单据推送接口', description: '供企业群体推送用印审批单据，用于在Saas平台驱动印章' })
   push(@Body() data: pushDto) {
@@ -48,15 +56,7 @@ export class ZhiyinController {
     // 方法体
     return this.zhiyinService.callback(data)
   }
-  @Post('/deviceAdd')
-  @ApiOperation({ summary: '印章修改回调地址', description: 'OA系统推送的一条用印审批单据盖章完成之后，单据会进行关闭，此时会调用数据导出方法，并调用合作方的的回调接口将盖章记录推送回去。一条单据可能对应多条盖章记录，一条盖章记录可能对应多条盖章详情。比如一条要盖5个章的单据，第一次盖了两个章，第二次盖了三个章；那么返回值就是一条单据，对应两条盖章记录，第一条记录对应两条详情，第二条记录对应三条详情。' })
-  @ApiBody({ type: callback })
-  deviceAdd(
-    @Body() data: callback,
-  ) {
-    // 方法体
-    return this.zhiyinService.deviceAdd(data)
-  }
+
   @Post('/convert')
   @ApiOperation({ summary: 'userOpenid转换', description: 'userOpenid转换' })
   convert(
