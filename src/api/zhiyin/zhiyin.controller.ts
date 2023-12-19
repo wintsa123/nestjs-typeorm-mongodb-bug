@@ -19,11 +19,10 @@ export class ZhiyinController {
   getDriveList() {
     return this.zhiyinService.getDriveList();
   }
-  @Post('/deviceAdd')
+  @Post('/deviceCallback')
   @ApiOperation({ summary: '印章修改回调地址' })
-  // @ApiBody({ type: callback })
   deviceAdd(
-    @Body() data: any[],
+    @Body() data,
   ) {
     // 方法体
     return this.zhiyinService.deviceAdd(data)
