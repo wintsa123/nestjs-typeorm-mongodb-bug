@@ -102,25 +102,25 @@ export class ZhiyinService {
     try {
       const { data: done } = await axios.get(url)
       if (done.success) {
-        for (const item of done.data) {
-          const existingData = await this.devicesRepository.findOne({
-            withDeleted: true, // 设置为 true，以便包含已软删除的记录
-            where: { mac: item.mac }
-          });
-          console.log(existingData)
-          if (!existingData) {
-            await this.devicesRepository.save(item);
-          } else {
-            if (new Date(item.serviceTime) < new Date()) {
-              await this.devicesRepository.softDelete({ mac: item.mac })
-            } else {
-              await this.devicesRepository.restore({ mac: item.mac })
-              await this.devicesRepository.update({ mac: item.mac }, item);
+        // for (const item of done.data) {
+        //   const existingData = await this.devicesRepository.findOne({
+        //     withDeleted: true, // 设置为 true，以便包含已软删除的记录
+        //     where: { mac: item.mac }
+        //   });
+        //   console.log(existingData)
+        //   if (!existingData) {
+        //     await this.devicesRepository.save(item);
+        //   } else {
+        //     if (new Date(item.serviceTime) < new Date()) {
+        //       await this.devicesRepository.softDelete({ mac: item.mac })
+        //     } else {
+        //       await this.devicesRepository.restore({ mac: item.mac })
+        //       await this.devicesRepository.update({ mac: item.mac }, item);
 
-            }
+        //     }
 
-          }
-        }
+        //   }
+        // }
         return done.data
       } else {
         this.logger.error(done.msg)
@@ -133,50 +133,56 @@ export class ZhiyinService {
 
 
   async deviceAdd(data) {
+    const { info, device } = data
     try {
-      for (const item of data) {
+      if (info == 'delete') {
+        await this.devicesRepository.softDelete({ mac: device.mac })
+
+      }
+      if (info == 'add') {
         const existingData = await this.devicesRepository.findOne({
           withDeleted: true, // 设置为 true，以便包含已软删除的记录
-
           where: {
-            mac: item.mac, // 查询 deletedAt 不为 null 的记录
+            mac: device.mac, // 查询 deletedAt 不为 null 的记录
           }
         });
         if (!existingData) {
-          await this.devicesRepository.save(item);
+          await this.devicesRepository.save(device);
         } else {
 
-          if (new Date(item.serviceTime) < new Date()) {
-            await this.devicesRepository.softDelete({ mac: item.mac })
+          if (new Date(device.serviceTime) < new Date()) {
+            await this.devicesRepository.softDelete({ mac: device.mac })
           } else {
-            await this.devicesRepository.restore({ mac: item.mac })
-            await this.devicesRepository.update({ mac: item.mac }, item);
+            await this.devicesRepository.restore({ mac: device.mac })
+            await this.devicesRepository.update({ mac: device.mac }, device);
 
           }
 
 
         }
+      
 
-      }
+
+    }
       return 'success'
 
-    } catch (error) {
-      this.logger.error(error)
-      throw error
-    }
+  } catch(error) {
+    this.logger.error(error)
+    throw error
   }
-  /**
-   * @Author: wintsa
-   * @Date: 2023-12-13 16:36:30
-   * @LastEditors: wintsa
-   * @Description: hash计算
-   * @return {*}
-   */
-  hashString(input) {
-    const hash = crypto.createHash('sha256');
-    hash.update(input);
-    return hash.digest('hex');
-  }
+}
+/**
+ * @Author: wintsa
+ * @Date: 2023-12-13 16:36:30
+ * @LastEditors: wintsa
+ * @Description: hash计算
+ * @return {*}
+ */
+hashString(input) {
+  const hash = crypto.createHash('sha256');
+  hash.update(input);
+  return hash.digest('hex');
+}
 
 
   /**
@@ -187,61 +193,61 @@ export class ZhiyinService {
    * @return {*}
    */
   async push(params) {
-    let objTmp = {
-      traceId: 'zw' + uuidv4(),
-      appId: this.appId,
-      timestamp: getTime()
-    }
-    const mergedObj = { ...objTmp, ...params };
-    const stampUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.stampUser} `)
-    const createUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.createUser}`)
-    console.log(stampUser1, createUser1)
-    if (createUser1[0].WORKCODE == null) {
-      return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
-    }
-    if (stampUser1[0].WORKCODE == null) {
-      return '用印人不存在'
-    }
-
-    const stampUser = this.hashString(stampUser1[0].WORKCODE)
-    const createUser = this.hashString(createUser1[0].WORKCODE)
-    mergedObj.stampUser = stampUser
-    mergedObj.createUser = createUser
-    let result = this.Sign(mergedObj)
-    const url = `${this.url}oa/apply/sync`
-    console.log(stampUser1[0].lastname)
-    try {
-      const { data: done } = await axios.post(url, result, {
-        headers: {
-          'Content-Type': 'application/json', // 设置请求头为 JSON 格式
-        },
-      })
-      console.log(done)
-      if (done.success) {
-        let tmpobj = {}
-        tmpobj['createOaUserId'] = createUser1[0].ID
-        tmpobj['stampOaUserId'] = createUser1[0].ID
-
-        tmpobj['createOaUserName'] = createUser1[0].LASTNAME
-        tmpobj['stampOaUserName'] = stampUser1[0].LASTNAME
-        tmpobj['requestId'] = params.requestId
-        tmpobj['code'] = params.code
-        tmpobj['status'] = '未盖章'
-
-        tmpobj['mac'] = params.mac
-        tmpobj['stampCode'] = done.data
-        await this.applyDetailRepository.save(tmpobj)
-
-        return done
-      } else {
-        this.logger.error(done)
-
-        return done.msg
-      }
-    } catch (error) {
-      this.logger.error(error)
-    }
+  let objTmp = {
+    traceId: 'zw' + uuidv4(),
+    appId: this.appId,
+    timestamp: getTime()
   }
+  const mergedObj = { ...objTmp, ...params };
+  const stampUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.stampUser} `)
+  const createUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.createUser}`)
+  console.log(stampUser1, createUser1)
+  if (createUser1[0].WORKCODE == null) {
+    return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
+  }
+  if (stampUser1[0].WORKCODE == null) {
+    return '用印人不存在'
+  }
+
+  const stampUser = this.hashString(stampUser1[0].WORKCODE)
+  const createUser = this.hashString(createUser1[0].WORKCODE)
+  mergedObj.stampUser = stampUser
+  mergedObj.createUser = createUser
+  let result = this.Sign(mergedObj)
+  const url = `${this.url}oa/apply/sync`
+  console.log(stampUser1[0].lastname)
+  try {
+    const { data: done } = await axios.post(url, result, {
+      headers: {
+        'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+      },
+    })
+    console.log(done)
+    if (done.success) {
+      let tmpobj = {}
+      tmpobj['createOaUserId'] = createUser1[0].ID
+      tmpobj['stampOaUserId'] = createUser1[0].ID
+
+      tmpobj['createOaUserName'] = createUser1[0].LASTNAME
+      tmpobj['stampOaUserName'] = stampUser1[0].LASTNAME
+      tmpobj['requestId'] = params.requestId
+      tmpobj['code'] = params.code
+      tmpobj['status'] = '未盖章'
+
+      tmpobj['mac'] = params.mac
+      tmpobj['stampCode'] = done.data
+      await this.applyDetailRepository.save(tmpobj)
+
+      return done
+    } else {
+      this.logger.error(done)
+
+      return done.msg
+    }
+  } catch (error) {
+    this.logger.error(error)
+  }
+}
 
   /**
    * @Author: wintsa
@@ -251,31 +257,31 @@ export class ZhiyinService {
    * @return {*}
    */
   async cancel(code: string) {
-    let objTmp = {
-      code,
-      appId: this.appId,
-      timestamp: getTime(),
-    }
-    let result = this.Sign(objTmp)
-
-    const url1 = `${this.url}oa/apply/cancel?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
-
-    try {
-
-      const { data: done } = await axios.get(url1)
-      if (done.success) {
-        const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
-        target!.status = '撤回'
-        target && await this.applyDetailRepository.save(target)
-        await this.applyDetailRepository.softDelete({ code: result.code })
-        return done
-      } else {
-        this.logger.error(done)
-      }
-    } catch (error) {
-      this.logger.error(error)
-    }
+  let objTmp = {
+    code,
+    appId: this.appId,
+    timestamp: getTime(),
   }
+  let result = this.Sign(objTmp)
+
+  const url1 = `${this.url}oa/apply/cancel?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
+
+  try {
+
+    const { data: done } = await axios.get(url1)
+    if (done.success) {
+      const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+      target!.status = '撤回'
+      target && await this.applyDetailRepository.save(target)
+      await this.applyDetailRepository.softDelete({ code: result.code })
+      return done
+    } else {
+      this.logger.error(done)
+    }
+  } catch (error) {
+    this.logger.error(error)
+  }
+}
   /**
    * @Author: wintsa
    * @Date: 2023-12-15 11:00:00
@@ -284,27 +290,27 @@ export class ZhiyinService {
    * @return {*}
    */
   async close(code: string) {
-    let objTmp = {
-      code,
-      appId: this.appId,
-      timestamp: getTime(),
-    }
-    let result = this.Sign(objTmp)
-    const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
-    try {
-      const { data: done } = await axios.get(url1)
-      if (done.success) {
-        const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
-        target!.status = '完成'
-        target && await this.applyDetailRepository.save(target)
-        return done
-      } else {
-        this.logger.error(done)
-      }
-    } catch (error) {
-      this.logger.error(error)
-    }
+  let objTmp = {
+    code,
+    appId: this.appId,
+    timestamp: getTime(),
   }
+  let result = this.Sign(objTmp)
+  const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
+  try {
+    const { data: done } = await axios.get(url1)
+    if (done.success) {
+      const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+      target!.status = '完成'
+      target && await this.applyDetailRepository.save(target)
+      return done
+    } else {
+      this.logger.error(done)
+    }
+  } catch (error) {
+    this.logger.error(error)
+  }
+}
   /**
    * @Author: wintsa
    * @Date: 2023-12-05 11:16:57
@@ -313,46 +319,46 @@ export class ZhiyinService {
    * @return {*}
    */
   async callback(data) {
-    try {
+  try {
 
-      const { opApplyDetailRequest, opStampRecordRequest } = data
-      delete opApplyDetailRequest['id']
-      opApplyDetailRequest['status'] = '待盖章'
-      if (opApplyDetailRequest['availableCount'] == 0) {
-        opApplyDetailRequest['status'] = '完成'
-      }
-      let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
-      if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
-      let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
-      let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
-      const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-      let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
-      let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-      let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
-      Object.assign(applyDetail, opApplyDetailRequest)
-      const stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
-      const createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
-      console.log(stampUser1, createUser1)
-      if (createUser1[0].LASTNAME == null) {
-        return '创建人不存在'
-      }
-      if (stampUser1[0].LASTNAME == null) {
-        return '创建人不存在'
-      }
-      StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
-      applyDetail['details'] = StampRecordDetails
-      applyDetail['records'] = StampRecords
-
-      applyDetail['createOaUserName'] = createUser1[0].LASTNAME
-      applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
-
-      await this.applyDetailRepository.save(applyDetail);
-      return true
-    } catch (error) {
-      throw error
+    const { opApplyDetailRequest, opStampRecordRequest } = data
+    delete opApplyDetailRequest['id']
+    opApplyDetailRequest['status'] = '待盖章'
+    if (opApplyDetailRequest['availableCount'] == 0) {
+      opApplyDetailRequest['status'] = '完成'
     }
+    let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
+    if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
+    let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
+    let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
+    const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
+    let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
+    let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
+    let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
+    Object.assign(applyDetail, opApplyDetailRequest)
+    const stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
+    const createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
+    console.log(stampUser1, createUser1)
+    if (createUser1[0].LASTNAME == null) {
+      return '创建人不存在'
+    }
+    if (stampUser1[0].LASTNAME == null) {
+      return '创建人不存在'
+    }
+    StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
+    applyDetail['details'] = StampRecordDetails
+    applyDetail['records'] = StampRecords
 
+    applyDetail['createOaUserName'] = createUser1[0].LASTNAME
+    applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
+
+    await this.applyDetailRepository.save(applyDetail);
+    return true
+  } catch (error) {
+    throw error
   }
+
+}
   /**
    * @Author: wintsa
    * @Date: 2023-12-05 17:52:19
@@ -361,29 +367,29 @@ export class ZhiyinService {
    * @return {*}
    */
   async info(code) {
-    let objTmp = {
-      traceId: 'zw' + uuidv4(),
-      code,
-      appId: this.appId,
-      timestamp: getTime(),
-    }
-    let result = this.Sign(objTmp)
-
-    const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
-    try {
-
-      const { data: done } = await axios.get(url1)
-      if (done.success) {
-
-        return done.data
-      } else {
-        return done.msg
-        this.logger.error(done)
-      }
-    } catch (error) {
-      this.logger.error(error)
-    }
+  let objTmp = {
+    traceId: 'zw' + uuidv4(),
+    code,
+    appId: this.appId,
+    timestamp: getTime(),
   }
+  let result = this.Sign(objTmp)
+
+  const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
+  try {
+
+    const { data: done } = await axios.get(url1)
+    if (done.success) {
+
+      return done.data
+    } else {
+      return done.msg
+      this.logger.error(done)
+    }
+  } catch (error) {
+    this.logger.error(error)
+  }
+}
   /**
    * @Author: wintsa
    * @Date: 2023-12-12 10:10:47
@@ -392,42 +398,42 @@ export class ZhiyinService {
    * @return {*}
    */
   async convert(Useropenid, local = false) {
-    try {
+  try {
 
-      const assess_token = await this.WxchatService.getAssesstToken()
-      const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
-        "open_userid_list": Useropenid,
-        "source_agentid": this.configService.get('zhiyin.AgentId')
-      })
-      console.log(data, 'convert')
-      if (data.errcode) {
-        this.logger.error(data)
-        return '失败'
-      }
-      if (data.userid_list.length > 0) {
-        const successIds = data.userid_list.map(e => {
-          return this.hashString(e.userid)
-
-        })
-        if (local == true) {
-          return data.userid_list[0].userid
-        } else {
-          return { successIds, invalid: data.invalid_open_userid_list }
-
-        }
-
-      } else {
-        return { successIds: [], invalid: data.invalid_open_userid_list }
-
-      }
+    const assess_token = await this.WxchatService.getAssesstToken()
+    const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
+      "open_userid_list": Useropenid,
+      "source_agentid": this.configService.get('zhiyin.AgentId')
+    })
+    console.log(data, 'convert')
+    if (data.errcode) {
+      this.logger.error(data)
+      return '失败'
     }
+    if (data.userid_list.length > 0) {
+      const successIds = data.userid_list.map(e => {
+        return this.hashString(e.userid)
 
+      })
+      if (local == true) {
+        return data.userid_list[0].userid
+      } else {
+        return { successIds, invalid: data.invalid_open_userid_list }
 
-    catch (error) {
-      console.log(error)
-      throw error;
+      }
+
+    } else {
+      return { successIds: [], invalid: data.invalid_open_userid_list }
+
     }
   }
+
+
+  catch (error) {
+    console.log(error)
+    throw error;
+  }
+}
 
 
 }
