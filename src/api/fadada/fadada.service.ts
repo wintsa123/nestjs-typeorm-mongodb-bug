@@ -489,17 +489,19 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    data['actors'].forEach(async (e) => {
+    for (const e of data['actors']) {
       if (e.actor.actorType == 'corp') {
         e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
       }
       if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
         let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientId'] } });
           console.log(result,'actorOpenId')
-        e.actor['actorOpenId'] = result!['openUserId:']
+        e.actor['actorOpenId'] = result!['openUserId']
         
       }
-    });
+    }
+     
+    
     console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
