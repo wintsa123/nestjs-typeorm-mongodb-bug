@@ -436,6 +436,8 @@ export class FadadaService {
     console.log(result.headers)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileProcess')
+      this.logger.error(result.data)
+
       throw result.data;
       
     }
