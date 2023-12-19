@@ -145,7 +145,7 @@ export class ZhiyinService {
 
         }
 
-        return data
+        return 'success'
       }
     } catch (error) {
       this.logger.error(error)
