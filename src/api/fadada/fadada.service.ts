@@ -494,7 +494,7 @@ export class FadadaService {
         e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
       }
       if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
-        let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientUserId'] } });
+        let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientId'] } });
           console.log(result,'actorOpenId')
         e.actor['actorOpenId'] = result!['openUserId:']
         
