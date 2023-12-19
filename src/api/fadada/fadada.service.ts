@@ -495,7 +495,8 @@ export class FadadaService {
       }
       if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
         let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientUserId'] } });
-          e.actor['actorOpenId'] = result!['actorOpenId']
+          console.log(result,'actorOpenId')
+        e.actor['actorOpenId'] = result!['actorOpenId']
         
       }
     });
