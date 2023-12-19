@@ -489,7 +489,7 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    data['actors'].forEach(async (e) => {
+    for (const e of data['actors']) {
       if (e.actor.actorType == 'corp') {
         e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
       }
@@ -499,7 +499,9 @@ export class FadadaService {
         e.actor['actorOpenId'] = result!['openUserId']
         
       }
-    });
+    }
+     
+    
     console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
