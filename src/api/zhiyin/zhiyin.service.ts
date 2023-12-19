@@ -111,9 +111,9 @@ export class ZhiyinService {
               await this.devicesRepository.softDelete({ mac: item.mac })
             }else{
               await this.devicesRepository.restore({ mac: item.mac })
+              await this.devicesRepository.update({ mac: item.mac }, item);
 
             }
-            await this.devicesRepository.update({ mac: item.mac }, item);
 
           }
         }
@@ -140,9 +140,9 @@ export class ZhiyinService {
             await this.devicesRepository.softDelete({ mac: item.mac })
           }else{
             await this.devicesRepository.restore({ mac: item.mac })
+            await this.devicesRepository.update({ mac: item.mac }, item);
 
           }
-          await this.devicesRepository.update({ mac: item.mac }, item);
 
 
         }
