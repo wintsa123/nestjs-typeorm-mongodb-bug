@@ -110,6 +110,9 @@ export class ZhiyinService {
             await this.devicesRepository.update({ mac: item.mac }, item);
             if (new Date(existingData.serviceTime) < new Date()) {
               await this.devicesRepository.softDelete({ mac: item.mac })
+            }else{
+              await this.devicesRepository.restore({ mac: item.mac })
+
             }
           }
         }
@@ -135,6 +138,9 @@ export class ZhiyinService {
 
           if (new Date(existingData.serviceTime) < new Date()) {
             await this.devicesRepository.softDelete({ mac: item.mac })
+          }else{
+            await this.devicesRepository.restore({ mac: item.mac })
+
           }
 
         }
