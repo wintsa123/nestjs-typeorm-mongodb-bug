@@ -108,12 +108,38 @@ export class ZhiyinService {
             await this.devicesRepository.save(item);
           } else {
             await this.devicesRepository.update({ mac: item.mac }, item);
-
+            if (new Date(existingData.serviceTime) < new Date()) {
+              await this.devicesRepository.softDelete({ mac: item.mac })
+            }
           }
         }
         return done.data
       } else {
         this.logger.error(done.msg)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
+  }
+
+
+
+  async deviceAdd(data) {
+    try {
+      for (const item of data) {
+        const existingData = await this.devicesRepository.findOne({ where: { mac: item.mac } });
+        if (!existingData) {
+          await this.devicesRepository.save(item);
+        } else {
+          await this.devicesRepository.update({ mac: item.mac }, item);
+
+          if (new Date(existingData.serviceTime) < new Date()) {
+            await this.devicesRepository.softDelete({ mac: item.mac })
+          }
+
+        }
+
+        return data
       }
     } catch (error) {
       this.logger.error(error)
@@ -353,7 +379,7 @@ export class ZhiyinService {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-console.log(data,'convert')
+      console.log(data, 'convert')
       if (data.errcode) {
         this.logger.error(data)
         return '失败'
