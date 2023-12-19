@@ -150,6 +150,7 @@ export class ZhiyinService {
 
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
   }
   /**
