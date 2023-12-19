@@ -103,7 +103,11 @@ export class ZhiyinService {
       const { data: done } = await axios.get(url)
       if (done.success) {
         for (const item of done.data) {
-          const existingData = await this.devicesRepository.findOne({ where: { mac: item.mac, deletedAt: Not(IsNull() )} });
+          const existingData = await this.devicesRepository.findOne({
+            withDeleted: true, // 设置为 true，以便包含已软删除的记录
+            where: { mac: item.mac }
+          });
+          console.log(existingData)
           if (!existingData) {
             await this.devicesRepository.save(item);
           } else {
@@ -132,8 +136,10 @@ export class ZhiyinService {
     try {
       for (const item of data) {
         const existingData = await this.devicesRepository.findOne({
+          withDeleted: true, // 设置为 true，以便包含已软删除的记录
+
           where: {
-            mac: item.mac, deletedAt: Not(IsNull()), // 查询 deletedAt 不为 null 的记录
+            mac: item.mac, // 查询 deletedAt 不为 null 的记录
           }
         });
         if (!existingData) {
