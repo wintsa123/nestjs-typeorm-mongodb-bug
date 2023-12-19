@@ -23,7 +23,7 @@ export class ZhiyinController {
   @ApiOperation({ summary: '印章修改回调地址' })
   // @ApiBody({ type: callback })
   deviceAdd(
-    @Body() data: [],
+    @Body() data: any[],
   ) {
     // 方法体
     return this.zhiyinService.deviceAdd(data)
