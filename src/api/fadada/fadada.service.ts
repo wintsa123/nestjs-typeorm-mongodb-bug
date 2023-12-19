@@ -374,14 +374,14 @@ export class FadadaService {
   }
 
 
-  async GetFreeStatus(clientUserId){
+  async GetFreeStatus(clientUserId) {
     let result = await this.freeIdRepository.findOne({ where: { clientUserId } });
     if (result) {
       return 'true'
     } else {
       return false
     }
-  
+
   }
   /**
      * @Author: wintsa
@@ -450,7 +450,7 @@ export class FadadaService {
       this.logger.error(result.data)
 
       throw result.data;
-      
+
     }
     console.log(result.data)
     return result.data.data
@@ -489,10 +489,15 @@ export class FadadaService {
     } else {
       delete data['businessId']
     }
-    data['actors'].forEach(e => {
-        if (e.actor.actorType=='corp') {
-          e.actor['actorOpenId']=this.configService.get('fadada.opencorpId')
-        }
+    data['actors'].forEach(async (e) => {
+      if (e.actor.actorType == 'corp') {
+        e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
+      }
+      if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
+        let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientUserId'] } });
+          e.actor['actorOpenId'] = result!['actorOpenId']
+        
+      }
     });
     console.log(data.actors, 'signCreate0000000000000000000000')
     try {
