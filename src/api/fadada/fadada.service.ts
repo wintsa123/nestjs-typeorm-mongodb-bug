@@ -153,7 +153,7 @@ export class FadadaService {
 
           await this.freeIdRepository.save(tmp1);
 
-          // await this.redisService.del(`GET:/api/v1/fadada/user/GetByClientUserId?ClientUserId=${tmp.clientUserId}`)
+          await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
           return 'success';
         } catch (error) {
