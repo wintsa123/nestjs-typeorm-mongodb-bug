@@ -107,14 +107,14 @@ export class ZhiyinService {
           if (!existingData) {
             await this.devicesRepository.save(item);
           } else {
-            await this.devicesRepository.update({ mac: item.mac }, item);
-            console.log('time',new Date(existingData.serviceTime) < new Date())
             if (new Date(existingData.serviceTime) < new Date()) {
               await this.devicesRepository.softDelete({ mac: item.mac })
             }else{
               await this.devicesRepository.restore({ mac: item.mac })
 
             }
+            await this.devicesRepository.update({ mac: item.mac }, item);
+
           }
         }
         return done.data
@@ -123,8 +123,6 @@ export class ZhiyinService {
       }
     } catch (error) {
       this.logger.error(error)
-      throw error
-
     }
   }
 
@@ -137,8 +135,6 @@ export class ZhiyinService {
         if (!existingData) {
           await this.devicesRepository.save(item);
         } else {
-          await this.devicesRepository.update({ mac: item.mac }, item);
-          console.log(`time${new Date(existingData.serviceTime)}`,new Date(existingData.serviceTime) < new Date())
 
           if (new Date(existingData.serviceTime) < new Date()) {
             await this.devicesRepository.softDelete({ mac: item.mac })
@@ -146,6 +142,8 @@ export class ZhiyinService {
             await this.devicesRepository.restore({ mac: item.mac })
 
           }
+          await this.devicesRepository.update({ mac: item.mac }, item);
+
 
         }
 
