@@ -372,6 +372,17 @@ export class FadadaService {
       return false
     }
   }
+
+
+  async GetFreeStatus(clientUserId){
+    let result = await this.freeIdRepository.findOne({ where: { clientUserId } });
+    if (result) {
+      return 'true'
+    } else {
+      return false
+    }
+  
+  }
   /**
      * @Author: wintsa
      * @Date: 2023-11-16 11:52:57
