@@ -161,6 +161,24 @@ export class FadadaService {
           return false
         }
         break;
+      case 'personal-seal-authorize-free-sign-cancel':
+  
+        const tmp2 = JSON.parse(data.bizContent)
+
+        try {
+
+
+          await this.freeIdRepository.delete({clientUserId:tmp2.clientUserId});
+
+          await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
+
+          return 'success';
+        } catch (error) {
+          this.logger.error('Error:', error);
+          return false
+        }
+        break;
+
 
       default:
         console.log(3)
@@ -495,13 +513,13 @@ export class FadadaService {
       }
       if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
         let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientId'] } });
-          console.log(result,'actorOpenId')
+        console.log(result, 'actorOpenId')
         e.actor['actorOpenId'] = result!['openUserId']
-        
+
       }
     }
-     
-    
+
+
     console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
