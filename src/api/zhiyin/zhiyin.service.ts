@@ -232,7 +232,7 @@ export class ZhiyinService {
         tmpobj['stampOaUserName'] = stampUser1[0].LASTNAME
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
-        tmpobj['status'] = '未盖章'
+        tmpobj['status'] = '待盖章'
 
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
