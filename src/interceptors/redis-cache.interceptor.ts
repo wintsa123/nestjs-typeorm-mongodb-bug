@@ -32,28 +32,23 @@ export class RedisCacheInterceptor implements NestInterceptor {
 
     if (isCacheApi) {
       console.log('走缓存');
-      
+
       let redisKey = ''
       // 如果有授权拦截的且需要区分用户的时候
 
       if (request.body) {
-        console.log('有body')
-
-        console.log(request.method)
         redisKey = await this.redisCacheKey(
           request.method,
           request.url,
           request.body,
 
         )
-        console.log(redisKey, 'body')
-
-      }else{
-        this.redisCacheKey(request.method, request.url);
+      } else {
+        redisKey = await this.redisCacheKey(request.method, request.url);
       }
 
       console.log(redisKey, 'redisKey')
-      const redisData = await this.redisService.get(redisKey);
+      const redisData = redisKey.length > 0 && await this.redisService.get(redisKey);
       if (redisData) {
         console.log(redisData, 'redis直接返回');
         return of(redisData);
@@ -61,7 +56,7 @@ export class RedisCacheInterceptor implements NestInterceptor {
         console.log('走后端');
         return next.handle().pipe(
           map((data) => {
-            this.redisService.set(redisKey, data, redisEXSecond);
+            redisKey.length > 0 && this.redisService.set(redisKey, data, redisEXSecond);
             return data;
           })
         );
@@ -87,22 +82,23 @@ export class RedisCacheInterceptor implements NestInterceptor {
   private redisCacheKey(method: string, url: string, body?: any): string {
     console.log(method, 'method')
 
-    if (method == 'GET') {
-      return `${method}:${url}`;
-    } if (method == 'POST') {
-      console.log(body, 'body')
-      if (body !== undefined  &&body !== null) {
-        const hash = generateCacheKey(body)
-        console.log(hash, 'hash')
+
+    if (body !== undefined && body !== null) {
+      const hash = generateCacheKey(body)
+      console.log(hash, 'hash')
+      if (method=='GET') {
+        return `${method}:${url}:${hash}`;
+
+      }else{
         return `${method}:${hash}`;
-      } else {
-        return `${method}:${url}`;
 
       }
-
     } else {
       return `${method}:${url}`;
+
     }
+
+
   }
 }
 
