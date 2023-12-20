@@ -22,7 +22,6 @@ export class RedisCacheInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     console.log('缓存拦截器');
     const request: IRequest = context.switchToHttp().getRequest();
-    console.log(request.method + ':' + request.url)
     const isCacheApi =
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getHandler()) ||
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getClass());
@@ -35,9 +34,11 @@ export class RedisCacheInterceptor implements NestInterceptor {
       console.log('走缓存');
       let redisKey = this.redisCacheKey(request.method, request.url);
       // 如果有授权拦截的且需要区分用户的时候
-      if (request.body) {
+      console.log(request.body,'-----------')
 
-        redisKey = this.redisCacheKey(
+      if (request.body) {
+        console.log('有body')
+        redisKey = await this.redisCacheKey(
           request.method,
           request.url,
           request.body,
@@ -80,10 +81,11 @@ export class RedisCacheInterceptor implements NestInterceptor {
   private redisCacheKey(method: string, url: string, body?: any): string {
     console.log(body,'-----------------------------------')
 
-    const hash=generateCacheKey(body)
     if (method='GET') {
       return `${method}:${url}`;
     } else {
+      const hash=generateCacheKey(body)
+      console.log(hash,'hash')
       return `${method}:${hash}`;
     }
 
