@@ -301,7 +301,7 @@ export class ZhiyinService {
       const { data: done } = await axios.get(url1)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
-        target!.status = '关闭'
+        target!.status = '撤销'
         target && await this.applyDetailRepository.save(target)
         return done
       } else {
