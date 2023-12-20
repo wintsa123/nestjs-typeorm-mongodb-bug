@@ -277,6 +277,7 @@ export class ZhiyinService {
         return done
       } else {
         this.logger.error(done)
+        return done.msg
       }
     } catch (error) {
       this.logger.error(error)
@@ -313,6 +314,8 @@ export class ZhiyinService {
         return done
       } else {
         this.logger.error(done)
+        return done.msg
+
       }
     } catch (error) {
       this.logger.error(error)
