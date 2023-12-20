@@ -320,6 +320,7 @@ export class ZhiyinService {
    */
   async callback(data) {
     try {
+      console.log(data)
 
       const { opApplyDetailRequest, opStampRecordRequest } = data
       delete opApplyDetailRequest['id']
@@ -339,7 +340,6 @@ export class ZhiyinService {
       Object.assign(applyDetail, opApplyDetailRequest)
       const stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
       const createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
-      console.log(stampUser1, createUser1)
       if (createUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
