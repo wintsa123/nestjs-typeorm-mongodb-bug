@@ -8,6 +8,5 @@ export class CreateZhiyinDto {
     @IsNotEmpty()
     code!: string
     @ApiProperty({ description: '标识' })
-    @IsNotEmpty()
     info?: string
 }
