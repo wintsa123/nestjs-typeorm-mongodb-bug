@@ -36,7 +36,6 @@ export class RedisCacheInterceptor implements NestInterceptor {
       let redisKey = this.redisCacheKey(request.method, request.url);
       // 如果有授权拦截的且需要区分用户的时候
       if (request.body) {
-        console.log(request.body,'-----------------------------------------------------')
 
         redisKey = this.redisCacheKey(
           request.method,
@@ -79,8 +78,9 @@ export class RedisCacheInterceptor implements NestInterceptor {
   private redisCacheKey(method: string, url: string): string;
   private redisCacheKey(method: string, url: string, body: any): string;
   private redisCacheKey(method: string, url: string, body?: any): string {
+    console.log(body,'-----------------------------------')
+
     const hash=generateCacheKey(body)
-    console.log(hash)
     if (method='GET') {
       return `${method}:${url}`;
     } else {
