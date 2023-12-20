@@ -320,7 +320,7 @@ export class ZhiyinService {
    */
   async callback(data) {
     try {
-      console.log(data)
+      console.log('盖章中')
 
       const { opApplyDetailRequest, opStampRecordRequest } = data
       delete opApplyDetailRequest['id']
