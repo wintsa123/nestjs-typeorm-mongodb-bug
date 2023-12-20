@@ -304,15 +304,18 @@ export class ZhiyinService {
       const { data: done } = await axios.get(url1)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+
+        console.log(target,'--------------')
         if (info=='true') {
           target!.status = '完成'
+          target && await this.applyDetailRepository.save(target)
 
         }
         if (info=='false') {
           target!.status = '撤销'
+          target && await this.applyDetailRepository.save(target)
 
         }
-        target && await this.applyDetailRepository.save(target)
         return done
       } else {
         this.logger.error(done)
