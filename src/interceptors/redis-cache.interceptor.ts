@@ -28,22 +28,28 @@ export class RedisCacheInterceptor implements NestInterceptor {
     const redisEXSecond =
       Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getHandler()) ||
       Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getClass());
-      
+
 
     if (isCacheApi) {
       console.log('走缓存');
-      let redisKey = this.redisCacheKey(request.method, request.url);
+      
+      let redisKey = ''
       // 如果有授权拦截的且需要区分用户的时候
-      console.log(request.body,'-----------')
 
       if (request.body) {
         console.log('有body')
+
+        console.log(request.method)
         redisKey = await this.redisCacheKey(
           request.method,
           request.url,
           request.body,
 
-        );
+        )
+        console.log(redisKey, 'body')
+
+      }else{
+        this.redisCacheKey(request.method, request.url);
       }
 
       console.log(redisKey, 'redisKey')
@@ -79,16 +85,24 @@ export class RedisCacheInterceptor implements NestInterceptor {
   private redisCacheKey(method: string, url: string): string;
   private redisCacheKey(method: string, url: string, body: any): string;
   private redisCacheKey(method: string, url: string, body?: any): string {
-    console.log(body,'-----------------------------------')
+    console.log(method, 'method')
 
-    if (method='GET') {
+    if (method == 'GET') {
       return `${method}:${url}`;
-    } else {
-      const hash=generateCacheKey(body)
-      console.log(hash,'hash')
-      return `${method}:${hash}`;
-    }
+    } if (method == 'POST') {
+      console.log(body, 'body')
+      if (body !== undefined  &&body !== null) {
+        const hash = generateCacheKey(body)
+        console.log(hash, 'hash')
+        return `${method}:${hash}`;
+      } else {
+        return `${method}:${url}`;
 
+      }
+
+    } else {
+      return `${method}:${url}`;
+    }
   }
 }
 
