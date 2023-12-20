@@ -292,7 +292,7 @@ export class ZhiyinService {
    * @Description: 关闭单据
    * @return {*}
    */
-  async close(code: string,info) {
+  async close(code: string, info) {
     let objTmp = {
       code,
       appId: this.appId,
@@ -302,18 +302,22 @@ export class ZhiyinService {
     const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
       const { data: done } = await axios.get(url1)
-      if (done.success) {
-        const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
+      console.log(done)
 
-        console.log(target,'--------------')
-        if (info=='true') {
+      if (done.success) {
+        const target = await this.applyDetailRepository.findOne({ where: { code } })
+        console.log(result)
+        console.log(target, '--------------')
+        if (info == 'true') {
           target!.status = '完成'
           target && await this.applyDetailRepository.save(target)
 
         }
-        if (info=='false') {
+        if (info == 'false') {
           target!.status = '撤销'
           target && await this.applyDetailRepository.save(target)
+          await this.applyDetailRepository.softDelete({ code })
+
 
         }
         return done
