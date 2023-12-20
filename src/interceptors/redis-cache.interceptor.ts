@@ -11,42 +11,45 @@ import {
   REDIS_CACHE_EX_SECOND_KEY,
   REDIS_CACHE_KEY,
 } from '@src/constants';
+import { generateCacheKey } from '@src/utils';
 
 type IRequest = Request & { user: ICurrentUserType };
 
 @Injectable()
 export class RedisCacheInterceptor implements NestInterceptor {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     console.log('缓存拦截器');
     const request: IRequest = context.switchToHttp().getRequest();
-console.log(request.method+':'+request.url)
+    console.log(request.method + ':' + request.url)
     const isCacheApi =
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getHandler()) ||
       Reflect.getMetadata(REDIS_CACHE_KEY, context.getClass());
     const redisEXSecond =
       Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getHandler()) ||
       Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getClass());
-    const isDiffUser =
-      Reflect.getMetadata(REDIS_CACHE_EX_DIFF_USER_KEY, context.getHandler()) ||
-      Reflect.getMetadata(REDIS_CACHE_EX_DIFF_USER_KEY, context.getClass());
+      
+
     if (isCacheApi) {
       console.log('走缓存');
       let redisKey = this.redisCacheKey(request.method, request.url);
       // 如果有授权拦截的且需要区分用户的时候
-      if (request.user && isDiffUser) {
+      if (request.body) {
+        console.log(request.body,'-----------------------------------------------------')
+
         redisKey = this.redisCacheKey(
           request.method,
           request.url,
-          `${request.user.username}_${request.user.id}`
+          request.body,
+
         );
       }
 
-      console.log(redisKey,'redisKey')
+      console.log(redisKey, 'redisKey')
       const redisData = await this.redisService.get(redisKey);
       if (redisData) {
-        console.log(redisData,'redis直接返回');
+        console.log(redisData, 'redis直接返回');
         return of(redisData);
       } else {
         console.log('走后端');
@@ -74,12 +77,16 @@ console.log(request.method+':'+request.url)
    * @return {*}
    */
   private redisCacheKey(method: string, url: string): string;
-  private redisCacheKey(method: string, url: string, identity: string): string;
-  private redisCacheKey(method: string, url: string, identity?: string): string {
-    if (identity) {
-      return `${identity}_${method}:${url}`;
-    } else {
+  private redisCacheKey(method: string, url: string, body: any): string;
+  private redisCacheKey(method: string, url: string, body?: any): string {
+    const hash=generateCacheKey(body)
+    console.log(hash)
+    if (method='GET') {
       return `${method}:${url}`;
+    } else {
+      return `${method}:${hash}`;
     }
+
   }
 }
+

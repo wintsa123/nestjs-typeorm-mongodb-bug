@@ -36,3 +36,19 @@ export const strToMd5 = (str: string): string => {
   const md5 = crypto.createHash('md5');
   return md5.update(str).digest('hex');
 };
+
+/**
+ * @Author: 水痕
+ * @Date: 2023-10-07 19:06:42
+ * @LastEditors: 水痕
+ * @Description: hash加密
+ * @param {string} str
+ * @return {*}
+ */
+export const generateCacheKey=(data) =>{
+  // Use SHA-256 hash function to hash the request body
+  const hash = crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
+
+  // Truncate or modify the hash if necessary to fit within Redis key length limit
+  return hash;
+}
