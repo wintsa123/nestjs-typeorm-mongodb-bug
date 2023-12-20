@@ -122,7 +122,7 @@ export class FadadaController {
   }
   @Post('/doc/fileProcess')
   @ApiOperation({ summary: '文件处理' })
-
+  @RedisCacheApi({ exSecond: null })
   fileProcess(@Body() data: FileProcess) {
     return this.fadadaService.fileProcess(data);
   }
