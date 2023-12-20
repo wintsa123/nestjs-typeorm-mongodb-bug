@@ -289,7 +289,7 @@ export class ZhiyinService {
    * @Description: 关闭单据
    * @return {*}
    */
-  async close(code: string) {
+  async close(code: string,info) {
     let objTmp = {
       code,
       appId: this.appId,
@@ -301,7 +301,14 @@ export class ZhiyinService {
       const { data: done } = await axios.get(url1)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
-        target!.status = '撤销'
+        if (info=='true') {
+          target!.status = '完成'
+
+        }
+        if (info=='false') {
+          target!.status = '撤销'
+
+        }
         target && await this.applyDetailRepository.save(target)
         return done
       } else {
