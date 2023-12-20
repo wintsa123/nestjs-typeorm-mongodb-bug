@@ -281,6 +281,8 @@ export class ZhiyinService {
       }
     } catch (error) {
       this.logger.error(error)
+      return error
+
     }
   }
   /**
@@ -319,6 +321,8 @@ export class ZhiyinService {
       }
     } catch (error) {
       this.logger.error(error)
+      return error
+
     }
   }
   /**
