@@ -39,7 +39,7 @@ export class ZhiyinController {
   }@Get('/close')
   @ApiOperation({ summary: 'OA审批单据完成/关闭', description: '供企业群体关闭已推送的用印审批单据' })
   close(@Query() data: CreateZhiyinDto) {
-    return this.zhiyinService.close(data.code);
+    return this.zhiyinService.close(data.code,data.info);
   }
   @Get('/info')
   @ApiOperation({ summary: '盖章记录查询接口 ', description: '供企业群体查询已推送的用印审批单据的盖章记录数据' })
