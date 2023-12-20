@@ -9,5 +9,5 @@ export class CreateZhiyinDto {
     code!: string
     @ApiProperty({ description: '标识' })
     @IsNotEmpty()
-    info!: string
+    info?: string
 }
