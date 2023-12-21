@@ -22,6 +22,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let resultParams = {};
     try {
       const { code, message, ...oth } = JSON.parse(exception.message);
+      Logger.log(exception.message, '------------------------------------------------');
+
       resultMessage = message;
       resultCode = code;
       resultParams = oth;

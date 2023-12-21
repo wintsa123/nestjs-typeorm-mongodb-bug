@@ -215,7 +215,6 @@ export class ZhiyinService {
     mergedObj.createUser = createUser
     let result = this.Sign(mergedObj)
     const url = `${this.url}oa/apply/sync`
-    console.log(stampUser1[0].lastname)
     try {
       const { data: done } = await axios.post(url, result, {
         headers: {
@@ -341,8 +340,7 @@ export class ZhiyinService {
    */
   async callback(data) {
     try {
-      console.log('盖章中')
-
+     
       const { opApplyDetailRequest, opStampRecordRequest } = data
       delete opApplyDetailRequest['id']
       opApplyDetailRequest['status'] = '盖章中'
@@ -373,7 +371,10 @@ export class ZhiyinService {
 
       applyDetail['createOaUserName'] = createUser1[0].LASTNAME
       applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
+      console.log('盖章中')
+      console.log(data)
 
+      console.log(StampRecords)
       await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {

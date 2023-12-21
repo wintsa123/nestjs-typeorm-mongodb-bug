@@ -806,7 +806,7 @@ export class FadadaService {
     let result: any = await Client.start(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('start')
-      return result.data.msg
+      throw result.data
     } else {
       console.log(result)
       return result.data.msg
