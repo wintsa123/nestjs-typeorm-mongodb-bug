@@ -8,8 +8,8 @@ export class devicesEntity extends baseEntity {
     name?: string;
     @Column({ type: 'varchar' })
     mac?: string;
-    @Column({ type: 'timestamp' })
-    serviceTime!: Date;
+    @Column({ type: 'timestamp',nullable:true })
+    serviceTime?: Date;
 
    
 }

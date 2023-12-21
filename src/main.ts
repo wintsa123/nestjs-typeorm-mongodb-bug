@@ -58,7 +58,7 @@ async function bootstrap() {
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
-
+ 
 
   const config = new DocumentBuilder()
     .setTitle('Api example')
@@ -83,6 +83,7 @@ async function bootstrap() {
       ],
     },
   });
+
   await app.listen(PORT, '0.0.0.0', () => {
     logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
   });
