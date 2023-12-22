@@ -1041,7 +1041,7 @@ export class FadadaService {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let result: any = await Client.getOwnerDownLoadUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('getOwnerDownLoadUrl')
+      this.logger.error(result.data)
       throw result.data
 
     }
@@ -1062,7 +1062,7 @@ export class FadadaService {
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let result: any = await client.createPersonalSealByImage(data)
     if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('createSealByImage')
+      this.logger.error(result.data)
       throw result.data
 
     }
@@ -1082,7 +1082,7 @@ export class FadadaService {
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let result: any = await client.getPersonalSealCreateUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('getPersonalSealCreateUrl')
+      this.logger.error(result.data)
       throw result.data
     }
     return result.data
