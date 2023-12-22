@@ -4,7 +4,7 @@ import { RedisService } from '@src/plugin/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 
-import { getTime } from "@src/utils/index";
+import { generateCacheKey, getTime } from "@src/utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -58,6 +58,7 @@ export class ZhiyinService {
       this.logger.log('Database connection established');
     } catch (error) {
       this.logger.error('Failed to establish database connection', error);
+      throw error
     }
   }
   /**
@@ -124,14 +125,23 @@ export class ZhiyinService {
         return done.data
       } else {
         this.logger.error(done.msg)
+        throw done
+
       }
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
   }
 
 
-
+/**
+ * @Author: wintsa
+ * @Date: 2023-12-22 14:42:18
+ * @LastEditors: wintsa
+ * @Description: 设备回调添加/删除
+ * @return {*}
+ */
   async deviceAdd(data) {
     const { info, device } = data
     try {
@@ -209,8 +219,8 @@ export class ZhiyinService {
       return '用印人不存在'
     }
 
-    const stampUser = this.hashString(stampUser1[0].WORKCODE)
-    const createUser = this.hashString(createUser1[0].WORKCODE)
+    const stampUser = generateCacheKey(stampUser1[0].WORKCODE)
+    const createUser = generateCacheKey(createUser1[0].WORKCODE)
     mergedObj.stampUser = stampUser
     mergedObj.createUser = createUser
     let result = this.Sign(mergedObj)
@@ -241,10 +251,11 @@ export class ZhiyinService {
       } else {
         this.logger.error(done)
 
-        return done.msg
+        throw done
       }
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
   }
 
@@ -408,11 +419,13 @@ export class ZhiyinService {
 
         return done.data
       } else {
-        return done.msg
         this.logger.error(done)
+        throw done
+
       }
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
   }
   /**
@@ -433,11 +446,11 @@ export class ZhiyinService {
       console.log(data, 'convert')
       if (data.errcode) {
         this.logger.error(data)
-        return '失败'
+        throw data
       }
       if (data.userid_list.length > 0) {
         const successIds = data.userid_list.map(e => {
-          return this.hashString(e.userid)
+          return generateCacheKey(e.userid)
 
         })
         if (local == true) {
