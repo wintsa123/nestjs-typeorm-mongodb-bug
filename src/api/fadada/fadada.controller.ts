@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode,Headers, UseGuards, Head } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode, Headers, UseGuards, Head } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -17,7 +17,7 @@ import { AuthGuard } from '@src/guard/auth.guard';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
-@ApiResponse({status : 200,description:'成功'})
+@ApiResponse({ status: 200, description: '成功' })
 
 // @UseGuards( AuthGuard)
 export class FadadaController {
@@ -30,9 +30,9 @@ export class FadadaController {
   @Post('/callback')
   @HttpCode(200)
   @ApiOperation({ summary: '回调数据' })
-  @UseGuards( ipWhitelist)
-  callback(@Body() data,@Headers() headers: any) {
-    return this.fadadaService.callback(data,headers);
+  @UseGuards(ipWhitelist)
+  callback(@Body() data, @Headers() headers: any) {
+    return this.fadadaService.callback(data, headers);
   }
 
   // @Post('/searchInfo')
@@ -70,23 +70,23 @@ export class FadadaController {
   }
   @Get('/submitCallback')
   @ApiOperation({ summary: '提交时回调' })
-  submitCallback(@Query('clientId') clientId:string) {
+  submitCallback(@Query('clientId') clientId: string) {
     return this.fadadaService.submitCallback(clientId);
   }
 
   @Post('/user/disable')
   @ApiOperation({ summary: '暂时关闭用户' })
-  userdisable(@Body() data:CreateFadadaDto) {
+  userdisable(@Body() data: CreateFadadaDto) {
     return this.fadadaService.userDisable(data);
   }
   @Post('/user/Enable')
   @ApiOperation({ summary: '开启用户' })
-  userEnable(@Body() data:CreateFadadaDto) {
+  userEnable(@Body() data: CreateFadadaDto) {
     return this.fadadaService.userEnable(data);
   }
   @Post('/user/Unbind')
   @ApiOperation({ summary: '解绑用户' })
-  userUnbind(@Body() data:CreateFadadaDto) {
+  userUnbind(@Body() data: CreateFadadaDto) {
     return this.fadadaService.userUnbind(data);
   }
 
@@ -139,8 +139,8 @@ export class FadadaController {
   @ApiOperation({ summary: '创建签署任务(基于文档)' })
   @RedisCacheApi({ exSecond: null })
 
-  signCreate(@Body() data: fileVerify,@Headers() header) {
-    console.log(header,'header')
+  signCreate(@Body() data: fileVerify, @Headers() header) {
+    console.log(header, 'header')
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')
@@ -279,9 +279,50 @@ export class FadadaController {
   signGetOwnerList(@Body() data) {
     return this.fadadaService.signGetOwnerList(data);
   }
+  @Post('/sign/getPrefillUrl')
+  @ApiOperation({ summary: '预填写连接', description: '获取签署任务的预览链接，通过此链接可查看签署合同内容.' })
+  getPrefillUrl(@Body() data) {
+    return this.fadadaService.getPrefillUrl(data);
+  }
   @Post('/sign/GetOwnerDownLoadUrl')
   @ApiOperation({ summary: '获取签署文档下载地址' })
   signGetOwnerDownLoadUrl(@Body() data) {
     return this.fadadaService.signGetOwnerDownLoadUrl(data);
+  }
+  @Post('/Personseal/PersonCreateByImage')
+  @ApiOperation({ summary: '创建图片签名' })
+  PersonCreateByImage(@Body() data) {
+    return this.fadadaService.PersonCreateByImage(data);
+  }
+
+  @Post('/Personseal/getPersonalSealCreateUrl')
+  @ApiOperation({ summary: '获取签名创建链接' })
+  getPersonalSealCreateUrl(@Body() data) {
+    return this.fadadaService.getPersonalSealCreateUrl(data);
+  }
+  @Post('/Personseal/getPersonalSealManageUrl')
+  @ApiOperation({ summary: '获取签名管理链接' })
+  getPersonalSealManageUrl(@Body() data) {
+    return this.fadadaService.getPersonalSealManageUrl(data);
+  }
+  @Post('/Personseal/getPersonalFreeSignUrl')
+  @ApiOperation({ summary: '获取签名设置免验证签链接' })
+  getPersonalFreeSignUrl(@Body() data) {
+    return this.fadadaService.getPersonalFreeSignUrl(data);
+  }
+  @Post('/Personseal/getPersonalSealList')
+  @ApiOperation({ summary: '查询个人签名列表' })
+  getPersonalSealList(@Body() data) {
+    return this.fadadaService.getPersonalSealList(data);
+  }
+  @Post('/Personseal/cancelPersonalFreeSign')
+  @ApiOperation({ summary: '解除签名免验证签' })
+  cancelPersonalFreeSign(@Body() data) {
+    return this.fadadaService.cancelPersonalFreeSign(data);
+  }
+  @Post('/Personseal/deletePersonalSeal')
+  @ApiOperation({ summary: '删除个人签名' })
+  deletePersonalSeal(@Body() data) {
+    return this.fadadaService.deletePersonalSeal(data);
   }
 }

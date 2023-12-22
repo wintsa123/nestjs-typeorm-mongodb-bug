@@ -200,7 +200,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('Corp获取失败')
       throw result.data
-      
+
 
     }
     return result.data.data
@@ -218,7 +218,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('corpGetIdentity获取失败')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -235,7 +235,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('corpGetIdentity获取失败')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -258,7 +258,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userAuthUrl获取失败')
       throw result.data
-      
+
     }
     return result.data.data
   }
@@ -320,7 +320,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userDisable获取失败')
       throw result.data
-      
+
     }
     await this.fadadaRepository.softDelete({ openUserId: data.openUserId });
 
@@ -339,7 +339,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userEnable获取失败')
       throw result.data
-      
+
     }
 
     await this.fadadaRepository.restore({ openUserId: data.openUserId });
@@ -360,7 +360,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userunbind获取失败')
       throw result.data
-      
+
     }
     await this.fadadaRepository.delete({ openUserId: data.openUserId })
 
@@ -379,7 +379,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userGet')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -422,7 +422,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userGetIdentity')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -439,7 +439,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('uploadDoc')
       throw result.data
-      
+
     }
     console.log(result.data)
     return result.data.data
@@ -458,7 +458,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('uploadFileByUrl')
       throw result.data
-      
+
     }
     return result.data.data
   }
@@ -496,7 +496,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileVerifySign')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -560,7 +560,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('createWithTemplate')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -577,7 +577,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('signAddDoc')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -594,7 +594,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('signdeleteDoc')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -611,7 +611,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addField')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -628,7 +628,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteField')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -645,7 +645,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fillFieldValues')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -662,7 +662,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addAttach')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -679,7 +679,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteAttach')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -696,7 +696,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addActor')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -713,7 +713,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteActor')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -730,7 +730,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('modifyActor')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -748,7 +748,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getSignTaskEditUrl')
       throw result.data
-      
+
     }
     return result.data.data
   }
@@ -766,7 +766,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getSignTaskPreviewUrl')
       throw result.data
-      
+
     }
     return result.data.data
   }
@@ -784,7 +784,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getActorUrl')
       throw result.data
-      
+
     }
     return result.data.data
   }
@@ -801,7 +801,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getActorBatchSignTaskUrl')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -818,7 +818,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getV3ActorSignTaskUrl')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -854,7 +854,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('cancel')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -871,7 +871,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('finalizeDoc')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -888,7 +888,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('urgeSignTask')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -906,7 +906,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('block')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -923,7 +923,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('unblock')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -940,7 +940,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('finish')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -958,7 +958,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('delete')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -975,7 +975,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('abolish')
       throw result.data
-      
+
     }
     return result.data.msg
   }
@@ -992,11 +992,27 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getDetail')
       throw result.data
-      
+
     }
     return result.data
   }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-22 15:20:10
+   * @LastEditors: wintsa
+   * @Description: 获取预填写链接
+   * @return {*}
+   */
+  async getPrefillUrl(data) {
+    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    let result: any = await Client.getPrefillUrl(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('getDetail')
+      throw result.data
 
+    }
+    return result.data
+  }
   /**
    * @Author: wintsa
    * @Date: 2023-11-17 10:59:25
@@ -1010,7 +1026,7 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getOwnerList')
       throw result.data
-      
+
     }
     return result.data
   }
@@ -1027,23 +1043,132 @@ export class FadadaService {
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getOwnerDownLoadUrl')
       throw result.data
-      
+
     }
     return result.data
   }
 
 
-  async PersonCreateByImage(data) {
-    // const client = new fascOpenApi.callbackClient.Client(await this.init())
-    const client = new fascOpenApi.sealClient.Client(await this.init())
 
-    let result: any = await client.createSealByImage(data)
+  /**-----------------------------------------------------------------------个人印章管理----------------------------------------------------------------------------------*/
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-22 14:52:53
+   * @LastEditors: wintsa
+   * @Description: 创建图片签名
+   * @return {*}
+   */
+  async PersonCreateByImage(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.createPersonalSealByImage(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('createSealByImage')
       throw result.data
-      
+
     }
     return result.data
   }
 
+
+
+  /**
+ * @Author: wintsa
+ * @Date: 2023-12-22 14:52:53
+ * @LastEditors: wintsa
+ * @Description: 获取签名创建链接
+ * @return {*}
+ */
+  async getPersonalSealCreateUrl(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.getPersonalSealCreateUrl(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('getPersonalSealCreateUrl')
+      throw result.data
+    }
+    return result.data
+  }
+  /**
+* @Author: wintsa
+* @Date: 2023-12-22 14:52:53
+* @LastEditors: wintsa
+* @Description: 获取签名管理链接
+* @return {*}
+*/
+  async getPersonalSealManageUrl(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.getPersonalSealManageUrl(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data
+  }
+
+  /**
+* @Author: wintsa
+* @Date: 2023-12-22 14:52:53
+* @LastEditors: wintsa
+* @Description: 获取签名设置免验证签链接
+* @return {*}
+*/
+  async getPersonalFreeSignUrl(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.getPersonalFreeSignUrl(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-22 14:58:04
+   * @LastEditors: wintsa
+   * @Description: 查询个人签名列表
+   * @return {*}
+   */
+  async getPersonalSealList(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.getPersonalSealList(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-22 14:59:19
+   * @LastEditors: wintsa
+   * @Description: 解除签名免验证签
+   * @return {*}
+   */
+  async cancelPersonalFreeSign(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.cancelPersonalFreeSign(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2023-12-22 14:59:38
+   * @LastEditors: wintsa
+   * @Description: 删除签名
+   * @return {*}
+   */
+  async deletePersonalSeal(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.deletePersonalSeal(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data
+  }
+  /**-----------------------------------------------------------------------个人印章管理end----------------------------------------------------------------------------------*/
+
 }
+
