@@ -919,6 +919,7 @@ export class FadadaService {
    */
   async signdelete(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    console.log(data,'delete')
     let result: any = await Client.delete(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('delete')
