@@ -4,11 +4,13 @@ import { CreateZhiyinDto } from './dto/create-zhiyin.dto';
 import { pushDto } from './dto/push.dto';
 import { callback } from './dto/callback.dto';
 
-import { ApiBody, ApiOperation, ApiParam, ApiTags, } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags, } from '@nestjs/swagger';
 import { query } from 'express';
 
 @ApiTags('豸印')
 @Controller('zhiyin')
+@ApiResponse({status : 200})
+
 export class ZhiyinController {
   constructor(private readonly zhiyinService: ZhiyinService) { }
 
