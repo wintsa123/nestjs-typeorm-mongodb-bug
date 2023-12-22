@@ -9,7 +9,7 @@ import { query } from 'express';
 
 @ApiTags('豸印')
 @Controller('zhiyin')
-@ApiResponse({status : 200})
+@ApiResponse({status : 200,description:'成功'})
 
 export class ZhiyinController {
   constructor(private readonly zhiyinService: ZhiyinService) { }

@@ -9,7 +9,7 @@ import { SignTask } from './dto/fadadaSignTask.dto';
 import { UnbindUserRequest } from "@fddnpm/fasc-openapi-node-sdk/src/services/user/user_models";
 import { SocketService } from 'src/socket/socket.service';
 
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { query } from 'express';
 import { RedisCacheApi } from '@src/decorators';
 import { ipWhitelist } from '@src/guard/ip.guard';
@@ -17,6 +17,8 @@ import { AuthGuard } from '@src/guard/auth.guard';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
+@ApiResponse({status : 200,description:'成功'})
+
 // @UseGuards( AuthGuard)
 export class FadadaController {
   constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }

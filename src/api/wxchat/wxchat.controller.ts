@@ -3,13 +3,14 @@ import { WxchatService } from './wxchat.service';
 import { WxchatDto } from './dto/wxchat.dto';
 import { daka } from './dto/daka.dto';
 
-import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { RedisCacheApi } from '@src/decorators';
 import { FastifyReply } from 'fastify';
 import { dakaRule } from './dto/dakaRule.dto';
 
 @ApiTags('企业微信')
 @Controller('wxchat')
+@ApiResponse({status : 200,description:'成功'})
 
 export class WxchatController {
   constructor(private readonly wxchatService: WxchatService) { }
