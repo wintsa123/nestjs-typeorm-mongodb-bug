@@ -14,6 +14,7 @@ import { query } from 'express';
 import { RedisCacheApi } from '@src/decorators';
 import { ipWhitelist } from '@src/guard/ip.guard';
 import { AuthGuard } from '@src/guard/auth.guard';
+import { fadadaList } from './dto/fadadaList.dto';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
@@ -276,7 +277,7 @@ export class FadadaController {
   }
   @Post('/sign/GetOwnerList')
   @ApiOperation({ summary: '查询签署任务列表' })
-  signGetOwnerList(@Body() data:SignTask) {
+  signGetOwnerList(@Body() data:fadadaList) {
     return this.fadadaService.signGetOwnerList(data);
   }
   @Post('/sign/getPrefillUrl')
