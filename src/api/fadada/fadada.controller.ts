@@ -276,7 +276,7 @@ export class FadadaController {
   }
   @Post('/sign/GetOwnerList')
   @ApiOperation({ summary: '查询签署任务列表' })
-  signGetOwnerList(@Body() data:CreateFadadaDto) {
+  signGetOwnerList(@Body() data:SignTask) {
     return this.fadadaService.signGetOwnerList(data);
   }
   @Post('/sign/getPrefillUrl')
