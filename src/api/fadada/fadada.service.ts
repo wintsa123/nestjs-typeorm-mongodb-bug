@@ -993,4 +993,17 @@ export class FadadaService {
     return result.data
   }
 
+
+  async PersonCreateByImage(data) {
+    // const client = new fascOpenApi.callbackClient.Client(await this.init())
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+
+    let result: any = await  client.createSealByImage(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('createSealByImage')
+      return result.data.msg
+    }
+    return result.data
+  }
+
 }

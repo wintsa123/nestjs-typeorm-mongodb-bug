@@ -11,30 +11,27 @@ import { formatDate } from '../utils';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    let resultMessage = exception.message;
     let resultCode = 1;
-    let resultParams = {};
-    try {
-      const { code, message, ...oth } = JSON.parse(exception.message);
-      Logger.log(exception.message, '------------------------------------------------');
 
-      resultMessage = message;
-      resultCode = code;
-      resultParams = oth;
-    } catch (e) {}
-    // const message = exception.message;
+    const { code, msg, ...oth } = exception
+    console.log(exception)
+
+
     Logger.log(exception, '错误提示');
+    console.log(oth)
+    console.log(msg)
+
     const errorResponse = {
       status,
-      message: resultMessage,
+      message: msg,
       code: resultCode, // 自定义code
-      params: resultParams,
+      params: oth,
       path: request.url, // 错误的url地址
       method: request.method, // 请求方式
       timestamp: new Date().toLocaleDateString(), // 错误的时间

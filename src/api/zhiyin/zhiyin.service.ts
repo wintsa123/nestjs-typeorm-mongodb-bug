@@ -268,6 +268,7 @@ export class ZhiyinService {
     try {
 
       const { data: done } = await axios.get(url1)
+      console.log(done)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
         target!.status = '撤销'
@@ -275,12 +276,13 @@ export class ZhiyinService {
         await this.applyDetailRepository.softDelete({ code: result.code })
         return done
       } else {
+        
         this.logger.error(done)
-        throw done.msg
+        throw done
       }
     } catch (error) {
       this.logger.error(error)
-      return error
+      throw error
 
     }
   }
@@ -340,7 +342,7 @@ export class ZhiyinService {
    */
   async callback(data) {
     try {
-     
+
       const { opApplyDetailRequest, opStampRecordRequest } = data
       delete opApplyDetailRequest['id']
       opApplyDetailRequest['status'] = '盖章中'
