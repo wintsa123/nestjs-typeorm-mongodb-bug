@@ -25,7 +25,7 @@ export class ApiInterceptor implements NestInterceptor {
       .replace('/api/v1/admin', '') // 去除双//
       .replace(/\?.*/, '') // 去除最后一个
       .replace(/(\d+)$/, '*');
-    console.log(newUrl, '-------------');
+    console.log(newUrl);
     if (this.whiteUrlList.includes(newUrl)) {
       return next.handle();
     }
