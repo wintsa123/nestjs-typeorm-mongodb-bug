@@ -324,12 +324,12 @@ export class ZhiyinService {
         return done
       } else {
         this.logger.error(done)
-        throw done.msg;
+        throw done;
 
       }
     } catch (error) {
       this.logger.error(error)
-      return error
+      throw error;
 
     }
   }

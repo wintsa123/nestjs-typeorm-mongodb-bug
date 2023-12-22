@@ -62,8 +62,7 @@ export class FadadaService {
       const token: any = await client.getAccessToken()
       if (token.status !== 200) {
         this.logger.error('Token获取失败')
-
-        return token.data
+        throw token.data
       }
       await this.redisService.set('fadadaToken', token.data.data.accessToken, 7200)
       return token.data.data.accessToken;
@@ -200,7 +199,9 @@ export class FadadaService {
     let result: any = await client.get({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('Corp获取失败')
+   throw result.data
       return result.data.msg
+      
     }
     return result.data.data
   }
@@ -216,6 +217,7 @@ export class FadadaService {
     let result: any = await client.getIdentityInfo({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('corpGetIdentity获取失败')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -232,6 +234,7 @@ export class FadadaService {
     let result: any = await client.getMemberList({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('corpGetIdentity获取失败')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -254,6 +257,7 @@ export class FadadaService {
     let result: any = await euiClient.getUserAuthUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userAuthUrl获取失败')
+   throw result.data
       return result.data.msg
     }
     return result.data.data
@@ -315,6 +319,7 @@ export class FadadaService {
     let result: any = await Client.disableUser(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userDisable获取失败')
+   throw result.data
       return result.data.msg
     }
     await this.fadadaRepository.softDelete({ openUserId: data.openUserId });
@@ -333,6 +338,7 @@ export class FadadaService {
     let result: any = await Client.enableUser(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userEnable获取失败')
+   throw result.data
       return result.data.msg
     }
 
@@ -353,6 +359,7 @@ export class FadadaService {
     let result: any = await Client.unbindUser(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userunbind获取失败')
+   throw result.data
       return result.data.msg
     }
     await this.fadadaRepository.delete({ openUserId: data.openUserId })
@@ -371,6 +378,7 @@ export class FadadaService {
     let result: any = await Client.getUserInfo(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userGet')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -413,6 +421,7 @@ export class FadadaService {
     let result: any = await Client.getIdentInfo(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('userGetIdentity')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -429,6 +438,7 @@ export class FadadaService {
     let result: any = await Client.getUploadUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('uploadDoc')
+   throw result.data
       return result.data.msg
     }
     console.log(result.data)
@@ -447,6 +457,7 @@ export class FadadaService {
     let result: any = await Client.uploadFileByUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('uploadFileByUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data.data
@@ -465,6 +476,7 @@ export class FadadaService {
     console.log(result.headers)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileProcess')
+   throw result.data
       this.logger.error(result.data)
 
       throw result.data;
@@ -485,6 +497,7 @@ export class FadadaService {
     let result: any = await Client.fileVerifySign(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileVerifySign')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -525,7 +538,9 @@ export class FadadaService {
       let result: any = await Client.create(data)
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.headers)
-        return result.data.msg
+     throw result.data
+        throw result.data
+
       }
       return result.data.data
     } catch (error) {
@@ -547,6 +562,7 @@ export class FadadaService {
     let result: any = await Client.createWithTemplate(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('createWithTemplate')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -563,6 +579,7 @@ export class FadadaService {
     let result: any = await Client.addDoc(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('signAddDoc')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -579,6 +596,7 @@ export class FadadaService {
     let result: any = await Client.deleteDoc(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('signdeleteDoc')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -595,6 +613,7 @@ export class FadadaService {
     let result: any = await Client.addField(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addField')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -611,6 +630,7 @@ export class FadadaService {
     let result: any = await Client.deleteField(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteField')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -627,6 +647,7 @@ export class FadadaService {
     let result: any = await Client.fillFieldValues(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fillFieldValues')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -643,6 +664,7 @@ export class FadadaService {
     let result: any = await Client.addAttach(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addAttach')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -659,6 +681,7 @@ export class FadadaService {
     let result: any = await Client.deleteAttach(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteAttach')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -675,6 +698,7 @@ export class FadadaService {
     let result: any = await Client.addActor(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('addActor')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -691,6 +715,7 @@ export class FadadaService {
     let result: any = await Client.deleteActor(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('deleteActor')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -707,6 +732,7 @@ export class FadadaService {
     let result: any = await Client.modifyActor(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('modifyActor')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -724,6 +750,7 @@ export class FadadaService {
 
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getSignTaskEditUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data.data
@@ -741,6 +768,7 @@ export class FadadaService {
     let result: any = await Client.getSignTaskPreviewUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getSignTaskPreviewUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data.data
@@ -758,6 +786,7 @@ export class FadadaService {
     let result: any = await Client.getActorUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getActorUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data.data
@@ -774,6 +803,7 @@ export class FadadaService {
     let result: any = await Client.getActorBatchSignTaskUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getActorBatchSignTaskUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -790,6 +820,7 @@ export class FadadaService {
     let result: any = await Client.getV3ActorSignTaskUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getV3ActorSignTaskUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -806,6 +837,7 @@ export class FadadaService {
     let result: any = await Client.start(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('start')
+   throw result.data
       throw result.data
     } else {
       console.log(result)
@@ -825,6 +857,7 @@ export class FadadaService {
     let result: any = await Client.cancel(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('cancel')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -841,6 +874,7 @@ export class FadadaService {
     let result: any = await Client.finalizeDoc(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('finalizeDoc')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -857,6 +891,7 @@ export class FadadaService {
     let result: any = await Client.urgeSignTask(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('urgeSignTask')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -874,6 +909,7 @@ export class FadadaService {
     let result: any = await Client.block(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('block')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -890,6 +926,7 @@ export class FadadaService {
     let result: any = await Client.unblock(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('unblock')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -906,6 +943,7 @@ export class FadadaService {
     let result: any = await Client.finish(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('finish')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -923,6 +961,7 @@ export class FadadaService {
     let result: any = await Client.delete(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('delete')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -939,6 +978,7 @@ export class FadadaService {
     let result: any = await Client.abolish(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('abolish')
+   throw result.data
       return result.data.msg
     }
     return result.data.msg
@@ -955,6 +995,7 @@ export class FadadaService {
     let result: any = await Client.getDetail(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getDetail')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -972,6 +1013,7 @@ export class FadadaService {
     let result: any = await Client.getOwnerList(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getOwnerList')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -988,6 +1030,7 @@ export class FadadaService {
     let result: any = await Client.getOwnerDownLoadUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getOwnerDownLoadUrl')
+   throw result.data
       return result.data.msg
     }
     return result.data
@@ -1001,6 +1044,7 @@ export class FadadaService {
     let result: any = await  client.createSealByImage(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('createSealByImage')
+   throw result.data
       return result.data.msg
     }
     return result.data
