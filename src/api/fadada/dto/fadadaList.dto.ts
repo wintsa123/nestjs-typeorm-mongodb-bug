@@ -4,7 +4,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class fadadaList {
     @ApiProperty({ required: true })
     @IsNotEmpty()
-    ownerId!: string
-
+    openId!: string
+    @ApiProperty({ required: true })
+    @IsNotEmpty()
+    idType!: string
 
 }
