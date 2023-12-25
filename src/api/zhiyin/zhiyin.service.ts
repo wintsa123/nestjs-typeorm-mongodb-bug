@@ -394,9 +394,14 @@ export class ZhiyinService {
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
           let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id;return new StampRecordDetailEntity(e) })
           console.log(StampRecordDetails)
-          await this.stampRecordRepository.save(StampRecords);
+          try {
+            await this.stampRecordRepository.save(StampRecords);
 
-          await this.stampRecordDetailRepository.save(StampRecordDetails);
+            await this.stampRecordDetailRepository.save(StampRecordDetails);
+          } catch (error) {
+            throw error
+          }
+       
 
         }
         return true
