@@ -360,7 +360,7 @@ export class ZhiyinService {
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
-        let applyData = await this.applyDetailRepository.findOne({ where: { createOaUserName: '管理员无审批盖章' } });
+        let applyData = await this.applyDetailRepository.findOne({ where: { requestId: IsNull() } });
 
 
         if (!applyData) {
@@ -405,6 +405,7 @@ export class ZhiyinService {
         return true
 
       }
+      //普通人用印根据stampCode更新数据
       delete opApplyDetailRequest['id']
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
       if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
@@ -414,8 +415,10 @@ export class ZhiyinService {
       let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
       let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
       Object.assign(applyDetail, opApplyDetailRequest)
-      applyDetail['details'] = StampRecordDetails
-      applyDetail['records'] = StampRecords
+      // applyDetail['details'] = StampRecordDetails
+      // applyDetail['records'] = StampRecords
+      await this.stampRecordRepository.save(StampRecords);
+      await this.stampRecordDetailRepository.save(StampRecordDetails);
       await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {

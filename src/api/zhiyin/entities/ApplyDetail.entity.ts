@@ -138,10 +138,10 @@ export class ApplyDetailEntity {
 
 
 
-  @OneToMany(() => StampRecordDetailEntity, stampRecordDetail => stampRecordDetail.apply,{cascade:true})
+  @OneToMany(() => StampRecordDetailEntity, stampRecordDetail => stampRecordDetail.apply,{cascade:false})
   details?: StampRecordDetailEntity[];
 
-  @OneToMany(() => StampRecordEntity, e => e.apply,{cascade:true})
+  @OneToMany(() => StampRecordEntity, e => e.apply,{cascade:false})
   records?: StampRecordEntity[];
 
 }
