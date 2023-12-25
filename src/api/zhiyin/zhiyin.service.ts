@@ -377,24 +377,43 @@ export class ZhiyinService {
           throw '盖章人不存在'
         }
         opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
-     
+
       }
 
 
       console.log(opApplyDetailRequest, '-------------------------------------------------')
       if (opApplyDetailRequest.id == 0) {
+        //管理员无条件发起
         delete opApplyDetailRequest['id']
-        const applyData = new ApplyDetailEntity(opApplyDetailRequest)
-        const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-        let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
-        let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-        let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
-        applyData['details'] = StampRecordDetails
-        applyData['records'] = StampRecords
-        applyData['status'] = '完成'
+        let applyData = await this.applyDetailRepository.findOne({ where: { stampCode:  IsNull() } });
+        console.log(applyData)
+        if (!applyData) {
+          const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
 
-        await this.applyDetailRepository.save(applyData);
-        return true
+          const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
+          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
+          let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
+          let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
+          NewapplyData['details'] = StampRecordDetails
+          NewapplyData['records'] = StampRecords
+          NewapplyData['status'] = '完成'
+          NewapplyData['records'] = StampRecords
+
+          await this.applyDetailRepository.save(NewapplyData);
+          return true
+        }else{
+          const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
+          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
+          let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
+          let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
+          applyData['details'] = StampRecordDetails
+          applyData['records'] = StampRecords
+          applyData['status'] = '完成'
+          applyData['records'] = StampRecords
+
+          await this.applyDetailRepository.save(applyData);
+        }
+       
       }
       delete opApplyDetailRequest['id']
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
@@ -405,15 +424,9 @@ export class ZhiyinService {
       let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
       let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
       Object.assign(applyDetail, opApplyDetailRequest)
-
-
       StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
-
-     
-      console.log('盖章中')
-
       console.log(StampRecords)
       await this.applyDetailRepository.save(applyDetail);
       return true
