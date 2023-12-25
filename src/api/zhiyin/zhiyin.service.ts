@@ -360,10 +360,10 @@ export class ZhiyinService {
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
-        let applyData = await this.applyDetailRepository.findOne({ where: { createOaUserName: '管理员无审批盖章'} });
+        let applyData = await this.applyDetailRepository.findOne({ where: { createOaUserName: '管理员无审批盖章' } });
 
 
-
+        console.log(applyData)
         if (!applyData) {
 
           if (!!opApplyDetailRequest['stampOpenUserId']) {
