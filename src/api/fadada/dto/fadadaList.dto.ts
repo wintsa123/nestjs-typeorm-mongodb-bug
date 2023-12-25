@@ -4,17 +4,17 @@ export class fadadaList extends PartialType(class { }) {
     @ApiProperty({
         type: 'object', properties: {
             idType: { type: 'string' },
-            ownerId: { type: 'string' },
+            openId: { type: 'string' },
 
         }, required: true
     })
-    OpenId!: OpenId[];
+    ownerId!: OpenId[];
 }
 
 interface OpenId {
     /** 文件的用途类型: doc | attach */
     idType: string;
     /** 法大大云存储中的源文件地址 */
-    ownerId: string;
+    openId: string;
 
 }
