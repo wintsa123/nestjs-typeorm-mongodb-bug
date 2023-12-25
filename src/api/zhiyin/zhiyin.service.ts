@@ -388,24 +388,18 @@ export class ZhiyinService {
           await this.applyDetailRepository.save(NewapplyData);
           return true
         } else {
-          console.log(applyData, '-----------------------------------')
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-          console.log(1)
 
-          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id;return new StampRecordEntity(e) })
-          console.log(2)
+          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyData!.id; return new StampRecordEntity(e) })
 
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-          let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id;return new StampRecordDetailEntity(e) })
+          let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyData!.id; return new StampRecordDetailEntity(e) })
           console.log(StampRecords)
-          try {
-            await this.stampRecordRepository.save(StampRecords);
+          await this.stampRecordRepository.save(StampRecords);
 
-            await this.stampRecordDetailRepository.save(StampRecordDetails);
-          } catch (error) {
-            throw error
-          }
-       
+          await this.stampRecordDetailRepository.save(StampRecordDetails);
+
+
 
         }
         return true
