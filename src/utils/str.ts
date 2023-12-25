@@ -1,4 +1,9 @@
+import { RequestParamsEnum, SignMethod } from '@fddnpm/fasc-openapi-node-sdk/lib/common/models';
 import crypto from 'crypto';
+import isStream from "is-stream"
+interface Obj {
+  [propName: string]: any
+}
 /**
  * @Author: 水痕
  * @Date: 2023-10-07 18:53:32
@@ -45,10 +50,135 @@ export const strToMd5 = (str: string): string => {
  * @param {string} str
  * @return {*}
  */
-export const generateCacheKey=(data) =>{
+export const generateCacheKey = (data) => {
   // Use SHA-256 hash function to hash the request body
   const hash = crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
   // Truncate or modify the hash if necessary to fit within Redis key length limit
   return hash;
 }
 
+
+/**
+ * @Author: wintsa
+ * @Date: 2023-12-25 15:47:29
+ * @LastEditors: wintsa
+ * @Description: copy法大大的sign逻辑
+ * @return {*}
+ */
+export const sign = ({
+  signStr,
+  timestamp,
+  appSecret,
+}: {
+  signStr: string
+  timestamp: number | string
+  appSecret: string
+}): string => {
+  // 对排序后的参数字符串计算摘要，sha256Hex
+  const signText = crypto.createHash("sha256").update(signStr).digest("hex")
+
+  // 用时间戳计算临时签名密钥
+  const timestampSecret = crypto
+    .createHmac("sha256", appSecret)
+    .update(String(timestamp))
+    .digest()
+
+  // 计算参数签名
+  const hash = crypto.createHmac("sha256", timestampSecret).update(signText).digest("hex")
+
+  return hash
+}
+
+export const formatParams=({
+  data,
+  appId,
+  signMethod,
+  nonce,
+  timestamp,
+  event
+}) =>{
+  const signParams = {
+    [RequestParamsEnum.DATA_KEY]: JSON.stringify(data || ''),
+    [RequestParamsEnum.APP_ID]: appId,
+    [RequestParamsEnum.SIGN_TYPE]: signMethod,
+    [RequestParamsEnum.NONCE]: nonce,
+    [RequestParamsEnum.TIMESTAMP]: timestamp,
+    ['X-FASC-Event']: event
+  }
+
+ 
+  
+
+  return signParams
+}
+
+export const formatSignString = (signParams:Obj): string => {
+  let params = { ...signParams }
+  let strParam = ""
+  // 去除字节流参数
+  removeStream(params)
+  // 去除值为空的字段
+  params = deepRemoveNull(params)
+  const keys = Object.keys(params)
+  // 排序
+  keys.sort()
+  // 参数拼接，去除重复的key
+  for (const k in keys) {
+    if (!keys.hasOwnProperty(k)) {
+      continue
+    }
+    strParam += "&" + keys[k] + "=" + params[keys[k] as keyof Obj]
+  }
+  const signStr = strParam.slice(1)
+  return signStr
+}
+
+
+function removeStream(data: any) {
+  for (const key in data) {
+    if (isStream(data[key])) {
+      delete data[key]
+    }
+  }
+}
+
+function deepRemoveNull(obj: any) {
+  if (isArray(obj)) {
+    return obj.map(deepRemoveNull)
+  } else if (isObject(obj)) {
+    const result: any = {}
+    for (const key in obj) {
+      const value = obj[key]
+      if (!isBlank(value)) {
+        result[key] = deepRemoveNull(value)
+      }
+    }
+    return result
+  } else {
+    return obj
+  }
+}
+
+function isBuffer(x: any): boolean {
+  return Buffer.isBuffer(x)
+}
+
+function isArray(x: any): boolean {
+  return Array.isArray(x)
+}
+
+function isObject(x: any): boolean {
+  return typeof x === "object" && !isArray(x) && !isStream(x) && !isBuffer(x)
+}
+
+function isNull(x: any): boolean {
+  return x === null
+}
+
+function isBlank(x: any): boolean {
+  if (typeof x === 'string') {
+    return x.trim() === ''
+  } else {
+    return x === null || x === undefined
+  }
+}

@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadafree } from './entities/fadadaFree.entity';
+import { formatParams, formatSignString, sign } from '@src/utils';
 
 @Injectable()
 export class FadadaService {
@@ -83,20 +84,28 @@ export class FadadaService {
    */
   async callback(data, headers) {
 
-    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': Nonce, 'x-fasc-event': Eventid } = headers
-    this.logger.log('data','callback', headers)
+    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'SIGN_TYPE': signMethod, 'X-FASC-Event': event, 'x-fasc-sign': signNum } = headers
 
+    this.logger.log('data', 'callback', headers)
+    if (!timestamp) {
+      throw '无效数据'
+    }
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
     if (timestamp < lowerLimit || timestamp > upperLimit) {
       this.logger.error('时间不正确')
 
-      return false
+      throw false
     }
 
 
-
+    const signature = sign({ signStr: formatSignString(formatParams({ data: data.bizContent, appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
+    console.log(signature, 'signature')
+    if (signature !== signNum) {
+      this.logger.error('法大大回调验证出错')
+      return 'success'
+    }
     switch (Eventid) {
       case 'user-authorize':
         const tmp = JSON.parse(data.bizContent)
@@ -104,13 +113,13 @@ export class FadadaService {
           this.logger.error('user-authorize')
           this.logger.error(tmp.authFailedReason)
 
-          return false
+          throw false
         }
         if (tmp.identProcessStatus !== 'success') {
           this.logger.error('user-authorize')
           this.logger.error(tmp.identFailedReason)
 
-          return false
+          throw false
         }
         try {
 
@@ -128,7 +137,7 @@ export class FadadaService {
           return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
-          return false
+          throw error
         }
         break;
       case 'personal-seal-authorize-free-sign':
@@ -147,7 +156,7 @@ export class FadadaService {
           return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
-          return false
+          throw error
         }
         break;
       case 'personal-seal-authorize-free-sign-cancel':
@@ -164,7 +173,7 @@ export class FadadaService {
           return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
-          return false
+          throw error
         }
         break;
 
