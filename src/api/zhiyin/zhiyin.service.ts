@@ -360,8 +360,8 @@ export class ZhiyinService {
       if (opApplyDetailRequest['availableCount'] == 0) {
         opApplyDetailRequest['status'] = '完成'
       }
-      let createUser1
-      let stampUser1
+      let createUser1=[]
+      let stampUser1=[]
       if (!!opApplyDetailRequest['createOpenUserId']) {
         let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
         createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
@@ -377,10 +377,10 @@ export class ZhiyinService {
 
       }
 
-      if (createUser1[0].LASTNAME == null) {
+      if (createUser1.length>0&&createUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
-      if (stampUser1[0].LASTNAME == null) {
+      if (createUser1.length>0&&stampUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
       if (opApplyDetailRequest.id == 0) {
