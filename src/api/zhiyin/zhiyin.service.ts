@@ -383,6 +383,8 @@ export class ZhiyinService {
       if (createUser1.length>0&&stampUser1[0].LASTNAME == null) {
         return '创建人不存在'
       }
+      console.log(opApplyDetailRequest,'-------------------------------------------------')
+
       if (opApplyDetailRequest.id == 0) {
         delete opApplyDetailRequest['id']
         const applyData =new ApplyDetailEntity(opApplyDetailRequest) 
@@ -412,7 +414,6 @@ export class ZhiyinService {
       applyDetail['createOaUserName'] = createUser1[0].LASTNAME
       applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
       console.log('盖章中')
-      console.log(data)
 
       console.log(StampRecords)
       await this.applyDetailRepository.save(applyDetail);
