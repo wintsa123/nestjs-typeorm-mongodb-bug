@@ -389,6 +389,8 @@ export class ZhiyinService {
           NewapplyData['details'] = StampRecordDetails
           NewapplyData['records'] = StampRecords
           NewapplyData['status'] = '完成'
+
+          NewapplyData['createOaUserName'] = '管理员无审批盖章'
           NewapplyData['records'] = StampRecords
 
           await this.applyDetailRepository.save(NewapplyData);
@@ -401,6 +403,8 @@ export class ZhiyinService {
           applyData['details'] = StampRecordDetails
           applyData['records'] = StampRecords
           applyData['status'] = '完成'
+          applyData['createOaUserName'] = '管理员无审批盖章'
+
           applyData['records'] = StampRecords
 
           await this.applyDetailRepository.save(applyData);

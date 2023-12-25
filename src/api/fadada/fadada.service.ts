@@ -84,7 +84,7 @@ export class FadadaService {
   async callback(data, headers) {
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': Nonce, 'x-fasc-event': Eventid } = headers
-    console.log(data, 'callback', Eventid)
+    this.logger.log('data','callback', headers)
 
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
@@ -94,18 +94,8 @@ export class FadadaService {
 
       return false
     }
-    console.log(headers)
 
-    // const redisResule = await this.redisService.get('X-FASC-Nonce')
-    // console.log(redisResule)
 
-    // if (redisResule == null) {
-    //   await this.redisService.set('X-FASC-Nonce', Nonce, 10 * 60)
-    // } else {
-    //   this.logger.error('repeat Nonce')
-    //   return false
-    // }
-    // console.log(headers,Eventid)
 
     switch (Eventid) {
       case 'user-authorize':
@@ -180,7 +170,6 @@ export class FadadaService {
 
 
       default:
-        console.log(3)
         return 'success'
         break;
     }
@@ -441,7 +430,6 @@ export class FadadaService {
       throw result.data
 
     }
-    console.log(result.data)
     return result.data.data
   }
   /**
@@ -452,7 +440,6 @@ export class FadadaService {
    * @return {*}
    */
   async uploadFileByUrl(data) {
-    console.log(data)
     const Client = new fascOpenApi.docClient.Client(await this.init())
     let result: any = await Client.uploadFileByUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
@@ -471,16 +458,13 @@ export class FadadaService {
    */
   async fileProcess(data) {
     const Client = new fascOpenApi.docClient.Client(await this.init())
-    console.log(data)
     let result: any = await Client.fileProcess(data)
-    console.log(result.headers)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('fileProcess')
       throw result.data
 
 
     }
-    console.log(result.data)
     return result.data.data
   }
   /**
@@ -524,14 +508,12 @@ export class FadadaService {
       }
       if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
         let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientId'] } });
-        console.log(result, 'actorOpenId')
         e.actor['actorOpenId'] = result!['openUserId']
 
       }
     }
 
 
-    console.log(data.actors, 'signCreate0000000000000000000000')
     try {
       let result: any = await Client.create(data)
       if (result.status !== 200 || result.data.code !== '100000') {
@@ -836,7 +818,6 @@ export class FadadaService {
       this.logger.error('start')
       throw result.dat
     } else {
-      console.log(result)
       return result.data.msg
     }
   }
@@ -953,7 +934,6 @@ export class FadadaService {
    */
   async signdelete(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    console.log(data, 'delete')
     let result: any = await Client.delete(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('delete')

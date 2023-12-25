@@ -21,7 +21,7 @@ async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }), {
-    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
+    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn','debug'],
   });
   app.enableCors({
     "origin": "*",

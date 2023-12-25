@@ -70,7 +70,6 @@ export class TasksService {
             `}
             }
             const { data: result } = await axios.post(this.robot, newObj);
-            console.log(result)
             if (result.errcode == 0) {
                 this.logger.warn(result.errmsg)
                 return
@@ -96,7 +95,6 @@ export class TasksService {
                 }
             }
             const { data: result } = await axios.post(this.robot, newObj);
-            console.log(result)
             if (result.errcode == 0) {
                 this.logger.warn(result.errmsg)
                 return
@@ -122,7 +120,6 @@ export class TasksService {
                 }
             }
             const { data: result } = await axios.post(this.robot, newObj);
-            console.log(result)
             if (result.errcode == 0) {
                 this.logger.warn(result.errmsg)
                 return
@@ -148,7 +145,6 @@ export class TasksService {
                 }
             }
             const { data: result } = await axios.post(this.robot, newObj);
-            console.log(result)
             if (result.errcode == 0) {
                 this.logger.warn(result.errmsg)
                 return
@@ -173,7 +169,6 @@ export class TasksService {
                 }
             }
             const { data: result } = await axios.post(this.robot, newObj);
-            console.log(result)
             if (result.errcode == 0) {
                 this.logger.warn(result.errmsg)
                 return

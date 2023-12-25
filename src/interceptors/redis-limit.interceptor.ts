@@ -28,6 +28,7 @@ export class RedisLimitInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     console.log('限流拦截器');
+    
     const request: IRequest = context.switchToHttp().getRequest();
     const currentIp = this.toolsService.getReqIP(request);
     const redisKey = `redis_limit_ip_${currentIp}`;

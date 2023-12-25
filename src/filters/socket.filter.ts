@@ -10,7 +10,6 @@ import {BizException} from "./BizException";
 @Catch()
 export class WsServiceExceptionFilter implements WsExceptionFilter {
     catch(exception: any, host: ArgumentsHost) {
-        console.log('errrorrrrrrrr')
 
         // 进入该拦截器，说明http调用中存在异常，需要解析异常，并返回统一处理
         let responseWrapper;

@@ -11,7 +11,6 @@ export class SocketService {
   server?: Server ;
   
   sendNotificationToClients(msg,@ConnectedSocket() client: Socket) {
-    console.log(this.server,111)
     client.broadcast.emit('message', msg);
     
     // client.to('268').emit('message', msg);

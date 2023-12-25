@@ -20,12 +20,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let resultCode = 1;
 
     const { code, msg, ...oth } = exception
-    console.log(exception)
 
 
     Logger.log(exception, '错误提示');
-    console.log(oth)
-    console.log(msg)
 
     const errorResponse = {
       status,

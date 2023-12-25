@@ -22,7 +22,6 @@ export class IpToAddressService {
     // TODO 这里使用const configService = new ConfigService()获取不到数据，只能这样获取环境变量
     // 主要是直接在实体类中使用要使用new的方式
     const lbsKey: string = config.lbsKey!;
-    console.log(lbsKey, '密钥');
     const url = `https://apis.map.qq.com/ws/location/v1/ip?key=${lbsKey}&ip=${ip}`;
     const { data } = await axios.get(url);
     if (data.status === 0) {

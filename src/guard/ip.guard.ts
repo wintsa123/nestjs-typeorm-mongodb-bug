@@ -15,8 +15,7 @@ export class ipWhitelist implements CanActivate {
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
         const clientIP = request.ip;
-        console.log(this.allowedIPs)
-        console.log(clientIP)
+
         return this.allowedIPs.includes(clientIP);
     }
 }

@@ -141,7 +141,6 @@ export class FadadaController {
   @RedisCacheApi({ exSecond: null })
 
   signCreate(@Body() data: fileVerify, @Headers() header) {
-    console.log(header, 'header')
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')
@@ -222,7 +221,6 @@ export class FadadaController {
   @Post('/sign/getV3ActorSignTaskUrl')
   @ApiOperation({ summary: '获取参与方签署链接（API3.0任务专属）' })
   getV3ActorSignTaskUrl(@Body() data: SignTask) {
-    console.log(data)
     return this.fadadaService.getV3ActorSignTaskUrl(data);
   }
   @Post('/sign/Start')

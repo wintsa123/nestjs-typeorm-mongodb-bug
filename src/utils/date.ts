@@ -48,7 +48,6 @@ export const birthdayYear = (date: Date): string | null => {
   try {
     return date ? `${moment().diff(date, 'years')}` : null;
   } catch (e) {
-    console.log(e);
     return null;
   }
 };

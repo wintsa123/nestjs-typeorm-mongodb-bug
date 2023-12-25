@@ -8,4 +8,3 @@ fs.copySync(sourceDir, targetDir);
 
 
 
-console.log('Static files copied successfully.');

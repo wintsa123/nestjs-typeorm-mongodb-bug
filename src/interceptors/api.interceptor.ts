@@ -25,7 +25,6 @@ export class ApiInterceptor implements NestInterceptor {
       .replace('/api/v1/admin', '') // 去除双//
       .replace(/\?.*/, '') // 去除最后一个
       .replace(/(\d+)$/, '*');
-    console.log(newUrl);
     if (this.whiteUrlList.includes(newUrl)) {
       return next.handle();
     }
@@ -38,7 +37,6 @@ export class ApiInterceptor implements NestInterceptor {
       }
       // 表示已经登录的
       const currentItem = user.authApi.find((item) => item.method == method && item.url == newUrl);
-      console.log(currentItem, '???');
       if (currentItem) {
         return next.handle();
       } else {

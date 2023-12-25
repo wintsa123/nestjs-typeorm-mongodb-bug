@@ -16,7 +16,6 @@ export class AuthGuard implements CanActivate {
     const token =
       context.switchToRpc().getData().headers
       // .origin='https://oa.zwgczx.com'
-console.log(token)
     if (token) {
       // 如果传递了token的话就要从redis中查询是否有该token
       return true;

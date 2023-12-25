@@ -60,7 +60,6 @@ export class WxchatService {
         "open_userid_list": id,
         "source_agentid":agentid
       })
-      console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
@@ -78,7 +77,6 @@ export class WxchatService {
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/user/getuserid?access_token=${assess_token}`, {
         "mobile": id,
       })
-      console.log(data)
       if (data.errcode) {
         return '失败'
       } else {
@@ -130,7 +128,6 @@ export class WxchatService {
   async getMsg(data: any, query: any) {
     const { msg_signature, timestamp, nonce } = query;
     let recivedMsg = this.wxBizMsgCrypt.DecryptMsg(msg_signature, timestamp, nonce, data);
-    console.log(recivedMsg)
     const testXmlData = MessageHandle.textXml({
       toUser: recivedMsg.FromUserName, // 员工号?或者账号就是 userid
       fromUser: this.CorpID, // 此处固定为 企业CorpID
@@ -187,7 +184,7 @@ export class WxchatService {
           responseType: 'json'
         });
       }))
-      let checkindata = done.map(e => { console.log(e); return e.data.checkindata }).flat()
+      let checkindata = done.map(e => {  return e.data.checkindata }).flat()
       results = {
         errcode: 0,
         errmsg: 'ok',
@@ -205,7 +202,6 @@ export class WxchatService {
       });
       results = done1
     }
-    console.log('result', results)
     return results.checkindata
   }
 

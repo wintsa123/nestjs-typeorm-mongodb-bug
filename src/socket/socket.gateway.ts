@@ -21,7 +21,6 @@ export class SocketGateway {
   server?: Server;
   @SubscribeMessage('clientUserId')
   create(@MessageBody('clientUserId') clientUserId: string,@ConnectedSocket() client: Socket) {
-    console.log(clientUserId,'create')
     client.join(clientUserId)
     return true;
   }
