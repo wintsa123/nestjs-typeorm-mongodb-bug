@@ -1,4 +1,5 @@
-import { RequestParamsEnum, SignMethod } from '@fddnpm/fasc-openapi-node-sdk/lib/common/models';
+
+import { RequestParamsEnum } from '@src/enums';
 import crypto from 'crypto';
 import isStream from "is-stream"
 interface Obj {
