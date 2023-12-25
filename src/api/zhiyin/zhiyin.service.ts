@@ -391,6 +391,8 @@ export class ZhiyinService {
         let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
         applyData['details'] = StampRecordDetails
         applyData['records'] = StampRecords
+        applyData['status'] = '完成'
+
         await this.applyDetailRepository.save(applyData);
         return true
       }
