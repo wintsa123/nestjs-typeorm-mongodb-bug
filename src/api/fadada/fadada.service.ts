@@ -99,13 +99,13 @@ export class FadadaService {
       throw false
     }
 
-    const signature = sign({ signStr: formatSignString(formatParams({ data:JSON.parse(data.bizContent), appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
-    console.log(signature, 'signature',signNum)
+    // const signature = sign({ signStr: formatSignString(formatParams({ data:JSON.parse(data.bizContent), appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
+    // console.log(signature, 'signature',signNum)
 
-    if (signature !== signNum) {
-      this.logger.error('法大大回调验证出错')
-      return 'success'
-    }
+    // if (signature !== signNum) {
+    //   this.logger.error('法大大回调验证出错')
+    //   return 'success'
+    // }
     switch (Eventid) {
       case 'user-authorize':
         const tmp = JSON.parse(data.bizContent)
