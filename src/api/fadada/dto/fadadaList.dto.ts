@@ -1,6 +1,6 @@
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
-export class FileProcess extends PartialType(class { }) {
+export class fadadaList extends PartialType(class { }) {
     @ApiProperty({
         type: 'object', properties: {
             idType: { type: 'string' },
