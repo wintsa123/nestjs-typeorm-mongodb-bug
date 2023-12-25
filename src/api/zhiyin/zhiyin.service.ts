@@ -360,8 +360,8 @@ export class ZhiyinService {
       if (opApplyDetailRequest['availableCount'] == 0) {
         opApplyDetailRequest['status'] = '完成'
       }
-      let createUser1=[]
-      let stampUser1=[]
+      let createUser1 :any=[]
+      let stampUser1:any=[]
       if (!!opApplyDetailRequest['createOpenUserId']) {
         let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
         createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
