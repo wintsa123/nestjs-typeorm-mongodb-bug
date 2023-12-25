@@ -393,9 +393,8 @@ export class ZhiyinService {
           let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
           let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
-          applyData['details'] = StampRecordDetails
-          applyData['records'] = StampRecords
-          applyData['records'] = StampRecords
+          applyData['details']?.concat(StampRecordDetails)
+          applyData['records'] ?.concat(StampRecords)
           await this.applyDetailRepository.save(applyData);
         }
         return true
