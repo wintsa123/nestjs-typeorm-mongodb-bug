@@ -354,32 +354,29 @@ export class ZhiyinService {
       if (opApplyDetailRequest['availableCount'] == 0) {
         opApplyDetailRequest['status'] = '完成'
       }
-      let createUser1: any = []
-      let stampUser1: any = []
-      if (!!opApplyDetailRequest['createOpenUserId']) {
-        let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
-        createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
-        if (createUser1[0].LASTNAME == null) {
-          throw '创建人不存在'
-        }
-        opApplyDetailRequest['createOaUserName'] = createUser1[0].LASTNAME
-      }
-      if (!!opApplyDetailRequest['stampOpenUserId']) {
-        let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
-        stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
-        if (stampUser1[0].LASTNAME == null) {
-          throw '盖章人不存在'
-        }
-        opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
 
-      }
 
 
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
-        let applyData = await this.applyDetailRepository.findOne({ where: { stampCode:  IsNull() } });
+        let applyData = await this.applyDetailRepository.findOne({ where: { stampCode: IsNull() } });
+
+
+
         if (!applyData) {
+
+          if (!!opApplyDetailRequest['stampOpenUserId']) {
+            let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
+            let stampUser1 = await this.connection.query(`select lastname,id from hrmresource where WORKCODE='${stampWorkcode}' `)
+            if (stampUser1[0].LASTNAME == null) {
+              throw '盖章人不存在'
+            }
+            opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
+            opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
+
+          }
+
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
 
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
@@ -395,7 +392,7 @@ export class ZhiyinService {
 
           await this.applyDetailRepository.save(NewapplyData);
           return true
-        }else{
+        } else {
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
           let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
@@ -409,7 +406,7 @@ export class ZhiyinService {
 
           await this.applyDetailRepository.save(applyData);
         }
-       
+
       }
       delete opApplyDetailRequest['id']
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
@@ -420,7 +417,6 @@ export class ZhiyinService {
       let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
       let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
       Object.assign(applyDetail, opApplyDetailRequest)
-      StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
       await this.applyDetailRepository.save(applyDetail);
