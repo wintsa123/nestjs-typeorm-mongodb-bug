@@ -355,48 +355,46 @@ export class ZhiyinService {
     try {
 
       const { opApplyDetailRequest, opStampRecordRequest } = data
-      delete opApplyDetailRequest['id']
+
       opApplyDetailRequest['status'] = '盖章中'
       if (opApplyDetailRequest['availableCount'] == 0) {
         opApplyDetailRequest['status'] = '完成'
       }
-      let createUser1 :any=[]
-      let stampUser1:any=[]
+      let createUser1: any = []
+      let stampUser1: any = []
       if (!!opApplyDetailRequest['createOpenUserId']) {
         let createWorkcode = await this.convert([opApplyDetailRequest.createOpenUserId], true)
         createUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${createWorkcode}'`)
+        if (createUser1[0].LASTNAME == null) {
+          throw '创建人不存在'
+        }
         opApplyDetailRequest['createOaUserName'] = createUser1[0].LASTNAME
-
-
       }
       if (!!opApplyDetailRequest['stampOpenUserId']) {
         let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
         stampUser1 = await this.connection.query(`select lastname from hrmresource where WORKCODE='${stampWorkcode}' `)
+        if (stampUser1[0].LASTNAME == null) {
+          throw '盖章人不存在'
+        }
         opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
-
-
+     
       }
 
-      if (createUser1.length>0&&createUser1[0].LASTNAME == null) {
-        return '创建人不存在'
-      }
-      if (createUser1.length>0&&stampUser1[0].LASTNAME == null) {
-        return '创建人不存在'
-      }
-      console.log(opApplyDetailRequest,'-------------------------------------------------')
 
+      console.log(opApplyDetailRequest, '-------------------------------------------------')
       if (opApplyDetailRequest.id == 0) {
         delete opApplyDetailRequest['id']
-        const applyData =new ApplyDetailEntity(opApplyDetailRequest) 
+        const applyData = new ApplyDetailEntity(opApplyDetailRequest)
         const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
         let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
         let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
-        let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => {  return new StampRecordDetailEntity(e) })
+        let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
         applyData['details'] = StampRecordDetails
         applyData['records'] = StampRecords
         await this.applyDetailRepository.save(applyData);
         return true
       }
+      delete opApplyDetailRequest['id']
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
       if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
 
@@ -411,8 +409,7 @@ export class ZhiyinService {
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
 
-      applyDetail['createOaUserName'] = createUser1[0].LASTNAME
-      applyDetail['stampOaUserName'] = stampUser1[0].LASTNAME
+     
       console.log('盖章中')
 
       console.log(StampRecords)
