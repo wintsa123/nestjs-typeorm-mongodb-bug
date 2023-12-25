@@ -99,17 +99,14 @@ export const formatParams=({
   event
 }) =>{
   const signParams = {
-    [RequestParamsEnum.DATA_KEY]: JSON.stringify(data || ''),
     [RequestParamsEnum.APP_ID]: appId,
     [RequestParamsEnum.SIGN_TYPE]: signMethod,
-    [RequestParamsEnum.NONCE]: nonce,
     [RequestParamsEnum.TIMESTAMP]: timestamp,
-    ['X-FASC-Event']: event
+    [RequestParamsEnum.NONCE]: nonce,
+    ['X-FASC-Event']: event,
+    [RequestParamsEnum.DATA_KEY]: JSON.stringify(data || '')
+
   }
-
- 
-  
-
   return signParams
 }
 

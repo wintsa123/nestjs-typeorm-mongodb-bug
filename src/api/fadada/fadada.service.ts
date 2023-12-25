@@ -86,7 +86,7 @@ export class FadadaService {
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'SIGN_TYPE': signMethod, 'X-FASC-Event': event, 'x-fasc-sign': signNum } = headers
 
-    this.logger.log('data', 'callback', headers)
+    this.logger.debug('data', 'callback', headers)
     if (!timestamp) {
       throw '无效数据'
     }
@@ -99,9 +99,9 @@ export class FadadaService {
       throw false
     }
 
+    const signature = sign({ signStr: formatSignString(formatParams({ data:JSON.parse(data.bizContent), appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
+    console.log(signature, 'signature',signNum)
 
-    const signature = sign({ signStr: formatSignString(formatParams({ data: data.bizContent, appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
-    console.log(signature, 'signature')
     if (signature !== signNum) {
       this.logger.error('法大大回调验证出错')
       return 'success'
