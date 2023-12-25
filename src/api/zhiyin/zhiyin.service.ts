@@ -363,7 +363,6 @@ export class ZhiyinService {
         let applyData = await this.applyDetailRepository.findOne({ where: { createOaUserName: '管理员无审批盖章' } });
 
 
-        console.log(applyData)
         if (!applyData) {
 
           if (!!opApplyDetailRequest['stampOpenUserId']) {
@@ -376,9 +375,7 @@ export class ZhiyinService {
             opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
 
           }
-
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
-
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
           let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
@@ -386,26 +383,22 @@ export class ZhiyinService {
           NewapplyData['details'] = StampRecordDetails
           NewapplyData['records'] = StampRecords
           NewapplyData['status'] = '完成'
-
           NewapplyData['createOaUserName'] = '管理员无审批盖章'
           NewapplyData['records'] = StampRecords
-
           await this.applyDetailRepository.save(NewapplyData);
           return true
         } else {
+          console.log(applyData, '-----------------------------------', applyData.records)
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
           let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
           let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
           applyData['details'] = StampRecordDetails
           applyData['records'] = StampRecords
-          applyData['status'] = '完成'
-          applyData['createOaUserName'] = '管理员无审批盖章'
-
           applyData['records'] = StampRecords
-
           await this.applyDetailRepository.save(applyData);
         }
+        return true
 
       }
       delete opApplyDetailRequest['id']
