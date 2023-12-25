@@ -72,7 +72,7 @@ export const sign = ({
 }: {
   signStr: string
   timestamp: number | string
-  appSecret: string
+  appSecret: string 
 }): string => {
   // 对排序后的参数字符串计算摘要，sha256Hex
   const signText = crypto.createHash("sha256").update(signStr).digest("hex")
