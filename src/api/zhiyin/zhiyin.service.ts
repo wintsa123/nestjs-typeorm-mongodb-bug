@@ -108,7 +108,6 @@ export class ZhiyinService {
         //     withDeleted: true, // 设置为 true，以便包含已软删除的记录
         //     where: { mac: item.mac }
         //   });
-        //   console.log(existingData)
         //   if (!existingData) {
         //     await this.devicesRepository.save(item);
         //   } else {
@@ -211,7 +210,6 @@ export class ZhiyinService {
     const mergedObj = { ...objTmp, ...params };
     const stampUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.stampUser} `)
     const createUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.createUser}`)
-    console.log(stampUser1, createUser1)
     if (createUser1[0].WORKCODE == null) {
       return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
     }
@@ -231,7 +229,6 @@ export class ZhiyinService {
           'Content-Type': 'application/json', // 设置请求头为 JSON 格式
         },
       })
-      console.log(done)
       if (done.success) {
         let tmpobj = {}
         tmpobj['createOaUserId'] = createUser1[0].ID
@@ -279,7 +276,6 @@ export class ZhiyinService {
     try {
 
       const { data: done } = await axios.get(url1)
-      console.log(done)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
         target!.status = '撤销'
@@ -314,12 +310,10 @@ export class ZhiyinService {
     const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
       const { data: done } = await axios.get(url1)
-      console.log(done)
 
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code } })
-        console.log(result)
-        console.log(target, '--------------')
+
         if (info == 'true') {
           target!.status = '完成'
           target && await this.applyDetailRepository.save(target)
@@ -381,12 +375,10 @@ export class ZhiyinService {
       }
 
 
-      console.log(opApplyDetailRequest, '-------------------------------------------------')
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
         let applyData = await this.applyDetailRepository.findOne({ where: { stampCode:  IsNull() } });
-        console.log(applyData)
         if (!applyData) {
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
 
@@ -427,7 +419,6 @@ export class ZhiyinService {
       StampRecords['stampOaUserName'] = stampUser1[0].LASTNAME
       applyDetail['details'] = StampRecordDetails
       applyDetail['records'] = StampRecords
-      console.log(StampRecords)
       await this.applyDetailRepository.save(applyDetail);
       return true
     } catch (error) {
@@ -483,7 +474,6 @@ export class ZhiyinService {
         "open_userid_list": Useropenid,
         "source_agentid": this.configService.get('zhiyin.AgentId')
       })
-      console.log(data, 'convert')
       if (data.errcode) {
         this.logger.error(data)
         throw data
@@ -508,7 +498,7 @@ export class ZhiyinService {
 
 
     catch (error) {
-      console.log(error)
+      this.logger.error(error)
       throw error;
     }
   }
