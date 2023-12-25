@@ -140,7 +140,7 @@ export class FadadaController {
   @ApiOperation({ summary: '创建签署任务(基于文档)' })
   @RedisCacheApi({ exSecond: null })
 
-  signCreate(@Body() data: fileVerify, @Headers() header) {
+  signCreate(@Body() data: fileVerify) {
     return this.fadadaService.signCreate(data);
   }
   @Post('/sign/CreateWithTemple')
