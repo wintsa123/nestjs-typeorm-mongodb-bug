@@ -73,7 +73,7 @@ export const sign = ({
 }: {
   signStr: string
   timestamp: number | string
-  appSecret: string 
+  appSecret: string
 }): string => {
   // 对排序后的参数字符串计算摘要，sha256Hex
   const signText = crypto.createHash("sha256").update(signStr).digest("hex")
@@ -90,14 +90,14 @@ export const sign = ({
   return hash
 }
 
-export const formatParams=({
+export const formatParams = ({
   data,
   appId,
   signMethod,
   nonce,
   timestamp,
   event
-}) =>{
+}) => {
   const signParams = {
     [RequestParamsEnum.APP_ID]: appId,
     [RequestParamsEnum.SIGN_TYPE]: signMethod,
@@ -110,7 +110,7 @@ export const formatParams=({
   return signParams
 }
 
-export const formatSignString = (signParams:Obj): string => {
+export const formatSignString = (signParams: Obj): string => {
   let params = { ...signParams }
   let strParam = ""
   // 去除字节流参数
