@@ -110,9 +110,10 @@ export class FadadaService {
     //   this.logger.error('法大大回调验证出错')
     //   return 'success'
     // }
+    const tmp = JSON.parse(data.bizContent)
+
     switch (Eventid) {
       case 'user-authorize':
-        const tmp = JSON.parse(data.bizContent)
         if (tmp.authResult !== 'success') {
           this.logger.error('user-authorize')
           this.logger.error(tmp.authFailedReason)
@@ -153,7 +154,7 @@ export class FadadaService {
         try {
 
 
-          await this.freeIdRepository.save(tmp1);
+          await this.freeIdRepository.save(tmp);
 
           await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
@@ -170,7 +171,7 @@ export class FadadaService {
         try {
 
 
-          await this.freeIdRepository.delete({ clientUserId: tmp2.clientUserId });
+          await this.freeIdRepository.delete({ clientUserId: tmp.clientUserId });
 
           await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
