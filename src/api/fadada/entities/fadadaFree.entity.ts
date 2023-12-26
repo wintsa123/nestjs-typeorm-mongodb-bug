@@ -17,22 +17,13 @@ export class fadadafree {
   clientUserId!: number;
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
-  @CreateDateColumn({
-    type: 'timestamp',
-    nullable: false,
-    name: 'eventTime',
-    comment: '创建时间',
-  })
+  @Column()
+
   eventTime!: Date;
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
-  @Column({
-    type: 'timestamp',
-    nullable: true,
-    name: 'expiresTime',
-    comment: '过期时间',
-  })
-  expiresTime!: Date;
+  @Column()
+  expiresTime?: Date;
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @UpdateDateColumn({
     type: 'timestamp',
