@@ -17,11 +17,12 @@ export class fadadafree {
   clientUserId!: number;
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
-  @Column()
+  @Column({ type: 'timestamp' , default: () => 'FROM_UNIXTIME(CURRENT_TIMESTAMP)',nullable:true})
   eventTime?: number;
   @Transform((row: TransformFnParams) => +new Date(row.value))
-  @Column()
+  @Column({ type: 'timestamp',default: () => 'FROM_UNIXTIME(CURRENT_TIMESTAMP + INTERVAL 1 YEAR)',nullable:true})
   expiresTime?: number;
+
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @UpdateDateColumn({
     type: 'timestamp',
