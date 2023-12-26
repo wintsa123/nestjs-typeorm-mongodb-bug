@@ -1013,14 +1013,29 @@ export class FadadaService {
    * @return {*}
    */
   async signGetOwnerList(data) {
-    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    let result: any = await Client.getOwnerList(data)
-    if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('getOwnerList')
-      throw result.data
+    try {
+      const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+      if (data.ownerId.idType == 'corp') {
+        data.ownerId['openId'] = this.configService.get('fadada.opencorpId')
+
+      } else if (data.ownerId.idType == 'person') {
+        const result = await this.fadadaRepository.findOne({
+          where: { clientUserId: data.ownerId['openId'] }, select: ["openUserId"] // 指定要选择的字段
+        });
+        data.ownerId['openId'] = result!.openUserId
+      }
+      console.log(data)
+      let result: any = await Client.getOwnerList(data)
+      if (result.status !== 200 || result.data.code !== '100000') {
+        this.logger.error('getOwnerList')
+        throw result.data
+
+      }
+      return result.data
+    } catch (error) {
+      throw error
 
     }
-    return result.data
   }
   /**
    * @Author: wintsa
