@@ -155,8 +155,8 @@ console.log(tmp)
             
             Object.assign(result,tmp)
             console.log(result)
-            result.expiresTime=Number(tmp.expiresTime)
-            result.eventTime=Number(tmp.eventTime)
+            // result.expiresTime=new Date(tmp.expiresTime)
+            // result.eventTime=Number(tmp.eventTime)
 
             await this.freeIdRepository.save(result);
           } else {
