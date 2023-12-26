@@ -211,10 +211,10 @@ export class ZhiyinService {
     const stampUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.stampUser} `)
     const createUser1 = await this.connection.query(`select WORKCODE,lastname,id from hrmresource where id=${mergedObj.createUser}`)
     if (createUser1[0].WORKCODE == null) {
-      return '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
+      throw '创建人不存在，我们不允许管理员发起因为管理员与企微账号无关联'
     }
     if (stampUser1[0].WORKCODE == null) {
-      return '用印人不存在'
+      throw '用印人不存在'
     }
 
     const stampUser = generateCacheKey(stampUser1[0].WORKCODE)
