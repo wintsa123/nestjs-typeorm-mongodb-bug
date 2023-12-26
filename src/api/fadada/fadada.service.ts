@@ -146,11 +146,8 @@ export class FadadaService {
         }
         break;
       case 'personal-seal-authorize-free-sign':
-        // {
-        //   "bizContent": { "sealId": "1698732690108149936", "eventTime": "1702536302495", "businessId": "3b68a1ff1e851c69ba4c70c2b1997421", "openUserId": "3429a2abf98f4cdebac489f0bd82c222", "expiresTime": "1734158700000", "clientUserId": "268" }
-        // }
-        const tmp1 = JSON.parse(data.bizContent)
 
+console.log(tmp)
         try {
 
           let result = await this.freeIdRepository.findOne({ where: { sealId:tmp.sealId } });
@@ -172,7 +169,6 @@ export class FadadaService {
         break;
       case 'personal-seal-authorize-free-sign-cancel':
 
-        const tmp2 = JSON.parse(data.bizContent)
 
         try {
 

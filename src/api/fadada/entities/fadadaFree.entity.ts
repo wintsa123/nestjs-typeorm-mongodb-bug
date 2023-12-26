@@ -33,7 +33,14 @@ export class fadadafree {
     comment: '过期时间',
   })
   expiresTime!: Date;
-
+  @Transform((row: TransformFnParams) => +new Date(row.value))
+  @UpdateDateColumn({
+    type: 'timestamp',
+    nullable: false,
+    name: 'updated_at',
+    comment: '更新时间',
+  })
+  updatedAt!: Date;
   @DeleteDateColumn({
     type: 'timestamp',
     nullable: false,
