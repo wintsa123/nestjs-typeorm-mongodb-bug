@@ -103,7 +103,7 @@ export const formatParams = ({
     [RequestParamsEnum.SIGN_TYPE]: signMethod,
     [RequestParamsEnum.TIMESTAMP]: timestamp,
     [RequestParamsEnum.NONCE]: nonce,
-    ['X-FASC-Event']: event,
+    'X-FASC-Event': event,
     [RequestParamsEnum.DATA_KEY]: JSON.stringify(data || '')
 
   }
