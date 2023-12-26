@@ -11,6 +11,7 @@ import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadafree } from './entities/fadadaFree.entity';
 import { formatParams, formatSignString, sign } from '@src/utils';
+import { signTaskStatus } from '@src/enums';
 
 @Injectable()
 export class FadadaService {
@@ -92,7 +93,7 @@ export class FadadaService {
 
       this.logger.error('无效数据')
       return 'success'
-  }
+    }
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
@@ -1031,6 +1032,14 @@ export class FadadaService {
         throw result.data
 
       }
+      result.data.data.signTasks.forEach(element => {
+        const statusValue = signTaskStatus[element.signTaskStatus];
+
+        if (statusValue) {
+          // 如果 statusValue 存在，则将 element.signTaskStatus 修改为相应的值
+          element.signTaskStatus = statusValue;
+        }
+      });
       return result.data
     } catch (error) {
       throw error
