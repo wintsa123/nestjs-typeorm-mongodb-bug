@@ -84,12 +84,15 @@ export class FadadaService {
    */
   async callback(data, headers) {
 
-    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'SIGN_TYPE': signMethod, 'X-FASC-Event': event, 'x-fasc-sign': signNum } = headers
+    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-event': event, 'x-fasc-sign': signNum } = headers
 
     this.logger.debug('data', 'callback', headers)
     if (!timestamp) {
-      throw '无效数据'
-    }
+      this.logger.error(data.bizContent)
+
+      this.logger.error('无效数据')
+      return 'success'
+  }
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
     const upperLimit = currentTimestamp + 300000; // 上限时间戳
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳

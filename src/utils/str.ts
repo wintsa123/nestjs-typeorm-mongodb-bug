@@ -107,6 +107,7 @@ export const formatParams=({
     [RequestParamsEnum.DATA_KEY]: JSON.stringify(data || '')
 
   }
+  console.log(signParams)
   return signParams
 }
 
@@ -119,7 +120,7 @@ export const formatSignString = (signParams:Obj): string => {
   params = deepRemoveNull(params)
   const keys = Object.keys(params)
   // 排序
-  keys.sort((a, b) => a.localeCompare(b))
+  keys.sort()
   // 参数拼接，去除重复的key
   for (const k in keys) {
     if (!keys.hasOwnProperty(k)) {
