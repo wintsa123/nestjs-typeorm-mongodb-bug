@@ -153,7 +153,7 @@ export class FadadaService {
 
         try {
 
-          let result = await this.freeIdRepository.findOne({ where: { clientUserId:tmp.clientUserId } });
+          let result = await this.freeIdRepository.findOne({ where: { sealId:tmp.sealId } });
           if (result) {
             
             Object.assign(result,tmp)
@@ -177,7 +177,7 @@ export class FadadaService {
         try {
 
 
-          await this.freeIdRepository.delete({ clientUserId: tmp.clientUserId });
+          await this.freeIdRepository.delete({ sealId: tmp.sealId });
 
           await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
