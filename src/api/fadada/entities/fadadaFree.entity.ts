@@ -18,10 +18,10 @@ export class fadadafree {
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @Column({ type: 'timestamp' , default: () => 'FROM_UNIXTIME(CURRENT_TIMESTAMP)',nullable:true})
-  eventTime?: number;
+  eventTime?: Date;
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @Column({ type: 'timestamp',default: () => 'FROM_UNIXTIME(CURRENT_TIMESTAMP + INTERVAL 1 YEAR)',nullable:true})
-  expiresTime?: number;
+  expiresTime?: Date;
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @UpdateDateColumn({
