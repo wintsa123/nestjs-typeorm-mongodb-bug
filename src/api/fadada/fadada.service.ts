@@ -147,13 +147,13 @@ export class FadadaService {
         break;
       case 'personal-seal-authorize-free-sign':
 
-console.log(tmp)
+        console.log(tmp)
         try {
 
-          let result = await this.freeIdRepository.findOne({ where: { sealId:tmp.sealId } });
+          let result = await this.freeIdRepository.findOne({ where: { sealId: tmp.sealId } });
           if (result) {
-            
-            Object.assign(result,tmp)
+
+            Object.assign(result, tmp)
             console.log(result)
             // result.expiresTime=new Date(tmp.expiresTime)
             // result.eventTime=Number(tmp.eventTime)
@@ -409,8 +409,8 @@ console.log(tmp)
   }
 
 
-  async GetFreeStatus(clientUserId) {
-    let result = await this.freeIdRepository.findOne({ where: { clientUserId } });
+  async GetFreeStatus(sealId) {
+    let result = await this.freeIdRepository.findOne({ where: { sealId } });
     if (result) {
       return 'true'
     } else {
