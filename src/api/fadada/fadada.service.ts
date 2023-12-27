@@ -5,7 +5,7 @@ import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
+import fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
@@ -99,17 +99,26 @@ export class FadadaService {
     const lowerLimit = currentTimestamp - 300000; // 下限时间戳
     if (timestamp < lowerLimit || timestamp > upperLimit) {
       this.logger.error('时间不正确')
-
-      throw false
+      return 'success'
     }
 
-    // const signature = sign({ signStr: formatSignString(formatParams({ data:JSON.parse(data.bizContent), appId, signMethod, nonce, timestamp, event })), timestamp, appSecret: this.configService.get('fadada.appSecret') as string })
-    // console.log(signature, 'signature',signNum)
+    const fascOpenApi = require('@fddnpm/fasc-openapi-node-sdk');
+    const params = {
+      "X-FASC-App-Id": headers['X-FASC-App-Id'],
+      "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
+      "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
+      "X-FASC-Nonce": headers['X-FASC-Nonce'],
+      "X-FASC-Event": headers['X-FASC-Event'],
+      bizContent: headers['bizContent'],
+      appSecret: this.configService.get('fadada.appSecret')
+    }
+    const sign = fascOpenApi.utils.sign(params);
 
-    // if (signature !== signNum) {
-    //   this.logger.error('法大大回调验证出错')
-    //   return 'success'
-    // }
+    if (sign !== headers['X-FASC-Sign']) {
+      this.logger.error('法大大回调验证出错')
+      return 'success'
+    }
+
     const tmp = JSON.parse(data.bizContent)
 
     switch (Eventid) {
@@ -155,13 +164,13 @@ export class FadadaService {
 
             Object.assign(result, tmp)
             console.log(result)
-            result.expiresTime=new Date(Number(tmp.expiresTime))
-            result.eventTime=new Date(Number(tmp.eventTime))
+            result.expiresTime = new Date(Number(tmp.expiresTime))
+            result.eventTime = new Date(Number(tmp.eventTime))
 
             await this.freeIdRepository.save(result);
           } else {
-            tmp.expiresTime=new Date(Number(tmp.expiresTime))
-            tmp.eventTime=new Date(Number(tmp.eventTime))
+            tmp.expiresTime = new Date(Number(tmp.expiresTime))
+            tmp.eventTime = new Date(Number(tmp.eventTime))
 
             await this.freeIdRepository.save(tmp);
           }
@@ -411,13 +420,13 @@ export class FadadaService {
     }
   }
 
-/**
-   * @Author: wintsa
-   * @Date: 2023-11-23 15:35:06
-   * @LastEditors: wintsa
-   * @Description: 检查签名的免验证签状态
-   * @return {*}
-   */
+  /**
+     * @Author: wintsa
+     * @Date: 2023-11-23 15:35:06
+     * @LastEditors: wintsa
+     * @Description: 检查签名的免验证签状态
+     * @return {*}
+     */
   async CheckFreeStatus(sealId) {
     let result = await this.freeIdRepository.findOne({ where: { sealId } });
     if (result) {
