@@ -155,11 +155,14 @@ export class FadadaService {
 
             Object.assign(result, tmp)
             console.log(result)
-            // result.expiresTime=new Date(tmp.expiresTime)
-            // result.eventTime=Number(tmp.eventTime)
+            result.expiresTime=new Date(Number(tmp.expiresTime))
+            result.eventTime=new Date(Number(tmp.eventTime))
 
             await this.freeIdRepository.save(result);
           } else {
+            tmp.expiresTime=new Date(Number(tmp.expiresTime))
+            tmp.eventTime=new Date(Number(tmp.eventTime))
+
             await this.freeIdRepository.save(tmp);
           }
 
