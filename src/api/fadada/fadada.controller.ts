@@ -102,11 +102,11 @@ export class FadadaController {
   GetByClientUserId(@Query('ClientUserId') ClientUserId: string) {
     return this.fadadaService.getopenUserId(ClientUserId);
   }
-  @Get('/user/GetFreeStatusBySealId')
+  @Get('/user/CheckFreeStatusBySealId')
   @RedisCacheApi({ exSecond: null })
-  @ApiOperation({ summary: '获取免验证状态' })
+  @ApiOperation({ summary: '检查免验证状态' })
   GetFreeStatus(@Query('SealId') SealId: string) {
-    return this.fadadaService.GetFreeStatus(SealId);
+    return this.fadadaService.CheckFreeStatus(SealId);
   }
   @Post('/user/GetIdentity')
   @ApiOperation({ summary: '获取用户授权信息' })

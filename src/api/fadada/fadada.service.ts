@@ -396,7 +396,7 @@ export class FadadaService {
    * @Author: wintsa
    * @Date: 2023-11-23 15:35:06
    * @LastEditors: wintsa
-   * @Description: 获取激活状态的openUserId
+   * @Description: 获取授权状态
    * @return {*}
    */
   async getopenUserId(clientUserId) {
@@ -408,8 +408,14 @@ export class FadadaService {
     }
   }
 
-
-  async GetFreeStatus(sealId) {
+/**
+   * @Author: wintsa
+   * @Date: 2023-11-23 15:35:06
+   * @LastEditors: wintsa
+   * @Description: 检查签名的免验证签状态
+   * @return {*}
+   */
+  async CheckFreeStatus(sealId) {
     let result = await this.freeIdRepository.findOne({ where: { sealId } });
     if (result) {
       return 'true'
@@ -836,7 +842,7 @@ export class FadadaService {
     let result: any = await Client.start(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('start')
-      throw result.dat
+      throw result.data
     } else {
       return result.data.msg
     }
