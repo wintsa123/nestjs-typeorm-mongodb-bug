@@ -1003,7 +1003,7 @@ export class FadadaService {
       throw result.data
 
     }
-    return result.data
+    return result.data.data
   }
   /**
    * @Author: wintsa
