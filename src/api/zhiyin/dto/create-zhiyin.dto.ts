@@ -7,6 +7,6 @@ export class CreateZhiyinDto {
     @ApiProperty({ description: '单据编号(OA系统单据的唯一标识)',required: true })
     @IsNotEmpty()
     code!: string
-    @ApiProperty({ description: '标识' })
+    @ApiProperty({ description: '标识',required: false})
     info?: string
 }
