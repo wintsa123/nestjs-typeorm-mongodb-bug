@@ -10,8 +10,8 @@ import { fastifyHelmet } from '@fastify/helmet';
 import { fastifyStatic } from '@fastify/static';
 import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
-import fastifyCsrf from 'fastify-csrf';
-import fastifyCookie from '@fastify/cookie';
+import fastifyCsrf from '@fastify/csrf';
+import  { fastifyCookie } from '@fastify/cookie';
 
 
 export const config = getConfig();
@@ -46,6 +46,8 @@ async function bootstrap() {
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
+    // app.register(fastifyCsrf);
+
   app.register(
     fastifyHelmet,
     {
@@ -54,7 +56,6 @@ async function bootstrap() {
     },
 
   )
-  app.register(fastifyCsrf);
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
