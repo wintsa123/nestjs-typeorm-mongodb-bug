@@ -10,7 +10,7 @@ import { fastifyHelmet } from '@fastify/helmet';
 import { fastifyStatic } from '@fastify/static';
 import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
-import fastifyCsrf from '@fastify/csrf';
+import fastifyCsrf from '@fastify/csrf-protection';
 import  { fastifyCookie } from '@fastify/cookie';
 
 
@@ -46,7 +46,7 @@ async function bootstrap() {
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
-    // app.register(fastifyCsrf);
+    app.register(fastifyCsrf);
 
   app.register(
     fastifyHelmet,
