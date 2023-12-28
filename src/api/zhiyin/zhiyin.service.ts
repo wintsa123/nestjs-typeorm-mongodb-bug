@@ -270,20 +270,16 @@ export class ZhiyinService {
       timestamp: getTime(),
     }
     let result = this.Sign(objTmp)
-
     const url1 = `${this.url}oa/apply/cancel?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
-
     try {
-
       const { data: done } = await axios.get(url1)
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code: result.code } })
         target!.status = '撤销'
         target && await this.applyDetailRepository.save(target)
         await this.applyDetailRepository.softDelete({ code: result.code })
-        return done
+        return done.data
       } else {
-
         this.logger.error(done)
         throw done
       }
@@ -310,32 +306,25 @@ export class ZhiyinService {
     const url1 = `${this.url}/oa/apply/close?code=${result.code}&appId=${result.appId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
       const { data: done } = await axios.get(url1)
-
       if (done.success) {
         const target = await this.applyDetailRepository.findOne({ where: { code } })
-
         if (info == 'true') {
           target!.status = '完成'
           target && await this.applyDetailRepository.save(target)
-
         }
         if (info == 'false') {
           target!.status = '撤销'
           target && await this.applyDetailRepository.save(target)
           await this.applyDetailRepository.softDelete({ code })
-
-
         }
-        return done
+        return done.data
       } else {
         this.logger.error(done)
         throw done;
-
       }
     } catch (error) {
       this.logger.error(error)
       throw error;
-
     }
   }
   /**
