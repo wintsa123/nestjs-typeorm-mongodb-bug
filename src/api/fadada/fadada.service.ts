@@ -177,7 +177,7 @@ export class FadadaService {
 
           if (result) {
             console.log(result)
-            if (!!result['deleted_at']) {
+            if (result.deletedAt) {
               await this.SealRepository.restore({ sealId: tmp.sealId });
 
             }
