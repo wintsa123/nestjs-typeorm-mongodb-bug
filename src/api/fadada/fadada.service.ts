@@ -175,7 +175,8 @@ export class FadadaService {
           let result = await this.SealRepository.findOne({ withDeleted: true, where: { sealId: tmp.sealId } });
 
           if (result) {
-            if (result.deletedAt) {
+            console.log(result)
+            if (!!result['deleted_at']) {
               await this.SealRepository.restore({ sealId: tmp.sealId });
 
             }
