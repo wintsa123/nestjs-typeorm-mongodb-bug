@@ -54,10 +54,7 @@ export class FadadaService {
    */
   async getToken() {
     try {
-      let fadadaToken = await this.redisService.get('fadadaToken')
-      if (fadadaToken) return fadadaToken
-      console.log(fascOpenApi)
-      let client = new fascOpenApi.serviceClient.Client({
+            let client = new fascOpenApi.serviceClient.Client({
         credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
         serverUrl: this.configService.get('fadada.serverUrl') as string,
       })
@@ -73,8 +70,6 @@ export class FadadaService {
       this.logger.error(error)
       throw error
     }
-
-
   }
   /**
    * @Author: wintsa

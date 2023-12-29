@@ -55,9 +55,9 @@ export class ZhiyinService {
       });
 
 
-      this.logger.log('Database connection established');
+      this.logger.log('oracle连接成功');
     } catch (error) {
-      this.logger.error('Failed to establish database connection', error);
+      this.logger.error('连接oracle失败', error);
       throw error
     }
   }
