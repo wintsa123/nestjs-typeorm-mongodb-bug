@@ -44,6 +44,7 @@ export class FadadaController {
   // }
   @Post('/corp/get')
   getCorp() {
+    console.log(21)
     return this.fadadaService.corpGet();
   }
 

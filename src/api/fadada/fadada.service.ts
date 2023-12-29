@@ -56,7 +56,7 @@ export class FadadaService {
     try {
       let fadadaToken = await this.redisService.get('fadadaToken')
       if (fadadaToken) return fadadaToken
-
+      console.log(fascOpenApi)
       let client = new fascOpenApi.serviceClient.Client({
         credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
         serverUrl: this.configService.get('fadada.serverUrl') as string,
@@ -217,7 +217,10 @@ export class FadadaService {
    */
   async corpGet() {
     const client = new fascOpenApi.corpClient.Client(await this.init())
+    console.log(1)
+
     let result: any = await client.get({ openCorpId: this.configService.get('fadada.opencorpId') as string })
+    console.log(result)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('Corp获取失败')
       throw result.data
@@ -254,7 +257,7 @@ export class FadadaService {
     const client = new fascOpenApi.orgClient.Client(await this.init())
     let result: any = await client.getMemberList({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error('corpGetIdentity获取失败')
+      this.logger.error('corpGetList error')
       throw result.data
 
     }
