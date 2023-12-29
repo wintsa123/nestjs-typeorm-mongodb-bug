@@ -52,9 +52,9 @@ aliyunOss:
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
 #法大大
 fadada:
-  appId: 00000876
+  appId: '00000876'
   appSecret: S1NAPOWD45VIXDMI9NL0S3NKSDVM6H3G 
-  serverUrl: https://api.fadada.com/api/v5/
+  serverUrl: https://api.fadada.com/api/v5
   opencorpId: 15ad1a994ed746dbbc2420840308d7a6
   businessId: d065d6947bfb545df69faaaff10868a5
 #豸印

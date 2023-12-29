@@ -59,8 +59,8 @@ export class FadadaService {
         serverUrl: this.configService.get('fadada.serverUrl') as string,
       })
       const token: any = await client.getAccessToken()
-      console.log(token.data)
-      if (token.status !== 200 && token.data.code !== '100000' ) {
+ 
+      if (token.status !== 200 || token.data.code !== '100000' ) {
         this.logger.error('Token获取失败')
         throw token.data
       }
@@ -98,22 +98,22 @@ export class FadadaService {
       return 'success'
     }
 
-    // const fascOpenApi = require('@fddnpm/fasc-openapi-node-sdk');
-    // const params = {
-    //   "X-FASC-App-Id": headers['X-FASC-App-Id'],
-    //   "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
-    //   "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
-    //   "X-FASC-Nonce": headers['X-FASC-Nonce'],
-    //   "X-FASC-Event": headers['X-FASC-Event'],
-    //   bizContent: headers['bizContent'],
-    //   appSecret: this.configService.get('fadada.appSecret')
-    // }
-    // const sign = fascOpenApi.utils.sign(params);
+    const fadada = require('@fddnpm/fasc-openapi-node-sdk');
+    const params = {
+      "X-FASC-App-Id": headers['X-FASC-App-Id'],
+      "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
+      "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
+      "X-FASC-Nonce": headers['X-FASC-Nonce'],
+      "X-FASC-Event": headers['X-FASC-Event'],
+      bizContent: headers['bizContent'],
+      appSecret: this.configService.get('fadada.appSecret')
+    }
+    const sign = fadada.utils.sign(params);
 
-    // if (sign !== headers['X-FASC-Sign']) {
-    //   this.logger.error('法大大回调验证出错')
-    //   return 'success'
-    // }
+    if (sign !== headers['X-FASC-Sign']) {
+      this.logger.error('法大大回调验证出错')
+      return 'success'
+    }
 
     const tmp = JSON.parse(data.bizContent)
 
