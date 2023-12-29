@@ -172,8 +172,13 @@ export class FadadaService {
 
       case 'personal-seal-authorize-free-sign':
         try {
-          let result = await this.SealRepository.findOne({ where: { sealId: tmp.sealId } });
+          let result = await this.SealRepository.findOne({ withDeleted: true, where: { sealId: tmp.sealId } });
+
           if (result) {
+            if (result.deletedAt) {
+              await this.SealRepository.restore({ sealId: tmp.sealId });
+
+            }
             Object.assign(result, tmp)
             result.expiresTime = new Date(Number(tmp.expiresTime))
             result.eventTime = new Date(Number(tmp.eventTime))
@@ -192,7 +197,7 @@ export class FadadaService {
         break;
       case 'personal-seal-authorize-free-sign-cancel':
         try {
-          await this.SealRepository.delete({ sealId: tmp.sealId });
+          await this.SealRepository.softDelete({ sealId: tmp.sealId });
           await this.redisService.del(`GET:/api/v1/fadada/user/CheckFreeStatusBySealId?SealId=${tmp.SealId}`)
           return 'success';
         } catch (error) {
