@@ -172,7 +172,8 @@ export class FadadaService {
 
       case 'personal-seal-authorize-free-sign':
         try {
-          let result = await this.SealRepository.findOne({ withDeleted: true, where: { sealId: tmp.sealId } });
+          let result = await this.SealRepository.findOne({ withDeleted: true, where: { sealId: tmp.sealId }  ,select: ['id', 'sealId', 'deletedAt']
+        });
 
           if (result) {
             if (result.deletedAt) {
