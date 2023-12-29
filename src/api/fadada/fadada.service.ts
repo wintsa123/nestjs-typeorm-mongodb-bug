@@ -9,7 +9,7 @@ import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
-import { fadadafree } from './entities/fadadaFree.entity';
+import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
 
 @Injectable()
@@ -22,8 +22,8 @@ export class FadadaService {
     private readonly configService: ConfigService,
     @InjectRepository(Fadada)
     private readonly fadadaRepository: Repository<Fadada>,
-    @InjectRepository(fadadafree)
-    private readonly freeIdRepository: Repository<fadadafree>,
+    @InjectRepository(fadadaSeal)
+    private readonly SealRepository: Repository<fadadaSeal>,
   ) { }
   /**
    * @Author: wintsa
@@ -85,8 +85,7 @@ export class FadadaService {
     this.logger.debug('data', 'callback', headers)
     if (!timestamp) {
       this.logger.error(data.bizContent)
-
-      this.logger.error('无效数据')
+      this.logger.error('过期无效数据')
       return 'success'
     }
     const currentTimestamp = Date.now(); // 获取当前时间戳（毫秒）
@@ -153,19 +152,19 @@ export class FadadaService {
 
         try {
 
-          let result = await this.freeIdRepository.findOne({ where: { sealId: tmp.sealId } });
+          let result = await this.SealRepository.findOne({ where: { sealId: tmp.sealId } });
           if (result) {
 
             Object.assign(result, tmp)
             result.expiresTime = new Date(Number(tmp.expiresTime))
             result.eventTime = new Date(Number(tmp.eventTime))
 
-            await this.freeIdRepository.save(result);
+            await this.SealRepository.save(result);
           } else {
             tmp.expiresTime = new Date(Number(tmp.expiresTime))
             tmp.eventTime = new Date(Number(tmp.eventTime))
 
-            await this.freeIdRepository.save(tmp);
+            await this.SealRepository.save(tmp);
           }
 
           await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
@@ -182,7 +181,7 @@ export class FadadaService {
         try {
 
 
-          await this.freeIdRepository.delete({ sealId: tmp.sealId });
+          await this.SealRepository.delete({ sealId: tmp.sealId });
 
           await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
 
@@ -421,7 +420,7 @@ export class FadadaService {
      * @return {*}
      */
   async CheckFreeStatus(sealId) {
-    let result = await this.freeIdRepository.findOne({ where: { sealId } });
+    let result = await this.SealRepository.findOne({ where: { sealId } });
     if (result) {
       return 'true'
     } else {

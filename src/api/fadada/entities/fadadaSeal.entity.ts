@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 
-@Entity({ name: 'fadadafree', database: 'nestapi' })
+@Entity({ name: 'fadadaseal', database: 'nestapi' })
 
-export class fadadafree {
+export class fadadaSeal {
   @PrimaryGeneratedColumn({
     type: 'int',
     name: 'id',
