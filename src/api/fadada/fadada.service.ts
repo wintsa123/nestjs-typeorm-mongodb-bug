@@ -80,7 +80,7 @@ export class FadadaService {
    */
   async callback(data, headers) {
 
-    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-event': event, 'x-fasc-sign': signNum } = headers
+    const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-sign': signNum } = headers
 
     this.logger.debug('data', 'callback', headers)
     if (!timestamp) {
@@ -98,17 +98,18 @@ export class FadadaService {
     }
 
     const params = {
-      "X-FASC-App-Id": headers['X-FASC-App-Id'],
-      "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
-      "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
-      "X-FASC-Nonce": headers['X-FASC-Nonce'],
-      "X-FASC-Event": headers['X-FASC-Event'],
-      bizContent: headers['bizContent'],
+      "X-FASC-App-Id": appId,
+      "X-FASC-Sign-Type": signMethod,
+      "X-FASC-Timestamp": timestamp,
+      "X-FASC-Nonce": nonce,
+      "X-FASC-Event": Eventid,
+      bizContent: data.bizContent,
       appSecret: this.configService.get('fadada.appSecret')
     }
+
     const sign = fascOpenApi.utils.sign(params);
 
-    if (sign !== headers['X-FASC-Sign']) {
+    if (sign !== signNum) {
       this.logger.error('法大大回调验证出错')
       return 'success'
     }
@@ -536,7 +537,7 @@ export class FadadaService {
       if (e.actor.actorType == 'corp') {
         e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
       }
-      if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == 'true') {
+      if (e.actor.actorType == 'person' && e.actor['actorOpenId'] == true) {
         let result = await this.fadadaRepository.findOne({ where: { clientUserId: e.actor['clientId'] } });
         e.actor['actorOpenId'] = result!['openUserId']
 
