@@ -5,7 +5,7 @@ import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
+import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
@@ -54,13 +54,13 @@ export class FadadaService {
    */
   async getToken() {
     try {
-      console.log(fascOpenApi)
       let client = new fascOpenApi.serviceClient.Client({
         credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
         serverUrl: this.configService.get('fadada.serverUrl') as string,
       })
       const token: any = await client.getAccessToken()
-      if (token.status !== 200) {
+      console.log(token.data)
+      if (token.status !== 200 && token.data.code !== '100000' ) {
         this.logger.error('Token获取失败')
         throw token.data
       }
@@ -97,7 +97,7 @@ export class FadadaService {
       this.logger.error('时间不正确')
       return 'success'
     }
-    
+
     // const fascOpenApi = require('@fddnpm/fasc-openapi-node-sdk');
     // const params = {
     //   "X-FASC-App-Id": headers['X-FASC-App-Id'],
