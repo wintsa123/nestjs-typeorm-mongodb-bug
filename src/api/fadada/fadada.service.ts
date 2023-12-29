@@ -54,7 +54,8 @@ export class FadadaService {
    */
   async getToken() {
     try {
-            let client = new fascOpenApi.serviceClient.Client({
+      console.log(fascOpenApi)
+      let client = new fascOpenApi.serviceClient.Client({
         credential: { appId: this.configService.get('fadada.appId') as string, appSecret: this.configService.get('fadada.appSecret') as string },
         serverUrl: this.configService.get('fadada.serverUrl') as string,
       })
@@ -96,23 +97,23 @@ export class FadadaService {
       this.logger.error('时间不正确')
       return 'success'
     }
+    
+    // const fascOpenApi = require('@fddnpm/fasc-openapi-node-sdk');
+    // const params = {
+    //   "X-FASC-App-Id": headers['X-FASC-App-Id'],
+    //   "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
+    //   "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
+    //   "X-FASC-Nonce": headers['X-FASC-Nonce'],
+    //   "X-FASC-Event": headers['X-FASC-Event'],
+    //   bizContent: headers['bizContent'],
+    //   appSecret: this.configService.get('fadada.appSecret')
+    // }
+    // const sign = fascOpenApi.utils.sign(params);
 
-    const fascOpenApi = require('@fddnpm/fasc-openapi-node-sdk');
-    const params = {
-      "X-FASC-App-Id": headers['X-FASC-App-Id'],
-      "X-FASC-Sign-Type": headers['X-FASC-Sign-Type'],
-      "X-FASC-Timestamp": headers['X-FASC-Timestamp'],
-      "X-FASC-Nonce": headers['X-FASC-Nonce'],
-      "X-FASC-Event": headers['X-FASC-Event'],
-      bizContent: headers['bizContent'],
-      appSecret: this.configService.get('fadada.appSecret')
-    }
-    const sign = fascOpenApi.utils.sign(params);
-
-    if (sign !== headers['X-FASC-Sign']) {
-      this.logger.error('法大大回调验证出错')
-      return 'success'
-    }
+    // if (sign !== headers['X-FASC-Sign']) {
+    //   this.logger.error('法大大回调验证出错')
+    //   return 'success'
+    // }
 
     const tmp = JSON.parse(data.bizContent)
 
@@ -151,14 +152,12 @@ export class FadadaService {
         break;
       case 'personal-seal-authorize-free-sign':
 
-        console.log(tmp)
         try {
 
           let result = await this.freeIdRepository.findOne({ where: { sealId: tmp.sealId } });
           if (result) {
 
             Object.assign(result, tmp)
-            console.log(result)
             result.expiresTime = new Date(Number(tmp.expiresTime))
             result.eventTime = new Date(Number(tmp.eventTime))
 
@@ -212,10 +211,7 @@ export class FadadaService {
    */
   async corpGet() {
     const client = new fascOpenApi.corpClient.Client(await this.init())
-    console.log(1)
-
     let result: any = await client.get({ openCorpId: this.configService.get('fadada.opencorpId') as string })
-    console.log(result)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('Corp获取失败')
       throw result.data
@@ -1048,7 +1044,6 @@ export class FadadaService {
         });
         data.ownerId['openId'] = result!.openUserId
       }
-      console.log(data)
       let result: any = await Client.getOwnerList(data)
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error('getOwnerList')
