@@ -114,7 +114,7 @@ export class FadadaService {
     }
 
     const tmp = JSON.parse(data.bizContent)
-
+console.log(Eventid,'Eventid')
     switch (Eventid) {
       case 'user-authorize':
         if (tmp.authResult !== 'success') {
