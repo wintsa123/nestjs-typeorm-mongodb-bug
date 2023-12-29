@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryColumn } from 'typeorm';
 import { baseEntity } from '@src/api/base.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { isNotEmpty } from 'class-validator';
 
 @Entity({ name: 'fadadaseal', database: 'nestapi' })
 
@@ -46,7 +47,9 @@ export class fadadaSeal {
   openUserId!: string;
   @Column()
   sealId!: string;
-  @Column()
-  businessId!: string;
-
+  @Column({nullable:true})
+  businessId!: string ;
+  @Column({nullable:true})
+  createSerialNo!: string ;
+  
 }

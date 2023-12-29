@@ -114,23 +114,20 @@ export class FadadaService {
     }
 
     const tmp = JSON.parse(data.bizContent)
-console.log(Eventid,'Eventid')
+    console.log(Eventid, 'Eventid')
     switch (Eventid) {
       case 'user-authorize':
         if (tmp.authResult !== 'success') {
           this.logger.error('user-authorize')
           this.logger.error(tmp.authFailedReason)
-
           throw false
         }
         if (tmp.identProcessStatus !== 'success') {
           this.logger.error('user-authorize')
           this.logger.error(tmp.identFailedReason)
-
           throw false
         }
         try {
-
           let existingData = await this.fadadaRepository.findOne({ where: { clientUserId: tmp.clientUserId } });
           if (existingData) {
             // 如果已存在，更新记录
@@ -148,26 +145,13 @@ console.log(Eventid,'Eventid')
           throw error
         }
         break;
-      case 'personal-seal-authorize-free-sign':
 
+      case 'personal-seal-create':
         try {
 
-          let result = await this.SealRepository.findOne({ where: { sealId: tmp.sealId } });
-          if (result) {
-
-            Object.assign(result, tmp)
-            result.expiresTime = new Date(Number(tmp.expiresTime))
-            result.eventTime = new Date(Number(tmp.eventTime))
-
-            await this.SealRepository.save(result);
-          } else {
-            tmp.expiresTime = new Date(Number(tmp.expiresTime))
-            tmp.eventTime = new Date(Number(tmp.eventTime))
-
-            await this.SealRepository.save(tmp);
-          }
-
-          await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
+          tmp.expiresTime = new Date(Number(tmp.expiresTime))
+          tmp.eventTime = new Date(Number(tmp.eventTime))
+          await this.SealRepository.save(tmp);
 
           return 'success';
         } catch (error) {
@@ -175,16 +159,41 @@ console.log(Eventid,'Eventid')
           throw error
         }
         break;
-      case 'personal-seal-authorize-free-sign-cancel':
-
-
+      case 'personal-seal-delete':
         try {
-
-
           await this.SealRepository.delete({ sealId: tmp.sealId });
+          await this.redisService.del(`GET:/api/v1/fadada/user/CheckFreeStatusBySealId?SealId=${tmp.SealId}`)
+          return 'success';
+        } catch (error) {
+          this.logger.error('Error:', error);
+          throw error
+        }
+        break;
 
-          await this.redisService.del(`GET:/api/v1/fadada/user/GetFreeStatusByClientUserId?ClientUserId=${tmp.clientUserId}`)
-
+      case 'personal-seal-authorize-free-sign':
+        try {
+          let result = await this.SealRepository.findOne({ where: { sealId: tmp.sealId } });
+          if (result) {
+            Object.assign(result, tmp)
+            result.expiresTime = new Date(Number(tmp.expiresTime))
+            result.eventTime = new Date(Number(tmp.eventTime))
+            await this.SealRepository.save(result);
+          } else {
+            tmp.expiresTime = new Date(Number(tmp.expiresTime))
+            tmp.eventTime = new Date(Number(tmp.eventTime))
+            await this.SealRepository.save(tmp);
+          }
+          await this.redisService.del(`GET:/api/v1/fadada/user/CheckFreeStatusBySealId?SealId=${tmp.SealId}`)
+          return 'success';
+        } catch (error) {
+          this.logger.error('Error:', error);
+          throw error
+        }
+        break;
+      case 'personal-seal-authorize-free-sign-cancel':
+        try {
+          await this.SealRepository.delete({ sealId: tmp.sealId });
+          await this.redisService.del(`GET:/api/v1/fadada/user/CheckFreeStatusBySealId?SealId=${tmp.SealId}`)
           return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
