@@ -29,6 +29,11 @@ export class SocketGateway {
     client.join(signTaskId)
     return true;
   }
+  @SubscribeMessage('remove')
+  removeConnectionFromRoom(@MessageBody('signTaskId') signTaskId: string, @ConnectedSocket() client: Socket) {
+    client.leave(signTaskId);
+    return true;
+  }
   sendMessageToClient(clientId: string, message) {
     this.server?.to(clientId).emit('message', message);
   }
