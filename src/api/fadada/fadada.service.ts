@@ -82,7 +82,7 @@ export class FadadaService {
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-sign': signNum } = headers
 
-    this.logger.debug('data', 'callback', headers,data.bizContent)
+    this.logger.debug('data', 'callback', headers, data.bizContent)
     if (!timestamp) {
       this.logger.error(data.bizContent)
       this.logger.error('过期无效数据')
@@ -145,7 +145,6 @@ export class FadadaService {
           throw error
         }
         break;
-
       case 'personal-seal-create':
         try {
 
@@ -169,15 +168,15 @@ export class FadadaService {
           throw error
         }
         break;
-
       case 'personal-seal-authorize-free-sign':
         try {
-          let result = await this.SealRepository.findOne({ withDeleted: true, where: { sealId: tmp.sealId }  ,select: ['id', 'sealId', 'deletedAt']
-        });
+          let result = await this.SealRepository.findOne({
+            withDeleted: true, where: { sealId: tmp.sealId }, select: ['id', 'sealId', 'deletedAt']
+          });
 
           if (result) {
             console.log(result)
-            
+
             Object.assign(result, tmp)
             result.expiresTime = new Date(Number(tmp.expiresTime))
             result.eventTime = new Date(Number(tmp.eventTime))
@@ -208,8 +207,14 @@ export class FadadaService {
           throw error
         }
         break;
+      case 'sign-task-sign-failed':
+        await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: data.bizContent })
 
-
+        break;
+        case 'sign-task-signed':
+          await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: data.bizContent })
+  
+          break;
       default:
         return 'success'
         break;
