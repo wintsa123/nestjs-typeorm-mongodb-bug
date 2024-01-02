@@ -24,9 +24,9 @@ export class SocketGateway {
     client.join(clientUserId)
     return true;
   }
-  @SubscribeMessage('Request')
-  create1(@MessageBody('Request') Request: string,@ConnectedSocket() client: Socket) {
-    client.join(Request)
+  @SubscribeMessage('signTaskId')
+  create1(@MessageBody('signTaskId') signTaskId: string,@ConnectedSocket() client: Socket) {
+    client.join(signTaskId)
     return true;
   }
   sendMessageToClient(clientId: string, message) {
