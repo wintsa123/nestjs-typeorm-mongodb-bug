@@ -15,6 +15,7 @@ import { RedisCacheApi } from '@src/decorators';
 import { ipWhitelist } from '@src/guard/ip.guard';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { fadadaList } from './dto/fadadaList.dto';
+import { TestDto } from './dto/test.dto';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
@@ -70,10 +71,10 @@ export class FadadaController {
   AuthUrl(@Query('clientUserId') clientUserId: string, @Query('openUserId') openUserId: string, @Query('authResult') authResult: string, @Query('authFailedReason') authFailedReason: string) {
     return this.fadadaService.UserAuthUrl(clientUserId, openUserId, authResult, authFailedReason);
   }
-  @Get('/submitCallback')
-  @ApiOperation({ summary: '提交时回调' })
-  submitCallback(@Query('clientId') clientId: string) {
-    return this.fadadaService.submitCallback(clientId);
+  @Post('/socketTest')
+  @ApiOperation({ summary: '测试' })
+  submitCallback(@Body() data: TestDto) {
+    return this.fadadaService.submitCallback(data.clientId,data.data);
   }
 
   @Post('/user/disable')

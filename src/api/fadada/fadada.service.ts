@@ -209,13 +209,16 @@ export class FadadaService {
         break;
       case 'sign-task-sign-failed':
         let params=JSON.parse(JSON.stringify( data.bizContent))
-        params.eventID=Eventid
+        params['eventID']=Eventid
+        console.log(params)
+
         await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params })
         return 'success'
         break;
+
       case 'sign-task-signed':
         let params1=JSON.parse(JSON.stringify( data.bizContent))
-        params1.eventID=Eventid
+        params1['eventID']=Eventid
         await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params1 })
         return 'success'
         break;
@@ -341,8 +344,8 @@ export class FadadaService {
    * @Description: 提交成功的回调，调用socket让流程提交
    * @return {*}
    */
-  async submitCallback(clientId) {
-    await this.SocketGateway.sendMessageToClient(clientId, { status: 'pass' })
+  async submitCallback(clientId,data) {
+    await this.SocketGateway.sendMessageToClient(clientId, { status: data })
 
     return true
   }
@@ -993,6 +996,8 @@ export class FadadaService {
     let result: any = await Client.delete(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('delete')
+      this.logger.error(data)
+
       throw result.data
 
     }
