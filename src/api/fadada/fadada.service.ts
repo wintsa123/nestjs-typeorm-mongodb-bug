@@ -82,7 +82,7 @@ export class FadadaService {
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-sign': signNum } = headers
 
-    this.logger.debug('data', 'callback', headers)
+    this.logger.debug('data', 'callback', headers,data.bizContent)
     if (!timestamp) {
       this.logger.error(data.bizContent)
       this.logger.error('过期无效数据')
