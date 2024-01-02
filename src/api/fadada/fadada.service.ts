@@ -176,14 +176,16 @@ export class FadadaService {
         });
 
           if (result) {
-            if (result.deletedAt) {
-              await this.SealRepository.restore({ sealId: tmp.sealId });
-
-            }
+            console.log(result)
+            
             Object.assign(result, tmp)
             result.expiresTime = new Date(Number(tmp.expiresTime))
             result.eventTime = new Date(Number(tmp.eventTime))
             await this.SealRepository.save(result);
+            if (result.deletedAt) {
+              await this.SealRepository.restore({ sealId: tmp.sealId });
+
+            }
           } else {
             tmp.expiresTime = new Date(Number(tmp.expiresTime))
             tmp.eventTime = new Date(Number(tmp.eventTime))
