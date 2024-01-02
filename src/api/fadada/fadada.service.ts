@@ -209,12 +209,12 @@ export class FadadaService {
         break;
       case 'sign-task-sign-failed':
         await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: data.bizContent })
-
+        return 'success'
         break;
-        case 'sign-task-signed':
-          await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: data.bizContent })
-  
-          break;
+      case 'sign-task-signed':
+        await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: data.bizContent })
+        return 'success'
+        break;
       default:
         return 'success'
         break;
