@@ -24,6 +24,11 @@ export class SocketGateway {
     client.join(clientUserId)
     return true;
   }
+  @SubscribeMessage('Request')
+  create1(@MessageBody('Request') Request: string,@ConnectedSocket() client: Socket) {
+    client.join(Request)
+    return true;
+  }
   sendMessageToClient(clientId: string, message) {
     this.server?.to(clientId).emit('message', message);
   }
