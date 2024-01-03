@@ -318,7 +318,7 @@ export class FadadaController {
 
   @Post('/crop/SealDetail')
   @ApiOperation({ summary: '查询签名详情' })
-  corpGetSeal(@Body('seal') seal:string) {
+  corpGetSeal(@Body() seal:string) {
     return this.fadadaService.corpGetSeal(seal);
   }
   @Post('/Personseal/cancelPersonalFreeSign')
