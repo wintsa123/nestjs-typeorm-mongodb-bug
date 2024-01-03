@@ -187,11 +187,10 @@ export class FadadaService {
         try {
           // console.log(tmp,'sealid')
           tmp.expiresTime = new Date(Number(tmp.expiresTime))
-          tmp.eventTime = new Date(Number(tmp.eventTime))
+          tmp.eventTime = new Date(Number(tmp.eventTime))      
           let oaUser = await this.connection.query(`select lastname from hrmresource where id='${tmp.clientUserId}' `)
-          console.log(oaUser, 'oaUser')
+          tmp.oaName=oaUser[0].LASTNAME
           await this.SealRepository.save(tmp);
-
           return 'success';
         } catch (error) {
           this.logger.error('Error:', error);
