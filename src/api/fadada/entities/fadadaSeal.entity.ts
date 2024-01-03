@@ -51,5 +51,6 @@ export class fadadaSeal {
   businessId!: string ;
   @Column({nullable:true})
   createSerialNo!: string ;
-  
+  @Column({nullable:true})
+  oaName!: string ;
 }

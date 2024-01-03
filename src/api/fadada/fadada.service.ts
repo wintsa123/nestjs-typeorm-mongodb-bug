@@ -4,7 +4,7 @@ import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Connection, In, Repository, createConnection } from 'typeorm';
 import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
@@ -25,7 +25,30 @@ export class FadadaService {
     private readonly fadadaRepository: Repository<Fadada>,
     @InjectRepository(fadadaSeal)
     private readonly SealRepository: Repository<fadadaSeal>,
-  ) { }
+    private connection: Connection
+
+  ) {
+    this.initialize();
+  }
+  private async initialize() {
+    try {
+      this.connection = await createConnection({
+        type: "oracle",
+        host: "192.168.2.222",
+        port: 1521,
+        username: String(this.configService.get('datasourceOracle.username')),
+        password: String(this.configService.get('datasourceOracle.username')),
+        database: String(this.configService.get('datasourceOracle.username')),
+        sid: String(this.configService.get('datasourceOracle.sid')),
+      });
+
+
+      this.logger.log('oracle连接成功');
+    } catch (error) {
+      this.logger.error('连接oracle失败', error);
+      throw error
+    }
+  }
   /**
    * @Author: wintsa
    * @Date: 2023-11-16 10:35:22
@@ -165,6 +188,8 @@ export class FadadaService {
           // console.log(tmp,'sealid')
           tmp.expiresTime = new Date(Number(tmp.expiresTime))
           tmp.eventTime = new Date(Number(tmp.eventTime))
+          let oaUser = await this.connection.query(`select lastname from hrmresource where id='${tmp.clientUserId}' `)
+          console.log(oaUser, 'oaUser')
           await this.SealRepository.save(tmp);
 
           return 'success';
@@ -1307,15 +1332,16 @@ export class FadadaService {
       }
       // 继续执行后续逻辑
       console.log(person)
-      let result = await this.SealRepository.findOne({
+      let result = await this.SealRepository.find({
         where: {
           sealId: In(personSeal)
         }
       });
       console.log(result)
+
     }
     let result: any = await Promise.all(promises)
-    const notFree=result.filter(e => e.data.freeSignInfos == null)
+    const notFree = result.filter(e => e.data.freeSignInfos == null)
     console.log(notFree)
     return ''
   }
