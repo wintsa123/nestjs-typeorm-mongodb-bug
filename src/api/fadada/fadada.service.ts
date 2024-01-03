@@ -208,8 +208,8 @@ export class FadadaService {
         }
         break;
       case 'sign-task-sign-failed':
-        let params=JSON.parse(JSON.stringify( data.bizContent))
-        params['eventID']=Eventid
+        let params = JSON.parse(JSON.stringify(data.bizContent))
+        params['eventID'] = Eventid
         console.log(params)
 
         await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params })
@@ -217,8 +217,8 @@ export class FadadaService {
         break;
 
       case 'sign-task-signed':
-        let params1=JSON.parse(JSON.stringify( data.bizContent))
-        params1['eventID']=Eventid
+        let params1 = JSON.parse(JSON.stringify(data.bizContent))
+        params1['eventID'] = Eventid
         await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params1 })
         return 'success'
         break;
@@ -258,6 +258,25 @@ export class FadadaService {
     const client = new fascOpenApi.corpClient.Client(await this.init())
     let result: any = await client.getIdentityInfo({ openCorpId: this.configService.get('fadada.opencorpId') as string })
     if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('corpGetIdentity获取失败')
+      throw result.data
+
+    }
+    return result.data
+  }
+  /**
+   * @Author: wintsa
+   * @Date: 2024-01-03 09:26:23
+   * @LastEditors: wintsa
+   * @Description: 查询印章名称、类型、系统章状态、图片和用印员列表等详情信息。
+   * @return {*}
+   */
+  async corpGetSeal(sealId) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.getSealDetail({ openCorpId: this.configService.get('fadada.opencorpId') as string, sealId })
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+
       this.logger.error('corpGetIdentity获取失败')
       throw result.data
 
@@ -344,7 +363,7 @@ export class FadadaService {
    * @Description: 提交成功的回调，调用socket让流程提交
    * @return {*}
    */
-  async submitCallback(clientId,data) {
+  async submitCallback(clientId, data) {
     await this.SocketGateway.sendMessageToClient(clientId, { status: data })
 
     return true

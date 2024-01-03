@@ -315,6 +315,12 @@ export class FadadaController {
   getPersonalSealList(@Body() data:CreateFadadaDto) {
     return this.fadadaService.getPersonalSealList(data);
   }
+
+  @Post('/crop/SealDetail')
+  @ApiOperation({ summary: '查询个人签名列表' })
+  corpGetSeal(@Body('seal') seal:string) {
+    return this.fadadaService.corpGetSeal(seal);
+  }
   @Post('/Personseal/cancelPersonalFreeSign')
   @ApiOperation({ summary: '解除签名免验证签' })
   cancelPersonalFreeSign(@Body() data:CreateFadadaDto) {
