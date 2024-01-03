@@ -11,6 +11,7 @@ import { RedisService } from '@src/plugin/redis/redis.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
+import JSONbig from 'json-bigint';
 
 @Injectable()
 export class FadadaService {
@@ -82,7 +83,9 @@ export class FadadaService {
 
     const { 'x-fasc-timestamp': timestamp, 'x-fasc-nonce': nonce, 'x-fasc-event': Eventid, 'x-fasc-app-id': appId, 'x-fasc-sign-type': signMethod, 'x-fasc-sign': signNum } = headers
 
-    this.logger.debug('data', 'callback', headers, data.bizContent)
+    this.logger.debug('data', 'callback', headers)
+    this.logger.debug(data.bizContent)
+
     if (!timestamp) {
       this.logger.error(data.bizContent)
       this.logger.error('过期无效数据')
@@ -105,15 +108,27 @@ export class FadadaService {
       bizContent: data.bizContent,
       appSecret: this.configService.get('fadada.appSecret')
     }
-
+    // @ts-ignore
     const sign = fascOpenApi.utils.sign(params);
 
     if (sign !== signNum) {
       this.logger.error('法大大回调验证出错')
       return 'success'
     }
+    // const tmp = JSON.parse(data.bizContent, (_key, value) => {
+    //   if (typeof value === 'number' ) {
+    //     console.log(value)
+    //     return String(value);
+    //   }
+    //   return value;
+    // });
+    const json = JSONbig({
+      storeAsString: true
 
-    const tmp = JSON.parse(data.bizContent)
+    })
+    const tmp = json.parse(data.bizContent)
+
+    console.log(tmp)
     console.log(Eventid, 'Eventid')
     switch (Eventid) {
       case 'user-authorize':
@@ -147,7 +162,7 @@ export class FadadaService {
         break;
       case 'personal-seal-create':
         try {
-
+          // console.log(tmp,'sealid')
           tmp.expiresTime = new Date(Number(tmp.expiresTime))
           tmp.eventTime = new Date(Number(tmp.eventTime))
           await this.SealRepository.save(tmp);

@@ -54,6 +54,7 @@
     "fastify-xml-body-parser": "^2.2.0",
     "fs-extra": "^11.2.0",
     "ioredis": "^5.3.2",
+    "json-bigint": "^1.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.0",
     "mysql2": "^3.6.5",
