@@ -16,6 +16,7 @@ import { ipWhitelist } from '@src/guard/ip.guard';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { fadadaList } from './dto/fadadaList.dto';
 import { TestDto } from './dto/test.dto';
+import { signTaskClient } from '@fddnpm/fasc-openapi-node-sdk';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
@@ -330,5 +331,10 @@ export class FadadaController {
   @ApiOperation({ summary: '删除个人签名' })
   deletePersonalSeal(@Body() data:CreateFadadaDto) {
     return this.fadadaService.deletePersonalSeal(data);
+  }
+  @Get('/auth/requirefreeseal')
+  @ApiOperation({ summary: '流程检查免验证签情况' })
+  authFreeSeal(@Query('signTaskId') signTaskId:string) {
+    return this.fadadaService.authFreeSeal(signTaskId);
   }
 }

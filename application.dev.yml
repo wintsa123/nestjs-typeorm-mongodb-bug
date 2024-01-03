@@ -51,18 +51,18 @@ aliyunOss:
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
 #法大大
-# fadada:
-#   appId: '00000876'
-#   appSecret: S1NAPOWD45VIXDMI9NL0S3NKSDVM6H3G 
-#   serverUrl: https://api.fadada.com/api/v5/
-#   opencorpId: 15ad1a994ed746dbbc2420840308d7a6
-#   businessId: d065d6947bfb545df69faaaff10868a5
 fadada:
-  appId: '80000470'
-  appSecret: FQCLPQRNNIZXVLX1NQDBS10DUZJ8HNFQ
-  serverUrl: https://uat-api.fadada.com/api/v5
-  opencorpId: b665596642694fa39a11e22ca5cdc704
-  businessId: 3b68a1ff1e851c69ba4c70c2b1997421
+  appId: '00000876'
+  appSecret: S1NAPOWD45VIXDMI9NL0S3NKSDVM6H3G 
+  serverUrl: https://api.fadada.com/api/v5/
+  opencorpId: 15ad1a994ed746dbbc2420840308d7a6
+  businessId: d065d6947bfb545df69faaaff10868a5
+# fadada:
+#   appId: '80000470'
+#   appSecret: FQCLPQRNNIZXVLX1NQDBS10DUZJ8HNFQ
+#   serverUrl: https://uat-api.fadada.com/api/v5
+#   opencorpId: b665596642694fa39a11e22ca5cdc704
+#   businessId: 3b68a1ff1e851c69ba4c70c2b1997421
 #豸印
 zhiyin:
   url: https://yk-test.zhiyinseal.com/smartsealservice/

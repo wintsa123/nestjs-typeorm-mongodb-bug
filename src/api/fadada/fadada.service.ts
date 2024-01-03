@@ -4,7 +4,7 @@ import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
@@ -1151,6 +1151,16 @@ export class FadadaService {
     return result.data
   }
 
+  async PersonCreateByTemple(data) {
+    const client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await client.createPersonalSealByTemplate(data)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error(result.data)
+      throw result.data
+
+    }
+    return result.data
+  }
 
 
   /**
@@ -1252,5 +1262,47 @@ export class FadadaService {
   }
   /**-----------------------------------------------------------------------个人印章管理end----------------------------------------------------------------------------------*/
 
+  /**
+  * @Author: wintsa
+  * @Date: 2024-01-03 09:48:56
+  * @LastEditors: wintsa
+  * @Description: 检查任务的签名免验证情况
+  * @return {*}
+  */
+  async authFreeSeal(signTaskId) {
+    console.log(signTaskId)
+    const detail = await this.signGetDetail({ signTaskId })
+    const corp = detail.actors.filter(e => e.actorInfo.actorType == 'corp')
+    const person = detail.actors.filter(e => e.actorInfo.actorType == 'person')
+    let promises = []
+    if (corp.length > 0) {
+      const corpSeal = corp.flatMap(e => e.signFields).map(e => e.sealId)
+      if (corpSeal.includes(null)) {
+        throw '公司有未指定印章'
+      }
+      const promise = corpSeal.map(async (e) => {
+        return await this.corpGetSeal(e)
+      })
+      promises = promises.concat(promise)
+    }
+    if (person.length > 0) {
+      const personSeal = person.flatMap(e => e.signFields).map(e => e.sealId)
+      if (personSeal.includes(null)) {
+        throw '个人有未指定印章'
+      }
+      // 继续执行后续逻辑
+      console.log(person)
+      let result = await this.SealRepository.findOne({
+        where: {
+          sealId: In(personSeal)
+        }
+      });
+      console.log(result)
+    }
+    let result: any = await Promise.all(promises)
+    const notFree=result.filter(e => e.data.freeSignInfos == null)
+    console.log(notFree)
+    return ''
+  }
 }
 
