@@ -4,7 +4,7 @@ import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
 import { Fadada } from './entities/fadada.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, In, Repository, createConnection } from 'typeorm';
+import { Connection, In, IsNull, LessThan, MoreThan, Repository, createConnection } from 'typeorm';
 import * as fascOpenApi from '@fddnpm/fasc-openapi-node-sdk';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/plugin/redis/redis.service';
@@ -12,6 +12,7 @@ import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
 import JSONbig from 'json-bigint';
+import { groupBy, map, merge, zip } from 'lodash';
 
 @Injectable()
 export class FadadaService {
@@ -187,9 +188,9 @@ export class FadadaService {
         try {
           // console.log(tmp,'sealid')
           tmp.expiresTime = new Date(Number(tmp.expiresTime))
-          tmp.eventTime = new Date(Number(tmp.eventTime))      
+          tmp.eventTime = new Date(Number(tmp.eventTime))
           let oaUser = await this.connection.query(`select lastname from hrmresource where id='${tmp.clientUserId}' `)
-          tmp.oaName=oaUser[0].LASTNAME
+          tmp.oaName = oaUser[0].LASTNAME
           await this.SealRepository.save(tmp);
           return 'success';
         } catch (error) {
@@ -1239,12 +1240,17 @@ export class FadadaService {
 * @Author: wintsa
 * @Date: 2023-12-22 14:52:53
 * @LastEditors: wintsa
-* @Description: 获取签名设置免验证签链接
+* @Description: 获取个人签名设置免验证签链接
 * @return {*}
 */
   async getPersonalFreeSignUrl(data) {
+    if (!data || data.length == 0) {
+      throw false
+    }
     const client = new fascOpenApi.sealClient.Client(await this.init())
-    let result: any = await client.getPersonalFreeSignUrl(data)
+    // console.log(sealIds)
+
+    let result: any = await client.getPersonalFreeSignUrl({ openUserId: data[0].openUserId, businessId: this.configService.get('fadada.businessId') as string, sealIds: data.map(e => e.sealId) })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
       throw result.data
@@ -1301,6 +1307,25 @@ export class FadadaService {
   }
   /**-----------------------------------------------------------------------个人印章管理end----------------------------------------------------------------------------------*/
 
+
+
+  /**
+   * @Author: wintsa
+   * @Date: 2024-01-03 17:36:58
+   * @LastEditors: wintsa
+   * @Description: 获取公司免验证签url
+   * @return {*}
+   */
+  async freeSealURL(sealIds) {
+    const Client = new fascOpenApi.sealClient.Client(await this.init())
+    let result: any = await Client.getSealFreeSignUrl({ openCorpId: this.configService.get('fadada.opencorpId') as string, businessId: this.configService.get('fadada.businessId') as string, sealIds })
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('getDeta获取公司免验证签urlil')
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data.data
+  }
   /**
   * @Author: wintsa
   * @Date: 2024-01-03 09:48:56
@@ -1309,40 +1334,82 @@ export class FadadaService {
   * @return {*}
   */
   async authFreeSeal(signTaskId) {
-    console.log(signTaskId)
-    const detail = await this.signGetDetail({ signTaskId })
-    const corp = detail.actors.filter(e => e.actorInfo.actorType == 'corp')
-    const person = detail.actors.filter(e => e.actorInfo.actorType == 'person')
-    let promises = []
-    if (corp.length > 0) {
-      const corpSeal = corp.flatMap(e => e.signFields).map(e => e.sealId)
-      if (corpSeal.includes(null)) {
-        throw '公司有未指定印章'
-      }
-      const promise = corpSeal.map(async (e) => {
-        return await this.corpGetSeal(e)
-      })
-      promises = promises.concat(promise)
-    }
-    if (person.length > 0) {
-      const personSeal = person.flatMap(e => e.signFields).map(e => e.sealId)
-      if (personSeal.includes(null)) {
-        throw '个人有未指定印章'
-      }
-      // 继续执行后续逻辑
-      console.log(person)
-      let result = await this.SealRepository.find({
-        where: {
-          sealId: In(personSeal)
-        }
-      });
-      console.log(result)
+    try {
 
+
+      const detail = await this.signGetDetail({ signTaskId })
+      const corp = detail.actors.filter(e => e.actorInfo.actorType == 'corp')
+      const person = detail.actors.filter(e => e.actorInfo.actorType == 'person')
+      let all: any[] = [];
+
+      if (corp.length > 0) {
+        let promises = []
+
+        const corpSeal = corp.flatMap(e => e.signFields).map(e => e.sealId)
+        if (corpSeal.includes(null)) {
+          throw '公司有未指定印章'
+        }
+        const promise = corpSeal.map(async (e) => {
+          return await this.corpGetSeal(e)
+        })
+        promises = promises.concat(promise)
+        let result: any = await Promise.all(promises)
+        if (result.some(e => e.code !== '100000')) {
+          throw result
+        }
+        const notFree = result.filter(e => e.data.sealInfo.freeSignInfos == null).map(e => { return { sealId: e.data.sealInfo.sealId, sealName: e.data.sealInfo.sealName, sealUser: e.data.sealInfo.sealUsers.map(e => e.memberName) } })
+        const url = await this.freeSealURL(notFree.map(e => e.sealId))
+        // 确保两个数组长度相同
+        notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
+        all = all.concat(notFree)
+
+      }
+
+      if (person.length > 0) {
+        const personSeal = person.flatMap(e => e.signFields).map(e => e.sealId)
+        if (personSeal.includes(null)) {
+          throw '个人有未指定印章'
+        }
+        // 继续执行后续逻辑
+        const currentDate = new Date();
+        let result = await this.SealRepository.find({
+          where: {
+            sealId: In(personSeal)
+          }
+        });
+        result = result.filter(e => {
+          if (e.expiresTime) {
+            return currentDate > new Date(e.expiresTime)
+
+          } else {
+            return e.businessId == null
+
+          }
+        })
+        const result1 = result.map(e => { return { sealId: e.sealId, sealUser: e.oaName, openUserId: e.openUserId } })
+        const groupByOpenUserid = groupBy(result1, 'openUserId')
+        const promise=Object.keys(groupByOpenUserid).map(async (e) => {
+          return await this.getPersonalFreeSignUrl(groupByOpenUserid[e])
+        })
+        const done=await Promise.all(promise)
+        if (done.some(e=>e.code!=='100000')) {
+          throw done
+        }
+        const notFree=Object.keys(groupByOpenUserid).map((e,i)=>{
+          return { sealId: groupByOpenUserid[e][0].sealId,
+          sealUser: groupByOpenUserid[e][0].sealUser,
+          url: done[i].data.freeSignShortUrl,
+          type: 'person'}
+        })
+        all = all.concat(notFree)
+      }
+
+
+      return all
+
+    } catch (error) {
+      throw error
     }
-    let result: any = await Promise.all(promises)
-    const notFree = result.filter(e => e.data.freeSignInfos == null)
-    console.log(notFree)
-    return ''
   }
 }
 
