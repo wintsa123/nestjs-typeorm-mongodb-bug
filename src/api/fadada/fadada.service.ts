@@ -248,18 +248,12 @@ export class FadadaService {
         }
         break;
       case 'sign-task-sign-failed':
-        let params = JSON.parse(JSON.stringify(data.bizContent))
-        params['eventID'] = Eventid
-        console.log(params)
-
-        await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params })
+       
         return 'success'
         break;
 
       case 'sign-task-signed':
-        let params1 = JSON.parse(JSON.stringify(data.bizContent))
-        params1['eventID'] = Eventid
-        await this.SocketGateway.sendMessageToClient(data.bizContent.signTaskId, { status: params1 })
+       this.logger.debug(tmp)
         return 'success'
         break;
       default:
