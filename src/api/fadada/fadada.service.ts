@@ -1361,7 +1361,7 @@ export class FadadaService {
           const url = await this.freeSealURL(notFree.map(e => e.sealId))
           // 确保两个数组长度相同
           notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
-          const tmp=uniqBy(notFree, (entry:any) => entry.sealUser + entry.url);
+          const tmp=uniqBy(notFree, 'url');
 
           all = all.concat(tmp)
         }
