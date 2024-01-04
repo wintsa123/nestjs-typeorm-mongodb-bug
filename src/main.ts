@@ -11,7 +11,7 @@ import { fastifyStatic } from '@fastify/static';
 import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
 import fastifyCsrf from '@fastify/csrf-protection';
-import  { fastifyCookie } from '@fastify/cookie';
+import { fastifyCookie } from '@fastify/cookie';
 
 
 export const config = getConfig();
@@ -21,7 +21,7 @@ async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }), {
-    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn','debug'],
+    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn', 'debug'],
   });
   app.enableCors({
     "origin": "*",
@@ -46,7 +46,7 @@ async function bootstrap() {
   app.register(fastifyCookie, {
     secret: 'zw', // for cookies signature
   });
-    app.register(fastifyCsrf);
+  app.register(fastifyCsrf);
 
   app.register(
     fastifyHelmet,
@@ -59,17 +59,17 @@ async function bootstrap() {
   // 给请求添加prefix
 
   app.setGlobalPrefix(PREFIX);
- 
+
 
   const config = new DocumentBuilder()
     .setTitle('Api example')
     .setDescription('临时接口调试')
     .setVersion('1.0')
-      .setLicense('Apache 2.0', 'http://www.apache.org/licenses/LICENSE-2.0.html')
+    .setLicense('Apache 2.0', 'http://www.apache.org/licenses/LICENSE-2.0.html')
 
     .build();
 
-    
+
 
   const fastifyInstance = app.getHttpAdapter().getInstance();
 
