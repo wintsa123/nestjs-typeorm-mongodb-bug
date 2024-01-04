@@ -1341,7 +1341,6 @@ export class FadadaService {
       const corp = detail.actors.filter(e => e.actorInfo.actorType == 'corp')
       const person = detail.actors.filter(e => e.actorInfo.actorType == 'person')
       let all: any[] = [];
-
       if (corp.length > 0) {
         let promises = []
 
@@ -1358,19 +1357,24 @@ export class FadadaService {
           throw result
         }
         const notFree = result.filter(e => e.data.sealInfo.freeSignInfos == null).map(e => { return { sealId: e.data.sealInfo.sealId, sealName: e.data.sealInfo.sealName, sealUser: e.data.sealInfo.sealUsers.map(e => e.memberName) } })
-        const url = await this.freeSealURL(notFree.map(e => e.sealId))
-        // 确保两个数组长度相同
-        notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
-        all = all.concat(notFree)
+        if (notFree.length > 0) {
+          const url = await this.freeSealURL(notFree.map(e => e.sealId))
+          // 确保两个数组长度相同
+          notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
+          all = all.concat(notFree)
+        }
+
 
       }
 
       if (person.length > 0) {
+
         const personSeal = person.flatMap(e => e.signFields).map(e => e.sealId)
         if (personSeal.includes(null)) {
           throw '个人有未指定印章'
         }
         // 继续执行后续逻辑
+
         const currentDate = new Date();
         let result = await this.SealRepository.find({
           where: {
@@ -1386,22 +1390,28 @@ export class FadadaService {
 
           }
         })
-        const result1 = result.map(e => { return { sealId: e.sealId, sealUser: e.oaName, openUserId: e.openUserId } })
-        const groupByOpenUserid = groupBy(result1, 'openUserId')
-        const promise=Object.keys(groupByOpenUserid).map(async (e) => {
-          return await this.getPersonalFreeSignUrl(groupByOpenUserid[e])
-        })
-        const done=await Promise.all(promise)
-        if (done.some(e=>e.code!=='100000')) {
-          throw done
+        if (result.length > 0) {
+
+          const result1 = result.map(e => { return { sealId: e.sealId, sealUser: e.oaName, openUserId: e.openUserId } })
+          const groupByOpenUserid = groupBy(result1, 'openUserId')
+          const promise = Object.keys(groupByOpenUserid).map(async (e) => {
+            return await this.getPersonalFreeSignUrl(groupByOpenUserid[e])
+          })
+          const done = await Promise.all(promise)
+          if (done.some(e => e.code !== '100000')) {
+            throw done
+          }
+          const notFree = Object.keys(groupByOpenUserid).map((e, i) => {
+            return {
+              sealId: groupByOpenUserid[e][0].sealId,
+              sealUser: groupByOpenUserid[e][0].sealUser,
+              url: done[i].data.freeSignShortUrl,
+              type: 'person'
+            }
+          })
+          all = all.concat(notFree)
         }
-        const notFree=Object.keys(groupByOpenUserid).map((e,i)=>{
-          return { sealId: groupByOpenUserid[e][0].sealId,
-          sealUser: groupByOpenUserid[e][0].sealUser,
-          url: done[i].data.freeSignShortUrl,
-          type: 'person'}
-        })
-        all = all.concat(notFree)
+
       }
 
 
