@@ -12,7 +12,7 @@ import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
 import JSONbig from 'json-bigint';
-import { groupBy, map, merge, zip } from 'lodash';
+import { groupBy, map, merge, uniqBy, zip } from 'lodash';
 
 @Injectable()
 export class FadadaService {
@@ -1361,7 +1361,9 @@ export class FadadaService {
           const url = await this.freeSealURL(notFree.map(e => e.sealId))
           // 确保两个数组长度相同
           notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
-          all = all.concat(notFree)
+          const tmp=uniqBy(notFree, (entry:any) => entry.sealUser + entry.url);
+
+          all = all.concat(tmp)
         }
 
 
