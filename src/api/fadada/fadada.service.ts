@@ -1262,8 +1262,15 @@ export class FadadaService {
     if (clientUserId.length == 0) {
       throw '未取得登录id'
     }
+    console.log(clientUserId)
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let openUserId = await this.fadadaRepository.findOne({ where: { clientUserId } });
+    console.log(openUserId)
+
+    if (!openUserId) {
+      throw '请先授权';
+      
+    }
     // @ts-ignore    
     let result: any = await client.getPersonalSealList({ openUserId })
     if (result.status !== 200 || result.data.code !== '100000') {
