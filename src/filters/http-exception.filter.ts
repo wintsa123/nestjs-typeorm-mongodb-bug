@@ -21,14 +21,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const { code, msg, ...oth } = exception
 
-
     Logger.log(exception, '错误提示');
 
     const errorResponse = {
       status,
       message: msg,
       code: resultCode, // 自定义code
-      params: oth,
+      params: typeof exception=='string'?exception:oth,
       path: request.url, // 错误的url地址
       method: request.method, // 请求方式
       timestamp: new Date().toLocaleDateString(), // 错误的时间
