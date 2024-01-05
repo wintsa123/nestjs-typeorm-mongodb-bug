@@ -313,8 +313,8 @@ export class FadadaController {
   }
   @Post('/Personseal/getPersonalSealList')
   @ApiOperation({ summary: '查询个人签名列表' })
-  getPersonalSealList(@Body() data:CreateFadadaDto) {
-    return this.fadadaService.getPersonalSealList(data);
+  getPersonalSealList(@Body() clientUserId:string) {
+    return this.fadadaService.getPersonalSealList(clientUserId);
   }
 
   @Post('/crop/SealDetail')

@@ -248,12 +248,12 @@ export class FadadaService {
         }
         break;
       case 'sign-task-sign-failed':
-       
+
         return 'success'
         break;
 
       case 'sign-task-signed':
-       this.logger.debug(tmp)
+        this.logger.debug(tmp)
         return 'success'
         break;
       default:
@@ -1258,9 +1258,14 @@ export class FadadaService {
    * @Description: 查询个人签名列表
    * @return {*}
    */
-  async getPersonalSealList(data) {
+  async getPersonalSealList(clientUserId) {
+    if (clientUserId.length == 0) {
+      throw '未取得登录id'
+    }
     const client = new fascOpenApi.sealClient.Client(await this.init())
-    let result: any = await client.getPersonalSealList(data)
+    let openUserId = await this.fadadaRepository.findOne({ where: { clientUserId } });
+    // @ts-ignore    
+    let result: any = await client.getPersonalSealList({ openUserId })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
       throw result.data
@@ -1355,7 +1360,7 @@ export class FadadaService {
           const url = await this.freeSealURL(notFree.map(e => e.sealId))
           // 确保两个数组长度相同
           notFree.forEach(e => { e['url'] = url.freeSignShortUrl, e['type'] = 'corp' })
-          const tmp=uniqBy(notFree, 'url');
+          const tmp = uniqBy(notFree, 'url');
 
           all = all.concat(tmp)
         }
