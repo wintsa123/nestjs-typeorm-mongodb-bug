@@ -233,9 +233,6 @@ export class ZhiyinService {
         let tmpobj = {}
         tmpobj['createOaUserId'] = createUser1[0].ID
         tmpobj['stampOaUserId'] = createUser1[0].ID
-
-        tmpobj['createOaUserName'] = createUser1[0].LASTNAME
-        tmpobj['stampOaUserName'] = stampUser1[0].LASTNAME
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
         tmpobj['status'] = '待盖章'
@@ -360,7 +357,6 @@ export class ZhiyinService {
             if (stampUser1[0].LASTNAME == null) {
               throw '盖章人不存在'
             }
-            opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
             opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
           }
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
@@ -371,7 +367,7 @@ export class ZhiyinService {
           NewapplyData['details'] = StampRecordDetails
           NewapplyData['records'] = StampRecords
           NewapplyData['status'] = '完成'
-          NewapplyData['createOaUserName'] = '管理员无审批盖章'
+          NewapplyData['code'] = '管理员无审批盖章'
           NewapplyData['records'] = StampRecords
           await this.applyDetailRepository.save(NewapplyData);
           return true

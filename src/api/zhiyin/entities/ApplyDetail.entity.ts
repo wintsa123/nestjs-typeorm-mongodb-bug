@@ -115,10 +115,7 @@ export class ApplyDetailEntity {
 
   @Column({  type: 'varchar',nullable:true })
   stampOpenUserId?: string;
-  @Column({  type: 'varchar',nullable:true })
-  stampOaUserName?: string;
-  @Column({  type: 'varchar',nullable:true })
-  createOaUserName?: string;
+
   @Column({  type: 'int',nullable:true })
   createUser?: number;
   @Column({  type: 'varchar',nullable:true })
