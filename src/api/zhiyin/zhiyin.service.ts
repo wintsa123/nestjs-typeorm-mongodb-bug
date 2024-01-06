@@ -362,11 +362,10 @@ export class ZhiyinService {
             }
             opApplyDetailRequest['stampOaUserName'] = stampUser1[0].LASTNAME
             opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
-
           }
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { return new StampRecordEntity(e) })
+          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['stampOaUserId'] = opApplyDetailRequest.stampOaUserId; return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
           let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { return new StampRecordDetailEntity(e) })
           NewapplyData['details'] = StampRecordDetails
@@ -378,20 +377,14 @@ export class ZhiyinService {
           return true
         } else {
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-
-          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyData!.id; return new StampRecordEntity(e) })
-
+          let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyData!.id; e['stampOaUserId'] = applyData!.stampOaUserId; return new StampRecordEntity(e) })
           let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
           let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyData!.id; return new StampRecordDetailEntity(e) })
-          console.log(StampRecords)
           await this.stampRecordRepository.save(StampRecords);
-
           await this.stampRecordDetailRepository.save(StampRecordDetails);
-
-
+          return true;
 
         }
-        return true;
 
       }
       //普通人用印根据stampCode更新数据
@@ -400,7 +393,7 @@ export class ZhiyinService {
       if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
 
       const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
-      let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordEntity(e) })
+      let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; e['stampOaUserId'] = applyDetail!.stampOaUserId; return new StampRecordEntity(e) })
       let tmp = [].concat(...opStampRecordRequest.map((e) => e.opStampRecordDetails))
       let StampRecordDetails = uniqBy(tmp, 'id').map((e: any) => { e['apply'] = applyDetail!.id; return new StampRecordDetailEntity(e) })
       Object.assign(applyDetail, opApplyDetailRequest)
