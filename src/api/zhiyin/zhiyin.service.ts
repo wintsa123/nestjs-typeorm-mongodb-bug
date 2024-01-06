@@ -489,8 +489,8 @@ export class ZhiyinService {
    */
   async setType(data) {
     const result = await this.devicesRepository.findOne({ where:{id: data.id} } );
-    result!.type=data.type
-    result!.organization=data.organization
+    result!.type=data.type.length>0?data.type:result!.type
+    result!.organization=data.type.organization>0?data.organization:result!.organization
     await this.devicesRepository.save(result!)
     return true
   }
