@@ -391,7 +391,7 @@ export class ZhiyinService {
 
 
         }
-        return true
+        return true;
 
       }
       //普通人用印根据stampCode更新数据

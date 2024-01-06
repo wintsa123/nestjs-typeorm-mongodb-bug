@@ -11,5 +11,8 @@ export class devicesEntity extends baseEntity {
     @Column({ type: 'timestamp',nullable:true })
     serviceTime?: Date;
 
-   
+    @Column({ type: 'varchar',nullable:true })
+    type?: string;
+    @Column({ type: 'varchar',nullable:true })
+    organization?: string;
 }
