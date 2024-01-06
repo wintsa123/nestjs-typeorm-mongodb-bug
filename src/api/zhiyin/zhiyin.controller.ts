@@ -7,6 +7,7 @@ import { callback } from './dto/callback.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags, } from '@nestjs/swagger';
 import { query } from 'express';
 import { ipWhitelist } from '@src/guard/ip.guard';
+import { setType } from './dto/setType.dto';
 
 @ApiTags('豸印')
 @Controller('zhiyin')
@@ -70,5 +71,12 @@ export class ZhiyinController {
     // 方法体
     return this.zhiyinService.convert(Useropenid)
   }
-
+  @Post('/setType')
+  @ApiOperation({ summary: 'setType'})
+  setType(
+    @Body() body:setType,
+  ) {
+    // 方法体
+    return this.zhiyinService.setType(body)
+  }
 }

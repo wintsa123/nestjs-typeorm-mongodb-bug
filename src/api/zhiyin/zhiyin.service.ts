@@ -480,6 +480,19 @@ export class ZhiyinService {
       throw error;
     }
   }
-
+  /**
+   * @Author: wintsa
+   * @Date: 2024-01-06 17:45:19
+   * @LastEditors: wintsa
+   * @Description: set
+   * @return {*}
+   */
+  async setType(data) {
+    const result = await this.devicesRepository.findOne({ where:{id: data.id} } );
+    result!.type=data.type
+    result!.organization=data.organization
+    await this.devicesRepository.save(result!)
+    return true
+  }
 
 }
