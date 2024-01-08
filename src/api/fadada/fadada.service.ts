@@ -1258,7 +1258,7 @@ export class FadadaService {
       console.log(data)
 
 
-      let tmp = await this.SealRepository.findOne({ where: { sealId:  Array.isArray(data) ? data[0].sealId : data.sealId } });
+      let tmp = await this.SealRepository.findOne({ where: { sealId:  Array.isArray(data) ? data[0].sealId : data.sealId[0] } });
 
       if (!tmp) {
         throw `${Array.isArray(data) ? data[0].clientUserId : data.clientUserId}该人未授权`
