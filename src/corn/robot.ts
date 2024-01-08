@@ -35,7 +35,7 @@ export class TasksService {
             throw error
         }
     }
-    @Cron(CronExpression.EVERY_DAY_AT_4AM)
+    @Cron(CronExpression.EVERY_DAY_AT_4AM,{name:'setCron'})
     // @Cron(CronExpression.EVERY_5_SECONDS)
 
     async setCorn() {
@@ -45,10 +45,13 @@ export class TasksService {
             let next;
             try {
                 // this.schedule.deleteCronJob(key);
-                let jo=this.schedule.getCronJob(key)
-                jo.stop()
-                this.logger.warn(`job ${key} stop!`);
+                if (key!=='setCron') {
+                    let jo=this.schedule.getCronJob(key)
+                    jo.stop()
+                    this.logger.warn(`job ${key} stop!`);
 
+                }
+               
             } catch (e) {
                 next = 'error: next fire date is in the past!';
             }
