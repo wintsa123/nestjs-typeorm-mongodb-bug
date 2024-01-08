@@ -493,7 +493,7 @@ export class ZhiyinService {
 
       const result = await this.devicesRepository.findOne({ where: { id: data.id } });
       result!.type = data.type ? data.type : result!.type
-      result!.organization = data.type ? data.organization : result!.organization
+      result!.organization = data.organization ? data.organization : result!.organization
       console.log(result)
       await this.devicesRepository.save(result!)
       return true
