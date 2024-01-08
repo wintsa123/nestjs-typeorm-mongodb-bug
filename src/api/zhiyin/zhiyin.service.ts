@@ -456,6 +456,7 @@ export class ZhiyinService {
         this.logger.error(data)
         throw data
       }
+      console.log(data, 'convert')
       if (data.userid_list.length > 0) {
         const successIds = data.userid_list.map(e => {
           return generateCacheKey(e.userid)
