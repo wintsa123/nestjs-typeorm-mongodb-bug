@@ -298,8 +298,8 @@ export class FadadaController {
 
   @Post('/Personseal/getPersonalSealCreateUrl')
   @ApiOperation({ summary: '获取签名创建链接' })
-  getPersonalSealCreateUrl(@Body() data:CreateFadadaDto) {
-    return this.fadadaService.getPersonalSealCreateUrl(data);
+  getPersonalSealCreateUrl(@Body() clientUserId:string) {
+    return this.fadadaService.getPersonalSealCreateUrl(clientUserId);
   }
   @Post('/Personseal/getPersonalSealManageUrl')
   @ApiOperation({ summary: '获取签名管理链接' })
