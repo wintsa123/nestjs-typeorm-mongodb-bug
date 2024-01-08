@@ -1258,7 +1258,7 @@ export class FadadaService {
       console.log(data)
 
 
-      let tmp = await this.SealRepository.findOne({ where: { sealId:  Array.isArray(data) ? data[0].sealId : data.sealId[0] } });
+      let tmp = await this.SealRepository.findOne({ where: { sealId: Array.isArray(data) ? data[0].sealId : data.sealId[0] } });
 
       if (!tmp) {
         throw `${Array.isArray(data) ? data[0].clientUserId : data.clientUserId}该人未授权`
@@ -1322,17 +1322,26 @@ export class FadadaService {
    * @Author: wintsa
    * @Date: 2023-12-22 14:59:38
    * @LastEditors: wintsa
-   * @Description: 删除签名
+   * @Description: 删除个人签名
    * @return {*}
    */
-  async deletePersonalSeal(data) {
-    const client = new fascOpenApi.sealClient.Client(await this.init())
-    let result: any = await client.deletePersonalSeal(data)
-    if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error(result.data)
-      throw result.data
+  async deletePersonalSeal(sealId) {
+    try {
+      const client = new fascOpenApi.sealClient.Client(await this.init())
+      let tmp = await this.SealRepository.findOne({ where: { sealId } });
+      if (!tmp) {
+        throw tmp
+      }
+      let result: any = await client.deletePersonalSeal({openUserId:tmp.openUserId,sealId})
+      if (result.status !== 200 || result.data.code !== '100000') {
+        this.logger.error(result.data)
+        throw result.data
+      }
+      return result.data
+    } catch (error) {
+
     }
-    return result.data
+
   }
   /**-----------------------------------------------------------------------个人印章管理end----------------------------------------------------------------------------------*/
 

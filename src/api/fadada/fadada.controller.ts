@@ -329,8 +329,8 @@ export class FadadaController {
   }
   @Post('/Personseal/deletePersonalSeal')
   @ApiOperation({ summary: '删除个人签名' })
-  deletePersonalSeal(@Body() data:CreateFadadaDto) {
-    return this.fadadaService.deletePersonalSeal(data);
+  deletePersonalSeal(@Body() sealId:string) {
+    return this.fadadaService.deletePersonalSeal(sealId);
   }
   @Get('/auth/requirefreeseal')
   @ApiOperation({ summary: '流程检查免验证签情况' })
