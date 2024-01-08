@@ -1328,18 +1328,20 @@ export class FadadaService {
   async deletePersonalSeal(sealId) {
     try {
       const client = new fascOpenApi.sealClient.Client(await this.init())
+      console.log(sealId)
       let tmp = await this.SealRepository.findOne({ where: { sealId } });
       if (!tmp) {
         throw tmp
       }
-      let result: any = await client.deletePersonalSeal({openUserId:tmp.openUserId,sealId})
+      console.log(tmp)
+      let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.data)
         throw result.data
       }
-      return result
+      return result.data
     } catch (error) {
-
+      throw error
     }
 
   }
