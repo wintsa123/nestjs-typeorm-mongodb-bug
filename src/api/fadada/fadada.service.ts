@@ -12,7 +12,7 @@ import { SocketGateway } from 'src/socket/socket.gateway';
 import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
 import JSONbig from 'json-bigint';
-import { groupBy, map, merge, uniqBy, zip } from 'lodash';
+import { groupBy, map, uniqBy, zip } from 'lodash';
 
 @Injectable()
 export class FadadaService {
@@ -1334,7 +1334,8 @@ export class FadadaService {
         throw tmp
       }
       console.log(tmp)
-      let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId })
+      //@ts-ignore
+      let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId:tmp.sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.data)
         throw result.data
