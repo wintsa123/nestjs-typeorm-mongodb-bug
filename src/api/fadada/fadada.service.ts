@@ -1184,13 +1184,13 @@ export class FadadaService {
     }
     return result.data
   }
-/**
- * @Author: wintsa
- * @Date: 2024-01-08 14:21:39
- * @LastEditors: wintsa
- * @Description: 根据模板创建个人签名
- * @return {*}
- */
+  /**
+   * @Author: wintsa
+   * @Date: 2024-01-08 14:21:39
+   * @LastEditors: wintsa
+   * @Description: 根据模板创建个人签名
+   * @return {*}
+   */
   async PersonCreateByTemple(data) {
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let result: any = await client.createPersonalSealByTemplate(data)
@@ -1215,7 +1215,7 @@ export class FadadaService {
       throw '未取得登录id'
     }
     const client = new fascOpenApi.sealClient.Client(await this.init())
-  
+
     let result: any = await client.getPersonalSealCreateUrl({ clientUserId })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
@@ -1248,18 +1248,32 @@ export class FadadaService {
 * @return {*}
 */
   async getPersonalFreeSignUrl(data) {
-    if (!data || data.length == 0) {
-      throw false
-    }
-    const client = new fascOpenApi.sealClient.Client(await this.init())
-    // console.log(sealIds)
+    try {
 
-    let result: any = await client.getPersonalFreeSignUrl({ openUserId: data[0].openUserId, businessId: this.configService.get('fadada.businessId') as string, sealIds: data.map(e => e.sealId) })
-    if (result.status !== 200 || result.data.code !== '100000') {
-      this.logger.error(result.data)
-      throw result.data
+
+      if (!data || data.length == 0) {
+        throw false
+      }
+      const client = new fascOpenApi.sealClient.Client(await this.init())
+      console.log(data)
+
+      let tmp = await this.fadadaRepository.findOne({ where: { clientUserId: Array.isArray(data)?data[0].clientUserId :data.clientUserId } });
+      console.log(tmp)
+
+      if (!tmp) {
+        throw `${Array.isArray(data)?data[0].clientUserId :data.clientUserId }该人未授权`
+      }
+      console.log(tmp)
+
+      let result: any = await client.getPersonalFreeSignUrl({ openUserId: tmp.openUserId, businessId: this.configService.get('fadada.businessId') as string, sealIds:  Array.isArray(data)?data.map(e => e.sealId):data.sealId })
+      if (result.status !== 200 || result.data.code !== '100000') {
+        this.logger.error(result.data)
+        throw result.data
+      }
+      return result.data
+    } catch (error) {
+      throw error
     }
-    return result.data
   }
   /**
    * @Author: wintsa
@@ -1278,10 +1292,10 @@ export class FadadaService {
 
     if (!data) {
       throw '请先授权';
-      
+
     }
     // @ts-ignore    
-    let result: any = await client.getPersonalSealList({ openUserId:data.openUserId })
+    let result: any = await client.getPersonalSealList({ openUserId: data.openUserId })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
       throw result.data
@@ -1409,8 +1423,8 @@ export class FadadaService {
         })
         if (result.length > 0) {
 
-          const result1 = result.map(e => { return { sealId: e.sealId, sealUser: e.oaName, openUserId: e.openUserId } })
-          const groupByOpenUserid = groupBy(result1, 'openUserId')
+          const result1 = result.map(e => { return { sealId: e.sealId, sealUser: e.oaName, clientUserId: e.clientUserId } })
+          const groupByOpenUserid = groupBy(result1, 'clientUserId')
           const promise = Object.keys(groupByOpenUserid).map(async (e) => {
             return await this.getPersonalFreeSignUrl(groupByOpenUserid[e])
           })
