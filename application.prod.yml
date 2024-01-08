@@ -62,6 +62,7 @@ zhiyin:
   url: https://www.zhiyinseal.cn/smartsealservice/
   appId: 9koctjctghthidy60frqc4uab2hjevk1
   appKey: inxz77e5woa4ql6n3o4ciaohbxm0flb8
-  AgentId: 1000020
+  AgentId: 1000023
+  # AgentId: 1000020
 
 ipWhitelist: ['111.229.217.225','111.231.141.181','118.89.112.13','115.159.196.132','82.156.159.103','62.234.17.101','127.0.0.1','192.168.2.1','192.168.2.221']
