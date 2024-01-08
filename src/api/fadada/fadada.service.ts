@@ -1337,7 +1337,7 @@ export class FadadaService {
         this.logger.error(result.data)
         throw result.data
       }
-      return result.data
+      return result
     } catch (error) {
 
     }
