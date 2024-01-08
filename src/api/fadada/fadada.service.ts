@@ -1171,7 +1171,7 @@ export class FadadaService {
    * @Author: wintsa
    * @Date: 2023-12-22 14:52:53
    * @LastEditors: wintsa
-   * @Description: 创建图片签名
+   * @Description: 创建个人图片签名
    * @return {*}
    */
   async PersonCreateByImage(data) {
@@ -1184,7 +1184,13 @@ export class FadadaService {
     }
     return result.data
   }
-
+/**
+ * @Author: wintsa
+ * @Date: 2024-01-08 14:21:39
+ * @LastEditors: wintsa
+ * @Description: 根据模板创建个人签名
+ * @return {*}
+ */
   async PersonCreateByTemple(data) {
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let result: any = await client.createPersonalSealByTemplate(data)
@@ -1204,9 +1210,13 @@ export class FadadaService {
  * @Description: 获取签名创建链接
  * @return {*}
  */
-  async getPersonalSealCreateUrl(data) {
+  async getPersonalSealCreateUrl(clientUserId) {
+    if (clientUserId.length == 0) {
+      throw '未取得登录id'
+    }
     const client = new fascOpenApi.sealClient.Client(await this.init())
-    let result: any = await client.getPersonalSealCreateUrl(data)
+  
+    let result: any = await client.getPersonalSealCreateUrl({ clientUserId })
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
       throw result.data
