@@ -241,7 +241,7 @@ export class ZhiyinService {
         tmpobj['expireTime'] = params.expireTime
         tmpobj['applyCount'] = params.applyCount
         tmpobj['reason'] = params.reason
-        tmpobj['availableCount'] = params.availableCount
+        tmpobj['availableCount'] = params.applyCount
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
         await this.applyDetailRepository.save(tmpobj)
