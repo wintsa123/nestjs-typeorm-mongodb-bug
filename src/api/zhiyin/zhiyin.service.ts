@@ -241,18 +241,14 @@ export class ZhiyinService {
         tmpobj['status'] = '待盖章'
         tmpobj['expireTime'] = params.expireTime
         tmpobj['applyCount'] = params.applyCount
-
         tmpobj['reason'] = params.reason
         tmpobj['availableCount'] = params.availableCount
-
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
         await this.applyDetailRepository.save(tmpobj)
-
         return done
       } else {
         this.logger.error(done)
-
         throw done
       }
     } catch (error) {
@@ -403,7 +399,7 @@ export class ZhiyinService {
       //普通人用印根据stampCode更新数据
       delete opApplyDetailRequest['id']
       let applyDetail = await this.applyDetailRepository.findOne({ where: { stampCode: opApplyDetailRequest.stampCode } });
-      if (!applyDetail) return '未找到对应单据，请确定该单据有在oa流程发起'
+      if (!applyDetail) throw '未找到对应单据，请确定该单据有在oa流程发起'
 
       const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
       let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['apply'] = applyDetail!.id; e['stampOaUserId'] = applyDetail!.stampOaUserId; return new StampRecordEntity(e) })
