@@ -347,7 +347,7 @@ export class ZhiyinService {
       }
 
 
-
+      console.log(opApplyDetailRequest,'opApplyDetailRequest')
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
