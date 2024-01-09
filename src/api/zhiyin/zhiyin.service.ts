@@ -236,6 +236,8 @@ export class ZhiyinService {
         tmpobj['requestId'] = params.requestId
         tmpobj['code'] = params.code
         tmpobj['status'] = '待盖章'
+        tmpobj['expireTime'] = params.expireTime
+        
 
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
