@@ -237,7 +237,10 @@ export class ZhiyinService {
         tmpobj['code'] = params.code
         tmpobj['status'] = '待盖章'
         tmpobj['expireTime'] = params.expireTime
-        
+        tmpobj['applyCount'] = params.applyCount
+
+        tmpobj['reason'] = params.reason
+        tmpobj['availableCount'] = params.availableCount
 
         tmpobj['mac'] = params.mac
         tmpobj['stampCode'] = done.data
