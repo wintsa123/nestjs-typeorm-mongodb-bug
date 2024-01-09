@@ -15,7 +15,6 @@ import { Connection, EntityRepository, IsNull, Not, Repository, createConnection
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
-import { notApproval } from './entities/notApproval.entity';
 @EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
