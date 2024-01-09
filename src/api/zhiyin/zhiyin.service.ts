@@ -15,6 +15,7 @@ import { Connection, EntityRepository, IsNull, Not, Repository, createConnection
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
+import { notApproval } from './entities/notApproval.entity';
 @EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
@@ -32,6 +33,8 @@ export class ZhiyinService {
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     @InjectRepository(devicesEntity)
     private readonly devicesRepository: Repository<devicesEntity>,
+    // @InjectRepository(notApproval)
+    // private readonly notApprovalResplo: Repository<notApproval>,
     // @InjectRepository(hrmresourceEntity,'oracle')
     // private readonly hrmresourceRepositor: Repository<hrmresourceEntity>,
     private readonly redisService: RedisService,
