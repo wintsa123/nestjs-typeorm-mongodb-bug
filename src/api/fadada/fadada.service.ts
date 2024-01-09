@@ -606,7 +606,7 @@ export class FadadaService {
    */
   async signCreate(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    let tmpData=JSON.parse(JSON.stringify(data))
+    let tmpData = JSON.parse(JSON.stringify(data))
     if (tmpData['initiator']['idType'] == 'corp') {
       tmpData['initiator']['openId'] = this.configService.get('fadada.opencorpId')
     }
@@ -630,9 +630,15 @@ export class FadadaService {
     try {
       let result: any = await Client.create(tmpData)
       if (result.status !== 200 || result.data.code !== '100000') {
+
         this.logger.error(result.headers)
-        const hash=redisCacheKey('POST','/api/v1/fadada/sign/Create',data)
-        await this.redisService.del(hash)
+        const hash = redisCacheKey('POST', '/api/v1/fadada/sign/Create', data)
+
+        if (hash) {
+          await this.redisService.del(hash)
+          let done = await this.signCreate(data)
+          return done
+        }
 
         throw result.data
 
@@ -1340,7 +1346,7 @@ export class FadadaService {
       }
       console.log(tmp)
       //@ts-ignore
-      let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId:tmp.sealId })
+      let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId: tmp.sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.data)
         throw result.data
