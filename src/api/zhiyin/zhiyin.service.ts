@@ -345,6 +345,8 @@ export class ZhiyinService {
       }
 
 
+      console.log(opApplyDetailRequest, 'opApplyDetailRequest')
+
       if (!!opApplyDetailRequest['stampOpenUserId']) {
         //转换stampOpenUserId为oaID
         let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
@@ -359,7 +361,6 @@ export class ZhiyinService {
         }
 
       }
-      console.log(opApplyDetailRequest, 'opApplyDetailRequest')
       if (!opApplyDetailRequest['stampCode']) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
