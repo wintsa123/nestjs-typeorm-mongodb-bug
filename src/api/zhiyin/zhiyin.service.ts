@@ -347,7 +347,7 @@ export class ZhiyinService {
       }
 
 
-      console.log(opApplyDetailRequest,'opApplyDetailRequest')
+      console.log(opApplyDetailRequest, 'opApplyDetailRequest')
       if (opApplyDetailRequest.id == 0) {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
@@ -358,11 +358,16 @@ export class ZhiyinService {
 
           if (!!opApplyDetailRequest['stampOpenUserId']) {
             let stampWorkcode = await this.convert([opApplyDetailRequest.stampOpenUserId], true)
-            let stampUser1 = await this.connection.query(`select lastname,id from hrmresource where WORKCODE='${stampWorkcode}' `)
-            if (stampUser1[0].LASTNAME == null) {
-              throw '盖章人不存在'
+            if (stampWorkcode) {
+              let stampUser1 = await this.connection.query(`select lastname,id from hrmresource where WORKCODE='${stampWorkcode}' `)
+              if (stampUser1[0].LASTNAME == null) {
+                throw '盖章人不存在'
+              }
+              opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
+            } else {
+              throw '盖章人id转换失败'
             }
-            opApplyDetailRequest['stampOaUserId'] = stampUser1[0].ID
+
           }
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
@@ -475,7 +480,12 @@ export class ZhiyinService {
         }
 
       } else {
-        return { successIds: [], invalid: data.invalid_open_userid_list }
+        if (local == true) {
+          return false
+        } else {
+          return { successIds: [], invalid: data.invalid_open_userid_list }
+        }
+
 
       }
     }
