@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode, Headers, UseGuards, Head } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode, Headers, UseGuards, Head, UseInterceptors } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -17,11 +17,12 @@ import { AuthGuard } from '@src/guard/auth.guard';
 import { fadadaList } from './dto/fadadaList.dto';
 import { TestDto } from './dto/test.dto';
 import { signTaskClient } from '@fddnpm/fasc-openapi-node-sdk';
+import { ResponseHeaderLoggerInterceptor } from '@src/filters/header-logger.interceptor';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
 @ApiResponse({ status: 200, description: '成功' })
-
+@UseInterceptors(ResponseHeaderLoggerInterceptor) // 将拦截器应用于整个控制器
 // @UseGuards( AuthGuard)
 export class FadadaController {
   constructor(private readonly fadadaService: FadadaService, private readonly SocketService: SocketService) { }
