@@ -58,3 +58,33 @@ export const generateCacheKey = (data) => {
   return hash;
 }
 
+/**
+   * @Author: 水痕
+   * @Date: 2022-08-12 22:23:43
+   * @LastEditors: wintsa
+   * @Description: 生成redis的key
+   * @param {string} method 请求方式
+   * @param {string} url url地址
+   * @param {string} identity 身份
+   * @return {*}
+   */
+
+export const redisCacheKey=(method: string, url: string, body?: any): string =>{
+  console.log(method, 'method')
+
+
+  if (body !== undefined && body !== null) {
+    const hash = generateCacheKey(body)
+    console.log(hash, 'hash')
+    if (method == 'GET') {
+      return `${method}:${url}:${hash}`;
+
+    } else {
+      return `${method}:${hash}`;
+
+    }
+  } else {
+    return `${method}:${url}`;
+
+  }
+}

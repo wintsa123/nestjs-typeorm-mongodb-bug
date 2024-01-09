@@ -13,6 +13,7 @@ import { fadadaSeal } from './entities/fadadaSeal.entity';
 import { signTaskStatus } from '@src/enums';
 import JSONbig from 'json-bigint';
 import { groupBy, map, uniqBy, zip } from 'lodash';
+import { redisCacheKey } from '@src/utils';
 
 @Injectable()
 export class FadadaService {
@@ -605,16 +606,16 @@ export class FadadaService {
    */
   async signCreate(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-
-    if (data['initiator']['idType'] == 'corp') {
-      data['initiator']['openId'] = this.configService.get('fadada.opencorpId')
+    let tmpData=JSON.parse(JSON.stringify(data))
+    if (tmpData['initiator']['idType'] == 'corp') {
+      tmpData['initiator']['openId'] = this.configService.get('fadada.opencorpId')
     }
-    if (data['businessId']) {
-      data['businessId'] = this.configService.get('fadada.businessId')
+    if (tmpData['businessId']) {
+      tmpData['businessId'] = this.configService.get('fadada.businessId')
     } else {
-      delete data['businessId']
+      delete tmpData['businessId']
     }
-    for (const e of data['actors']) {
+    for (const e of tmpData['actors']) {
       if (e.actor.actorType == 'corp') {
         e.actor['actorOpenId'] = this.configService.get('fadada.opencorpId')
       }
@@ -627,9 +628,12 @@ export class FadadaService {
 
 
     try {
-      let result: any = await Client.create(data)
+      let result: any = await Client.create(tmpData)
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.headers)
+        const hash=redisCacheKey('POST','/api/v1/fadada/sign/Create',data)
+        await this.redisService.del(hash)
+
         throw result.data
 
       }
@@ -1054,6 +1058,7 @@ export class FadadaService {
       throw result.data
 
     }
+
     return result.data.msg
   }
   /**

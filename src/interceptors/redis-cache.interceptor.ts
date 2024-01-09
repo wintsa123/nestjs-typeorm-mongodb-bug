@@ -11,7 +11,7 @@ import {
   REDIS_CACHE_EX_SECOND_KEY,
   REDIS_CACHE_KEY,
 } from '@src/constants';
-import { generateCacheKey } from '@src/utils';
+import { generateCacheKey, redisCacheKey } from '@src/utils';
 
 type IRequest = Request & { user: ICurrentUserType };
 
@@ -37,14 +37,14 @@ export class RedisCacheInterceptor implements NestInterceptor {
       // 如果有授权拦截的且需要区分用户的时候
 
       if (request.body) {
-        redisKey = await this.redisCacheKey(
+        redisKey = await redisCacheKey(
           request.method,
           request.url,
           request.body,
 
         )
       } else {
-        redisKey = await this.redisCacheKey(request.method, request.url);
+        redisKey = await redisCacheKey(request.method, request.url);
       }
 
       console.log(redisKey, 'redisKey')
@@ -67,38 +67,9 @@ export class RedisCacheInterceptor implements NestInterceptor {
     }
   }
 
-  /**
-   * @Author: 水痕
-   * @Date: 2022-08-12 22:23:43
-   * @LastEditors: 水痕
-   * @Description: 自定义redis的key
-   * @param {string} method 请求方式
-   * @param {string} url url地址
-   * @param {string} identity 身份
-   * @return {*}
-   */
-  private redisCacheKey(method: string, url: string): string;
-  private redisCacheKey(method: string, url: string, body: any): string;
-  private redisCacheKey(method: string, url: string, body?: any): string {
-    console.log(method, 'method')
 
 
-    if (body !== undefined && body !== null) {
-      const hash = generateCacheKey(body)
-      console.log(hash, 'hash')
-      if (method=='GET') {
-        return `${method}:${url}:${hash}`;
-
-      }else{
-        return `${method}:${hash}`;
-
-      }
-    } else {
-      return `${method}:${url}`;
-
-    }
 
 
-  }
 }
 
