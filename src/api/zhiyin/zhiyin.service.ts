@@ -15,6 +15,7 @@ import { Connection, EntityRepository, IsNull, Not, Repository, createConnection
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
+import { banUser } from './entities/banUser.entity';
 @EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
@@ -32,6 +33,8 @@ export class ZhiyinService {
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     @InjectRepository(devicesEntity)
     private readonly devicesRepository: Repository<devicesEntity>,
+    @InjectRepository(banUser)
+    private readonly banUserRepository: Repository<banUser>,
     // @InjectRepository(notApproval)
     // private readonly notApprovalResplo: Repository<notApproval>,
     // @InjectRepository(hrmresourceEntity,'oracle')
@@ -433,18 +436,14 @@ export class ZhiyinService {
       timestamp: getTime(),
     }
     let result = this.Sign(objTmp)
-
     const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
-
       const { data: done } = await axios.get(url1)
       if (done.success) {
-
         return done.data
       } else {
         this.logger.error(done)
         throw done
-
       }
     } catch (error) {
       this.logger.error(error)
@@ -460,7 +459,6 @@ export class ZhiyinService {
    */
   async convert(Useropenid, local = false) {
     try {
-
       const assess_token = await this.WxchatService.getAssesstToken()
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
         "open_userid_list": Useropenid,
@@ -472,29 +470,24 @@ export class ZhiyinService {
       }
       console.log(data, 'convert')
       if (data.userid_list.length > 0) {
+        console.log(data.userid_list)
+
         const successIds = data.userid_list.map(e => {
           return generateCacheKey(e.userid)
-
         })
         if (local == true) {
           return data.userid_list[0].userid
         } else {
           return { successIds, invalid: data.invalid_open_userid_list }
-
         }
-
       } else {
         if (local == true) {
           return false
         } else {
           return { successIds: [], invalid: data.invalid_open_userid_list }
         }
-
-
       }
     }
-
-
     catch (error) {
       this.logger.error(error)
       throw error;
