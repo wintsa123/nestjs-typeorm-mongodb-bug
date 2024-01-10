@@ -105,24 +105,24 @@ export class ZhiyinService {
     try {
       const { data: done } = await axios.get(url)
       if (done.success) {
-        // for (const item of done.data) {
-        //   const existingData = await this.devicesRepository.findOne({
-        //     withDeleted: true, // 设置为 true，以便包含已软删除的记录
-        //     where: { mac: item.mac }
-        //   });
-        //   if (!existingData) {
-        //     await this.devicesRepository.save(item);
-        //   } else {
-        //     if (new Date(item.serviceTime) < new Date()) {
-        //       await this.devicesRepository.softDelete({ mac: item.mac })
-        //     } else {
-        //       await this.devicesRepository.restore({ mac: item.mac })
-        //       await this.devicesRepository.update({ mac: item.mac }, item);
+        for (const item of done.data) {
+          const existingData = await this.devicesRepository.findOne({
+            withDeleted: true, // 设置为 true，以便包含已软删除的记录
+            where: { mac: item.mac }
+          });
+          if (!existingData) {
+            await this.devicesRepository.save(item);
+          } else {
+            if (new Date(item.serviceTime) < new Date()) {
+              await this.devicesRepository.softDelete({ mac: item.mac })
+            } else {
+              await this.devicesRepository.restore({ mac: item.mac })
+              await this.devicesRepository.update({ mac: item.mac }, item);
 
-        //     }
+            }
 
-        //   }
-        // }
+          }
+        }
         return done.data
       } else {
         this.logger.error(done.msg)
