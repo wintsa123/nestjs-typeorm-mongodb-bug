@@ -433,18 +433,14 @@ export class ZhiyinService {
       timestamp: getTime(),
     }
     let result = this.Sign(objTmp)
-
     const url1 = `${this.url}oa/stamp/info?appId=${result.appId}&code=${result.code}&traceId=${result.traceId}&timestamp=${result.timestamp}&sign=${result.sign}`
     try {
-
       const { data: done } = await axios.get(url1)
       if (done.success) {
-
         return done.data
       } else {
         this.logger.error(done)
         throw done
-
       }
     } catch (error) {
       this.logger.error(error)
@@ -460,7 +456,6 @@ export class ZhiyinService {
    */
   async convert(Useropenid, local = false) {
     try {
-
       const assess_token = await this.WxchatService.getAssesstToken()
       const { data } = await axios.post(`https://qyapi.weixin.qq.com/cgi-bin/batch/openuserid_to_userid?access_token=${assess_token}`, {
         "open_userid_list": Useropenid,
@@ -474,27 +469,20 @@ export class ZhiyinService {
       if (data.userid_list.length > 0) {
         const successIds = data.userid_list.map(e => {
           return generateCacheKey(e.userid)
-
         })
         if (local == true) {
           return data.userid_list[0].userid
         } else {
           return { successIds, invalid: data.invalid_open_userid_list }
-
         }
-
       } else {
         if (local == true) {
           return false
         } else {
           return { successIds: [], invalid: data.invalid_open_userid_list }
         }
-
-
       }
     }
-
-
     catch (error) {
       this.logger.error(error)
       throw error;

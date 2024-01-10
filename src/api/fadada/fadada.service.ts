@@ -133,7 +133,6 @@ export class FadadaService {
       bizContent: data.bizContent,
       appSecret: this.configService.get('fadada.appSecret')
     }
-    // @ts-ignore
     const sign = fascOpenApi.utils.sign(params);
 
     if (sign !== signNum) {
@@ -1337,7 +1336,7 @@ export class FadadaService {
       if (!tmp) {
         throw tmp
       }
-      //@ts-ignore
+      // @ts-ignore
       let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId: tmp.sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
         this.logger.error(result.data)
