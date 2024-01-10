@@ -537,7 +537,7 @@ export class FadadaService {
     let result: any = await Client.getUploadUrl(data)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('uploadDoc')
-      throw result.data
+      throw result
 
     }
     return result.data.data
