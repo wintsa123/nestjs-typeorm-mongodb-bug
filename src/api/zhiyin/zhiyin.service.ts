@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
-import { Connection, EntityRepository, IsNull, Not, Repository, createConnection, getConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
+import { Connection, EntityRepository, In, IsNull, Not, Repository, createConnection, getConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
@@ -368,13 +368,13 @@ export class ZhiyinService {
         //管理员无条件发起
         delete opApplyDetailRequest['id']
 
-     
-        let applyData = await this.applyDetailRepository.findOne({ where: { requestId: IsNull(),stampOaUserId:opApplyDetailRequest['stampOaUserId'] } });
+
+        let applyData = await this.applyDetailRepository.findOne({ where: { requestId: IsNull(), stampOaUserId: opApplyDetailRequest['stampOaUserId'] } });
 
         //查出管理员无条件发起数据
         if (!applyData) {
           //没数据时插入
-        
+
           const NewapplyData = new ApplyDetailEntity(opApplyDetailRequest)
           const tmp1 = opStampRecordRequest.map((e: any) => { return { ...e.opStampRecordBo, opStampRecordImages: e.opStampRecordImages } });
           let StampRecords = uniqBy([].concat(...tmp1), 'id').map((e: any) => { e['stampOaUserId'] = opApplyDetailRequest.stampOaUserId; return new StampRecordEntity(e) })
@@ -470,11 +470,54 @@ export class ZhiyinService {
       }
       console.log(data, 'convert')
       if (data.userid_list.length > 0) {
-        console.log(data.userid_list)
 
         const successIds = data.userid_list.map(e => {
+
           return generateCacheKey(e.userid)
         })
+        const oaidPromises = data.userid_list.map(async (e) => {
+          try {
+            let stampUser1 = await this.connection.query(`SELECT lastname, id FROM hrmresource WHERE WORKCODE='${e.userid}' `);
+
+            if (stampUser1[0].LASTNAME == null) {
+              throw '盖章人不存在';
+            }
+
+            return stampUser1[0].ID;
+          } catch (error) {
+            // Handle errors if needed
+            console.error(`Error processing userid ${e.userid}:`, error);
+            return null; // or handle the error in a way that fits your use case
+          }
+        });
+
+        // Wait for all promises to resolve
+        const oaidValues = await Promise.all(oaidPromises);
+
+        // Filter out null values (in case of errors)
+        const validOaids = oaidValues.filter((oaid) => oaid !== null);
+        const banUsers = validOaids.map((oaid) => {
+          const banuser = new banUser();
+          banuser.oaid = oaid;
+          return banuser;
+        });
+
+        // Check if oaid already exists in the database
+        const existingOaids = await this.banUserRepository.find({
+          where: {
+            oaid: In(validOaids),
+          },
+        });
+
+        // Filter out existing oaids
+        const newBanUsers = banUsers.filter((banUser) => {
+          return !existingOaids.some((existing) => existing.oaid === banUser.oaid);
+        });
+
+        // Save only the new banUser entities to the database
+        if (newBanUsers.length > 0) {
+          await this.banUserRepository.save(newBanUsers);
+        }
         if (local == true) {
           return data.userid_list[0].userid
         } else {
