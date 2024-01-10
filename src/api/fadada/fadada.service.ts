@@ -153,8 +153,7 @@ export class FadadaService {
     })
     const tmp = json.parse(data.bizContent)
 
-    console.log(tmp)
-    console.log(Eventid, 'Eventid')
+
     switch (Eventid) {
       case 'user-authorize':
         if (tmp.authResult !== 'success') {
@@ -187,7 +186,6 @@ export class FadadaService {
         break;
       case 'personal-seal-create':
         try {
-          // console.log(tmp,'sealid')
           tmp.expiresTime = new Date(Number(tmp.expiresTime))
           tmp.eventTime = new Date(Number(tmp.eventTime))
           let oaUser = await this.connection.query(`select lastname from hrmresource where id='${tmp.clientUserId}' `)
@@ -216,7 +214,6 @@ export class FadadaService {
           });
 
           if (result) {
-            console.log(result)
 
             Object.assign(result, tmp)
             result.expiresTime = new Date(Number(tmp.expiresTime))
@@ -1266,7 +1263,6 @@ export class FadadaService {
         throw false
       }
       const client = new fascOpenApi.sealClient.Client(await this.init())
-      console.log(data)
 
 
       let tmp = await this.SealRepository.findOne({ where: { sealId: Array.isArray(data) ? data[0].sealId : data.sealId[0] } });
@@ -1274,7 +1270,6 @@ export class FadadaService {
       if (!tmp) {
         throw `${Array.isArray(data) ? data[0].clientUserId : data.clientUserId}该人未授权`
       }
-      console.log(tmp)
 
       let result: any = await client.getPersonalFreeSignUrl({ openUserId: tmp.openUserId, businessId: this.configService.get('fadada.businessId') as string, sealIds: Array.isArray(data) ? data.map(e => e.sealId) : data.sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
@@ -1297,7 +1292,6 @@ export class FadadaService {
     if (clientUserId.length == 0) {
       throw '未取得登录id'
     }
-    console.log(clientUserId)
     const client = new fascOpenApi.sealClient.Client(await this.init())
     let data = await this.fadadaRepository.findOne({ where: { clientUserId } });
 
@@ -1339,12 +1333,10 @@ export class FadadaService {
   async deletePersonalSeal(sealId) {
     try {
       const client = new fascOpenApi.sealClient.Client(await this.init())
-      console.log(sealId)
       let tmp = await this.SealRepository.findOne({ where: { sealId } });
       if (!tmp) {
         throw tmp
       }
-      console.log(tmp)
       //@ts-ignore
       let result: any = await client.deletePersonalSeal({ openUserId: tmp.openUserId, sealId: tmp.sealId })
       if (result.status !== 200 || result.data.code !== '100000') {
