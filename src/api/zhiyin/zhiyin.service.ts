@@ -15,6 +15,7 @@ import { Connection, EntityRepository, IsNull, Not, Repository, createConnection
 import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
+import { banUser } from './entities/banUser.entity';
 @EntityRepository(ApplyDetailEntity)
 @Injectable()
 export class ZhiyinService {
@@ -32,6 +33,8 @@ export class ZhiyinService {
     private readonly stampRecordDetailRepository: Repository<StampRecordDetailEntity>,
     @InjectRepository(devicesEntity)
     private readonly devicesRepository: Repository<devicesEntity>,
+    @InjectRepository(banUser)
+    private readonly banUserRepository: Repository<banUser>,
     // @InjectRepository(notApproval)
     // private readonly notApprovalResplo: Repository<notApproval>,
     // @InjectRepository(hrmresourceEntity,'oracle')
@@ -467,6 +470,8 @@ export class ZhiyinService {
       }
       console.log(data, 'convert')
       if (data.userid_list.length > 0) {
+        console.log(data.userid_list)
+
         const successIds = data.userid_list.map(e => {
           return generateCacheKey(e.userid)
         })
