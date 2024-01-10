@@ -631,7 +631,7 @@ export class FadadaService {
         this.logger.error(result.headers)
         const hash = redisCacheKey('POST', '/api/v1/fadada/sign/Create', data)
 
-        if (hash) {
+        if (await this.redisService.get(hash)) {
           await this.redisService.del(hash)
           let done = await this.signCreate(data)
           return done
