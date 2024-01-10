@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, BeforeUpdate } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, BeforeUpdate, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { baseEntity } from '@src/api/base.entity';
 
 @Entity({ name: 'zhiyindevices', database: 'nestapi' })
-export class devicesEntity extends baseEntity {
+export class devicesEntity extends baseEntity  {
     @Column({ type: 'varchar' })
     name?: string;
     @Column({ type: 'varchar' })
@@ -15,4 +15,6 @@ export class devicesEntity extends baseEntity {
     type?: string;
     @Column({ type: 'varchar',nullable:true })
     organization?: string;
+
+   
 }
