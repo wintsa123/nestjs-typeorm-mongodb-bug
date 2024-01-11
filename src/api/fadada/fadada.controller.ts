@@ -18,6 +18,7 @@ import { fadadaList } from './dto/fadadaList.dto';
 import { TestDto } from './dto/test.dto';
 import { signTaskClient } from '@fddnpm/fasc-openapi-node-sdk';
 import { ResponseHeaderLoggerInterceptor } from '@src/filters/header-logger.interceptor';
+import { report } from './dto/report.dto.ts';
 
 @ApiTags('法大大电子签章')
 @Controller('fadada')
@@ -337,5 +338,10 @@ export class FadadaController {
   @ApiOperation({ summary: '流程检查免验证签情况' })
   authFreeSeal(@Query('signTaskId') signTaskId:string) {
     return this.fadadaService.authFreeSeal(signTaskId);
+  }
+  @Post('/report/getReportUrl')
+  @ApiOperation({ summary: '出证' })
+  getReportUrl(@Query('signTaskId') signTaskId:report) {
+    return this.fadadaService.report(signTaskId);
   }
 }
