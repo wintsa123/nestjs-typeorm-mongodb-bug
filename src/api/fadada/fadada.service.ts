@@ -1095,6 +1095,7 @@ export class FadadaService {
       throw result.data
 
     }
+    delete result.data.data['initiator']
     return result.data.data
   }
   /**
