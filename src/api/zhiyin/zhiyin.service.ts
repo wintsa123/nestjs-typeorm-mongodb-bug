@@ -508,12 +508,10 @@ export class ZhiyinService {
             oaid: In(validOaids),
           },
         });
-        console.log(existingOaids)
         // Filter out existing oaids
         const newBanUsers = banUsers.filter((e) => {
           return !existingOaids.some((existing) => existing.oaid == e.oaid);
         });
-        console.log(newBanUsers)
 
         // Save only the new banUser entities to the database
         if (newBanUsers.length > 0) {
@@ -551,7 +549,6 @@ export class ZhiyinService {
       const result = await this.devicesRepository.findOne({ where: { id: data.id } });
       result!.type = data.type ? data.type : result!.type
       result!.organization = data.organization ? data.organization : result!.organization
-      console.log(result)
       await this.devicesRepository.save(result!)
       return true
     } catch (error) {

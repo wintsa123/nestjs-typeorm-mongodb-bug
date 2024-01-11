@@ -1466,5 +1466,33 @@ export class FadadaService {
       throw error
     }
   }
+
+  /**
+   * @Author: wintsa
+   * @Date: 2024-01-11 10:36:28
+   * @LastEditors: wintsa
+   * @Description: 下载report
+   * @return {*}
+   */
+  async  report(data) {
+    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    const field=await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
+    // Client.applyReport
+    // Client.downloadReport
+
+    
+  }
+   /**
+   * @Author: wintsa
+   * @Date: 2024-01-11 10:36:28
+   * @LastEditors: wintsa
+   * @Description: 查询签署完成的附件
+   * @return {*}
+   */
+  async  getFileInfo(data) {
+    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    // Client.getDetail
+
+  }
 }
 
