@@ -508,11 +508,12 @@ export class ZhiyinService {
             oaid: In(validOaids),
           },
         });
-
+        console.log(existingOaids)
         // Filter out existing oaids
         const newBanUsers = banUsers.filter((banUser) => {
           return !existingOaids.some((existing) => existing.oaid === banUser.oaid);
         });
+        console.log(newBanUsers)
 
         // Save only the new banUser entities to the database
         if (newBanUsers.length > 0) {
