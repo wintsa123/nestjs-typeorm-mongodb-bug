@@ -1480,7 +1480,7 @@ export class FadadaService {
     const field=await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
     // Client.applyReport
     // Client.downloadReport
-
+console.log(data)
     
   }
    /**
@@ -1493,6 +1493,7 @@ export class FadadaService {
   async  getFileInfo(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     // Client.getDetail
+    console.log(data)
 
   }
 }
