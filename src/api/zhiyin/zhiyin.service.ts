@@ -510,8 +510,8 @@ export class ZhiyinService {
         });
         console.log(existingOaids)
         // Filter out existing oaids
-        const newBanUsers = banUsers.filter((banUser) => {
-          return !existingOaids.some((existing) => existing.oaid === banUser.oaid);
+        const newBanUsers = banUsers.filter((e) => {
+          return !existingOaids.some((existing) => existing.oaid == e.oaid);
         });
         console.log(newBanUsers)
 
