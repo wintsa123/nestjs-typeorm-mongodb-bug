@@ -14,6 +14,7 @@ import { signTaskStatus } from '@src/enums';
 import JSONbig from 'json-bigint';
 import { groupBy, map, uniqBy, zip } from 'lodash';
 import { redisCacheKey } from '@src/utils';
+import { IdTypeEnum, OpenId } from '@fddnpm/fasc-openapi-node-sdk';
 
 @Injectable()
 export class FadadaService {
@@ -1164,9 +1165,10 @@ export class FadadaService {
   async signGetOwnerDownLoadUrl(signTaskId) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
     let params={
-      "ownerId": {"idType":fascOpenApi.IdTypeEnum.CORP,"openId":this.configService.get('fadada.opencorpId')},
+      "ownerId": {"idType":'corp' ,"openId":this.configService.get('fadada.opencorpId')} as OpenId,
       "signTaskId":signTaskId
     }
+    
     let result: any = await Client.getOwnerDownLoadUrl(params)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
