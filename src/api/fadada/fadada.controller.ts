@@ -289,8 +289,8 @@ export class FadadaController {
   }
   @Post('/sign/GetOwnerDownLoadUrl')
   @ApiOperation({ summary: '获取签署文档下载地址' })
-  signGetOwnerDownLoadUrl(@Body() data:CreateFadadaDto) {
-    return this.fadadaService.signGetOwnerDownLoadUrl(data);
+  signGetOwnerDownLoadUrl(@Body() signTaskId:string) {
+    return this.fadadaService.signGetOwnerDownLoadUrl(signTaskId);
   }
   @Post('/Personseal/PersonCreateByImage')
   @ApiOperation({ summary: '创建图片签名' })

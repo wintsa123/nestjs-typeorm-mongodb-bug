@@ -1161,9 +1161,13 @@ export class FadadaService {
    * @Description: 获取签署文档下载地址
    * @return {*}
    */
-  async signGetOwnerDownLoadUrl(data) {
+  async signGetOwnerDownLoadUrl(signTaskId) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    let result: any = await Client.getOwnerDownLoadUrl(data)
+    let params={
+      "ownerId": {"idType":fascOpenApi.IdTypeEnum.CORP,"openId":this.configService.get('fadada.opencorpId')},
+      "signTaskId":signTaskId
+    }
+    let result: any = await Client.getOwnerDownLoadUrl(params)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
       throw result.data
@@ -1492,7 +1496,7 @@ console.log(data)
    */
   async  getFileInfo(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    // Client.getDetail
+    // Client.getMessageReportDownloadUrl
     console.log(data)
 
   }
