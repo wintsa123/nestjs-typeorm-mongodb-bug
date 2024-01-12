@@ -341,12 +341,12 @@ export class FadadaController {
   }
   @Post('/report/getReportUrl')
   @ApiOperation({ summary: '出证' })
-  getReportUrl(@Query('signTaskId') signTaskId:report) {
+  getReportUrl(@Body() signTaskId:report) {
     return this.fadadaService.report(signTaskId);
   }
   @Post('/file/getFinshFile')
   @ApiOperation({ summary: '下载完成签署文档' })
-  getFinshFile(@Query('signTaskId') data:any) {
+  getFinshFile(@Body() data:report) {
     return this.fadadaService.getFileInfo(data);
   }
 }

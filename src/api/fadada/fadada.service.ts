@@ -1165,11 +1165,11 @@ export class FadadaService {
    */
   async signGetOwnerDownLoadUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    let params={
-      "ownerId": {"idType":'corp' ,"openId":this.configService.get('fadada.opencorpId')} as OpenId,
-      "signTaskId":data.signTaskId
+    let params = {
+      "ownerId": { "idType": 'corp', "openId": this.configService.get('fadada.opencorpId') } as OpenId,
+      "signTaskId": data.signTaskId
     }
-    
+
     let result: any = await Client.getOwnerDownLoadUrl(params)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error(result.data)
@@ -1482,28 +1482,32 @@ export class FadadaService {
    * @Description: 下载report
    * @return {*}
    */
-  async  report(data) {
+  async report(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    const field=await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
+    const field = await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
     // Client.applyReport
     // Client.downloadReport
-         console.log(data)
-    
-  }
-   /**
-   * @Author: wintsa
-   * @Date: 2024-01-11 10:36:28
-   * @LastEditors: wintsa
-   * @Description: 查询签署完成的附件
-   * @return {*}
-   */
-  async getFileInfo(data) {
-    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    Client.getOwnerFile({signTaskId:data.signTaskId} as GetOwnerFileRequest)
     console.log(data)
 
   }
+  /**
+  * @Author: wintsa
+  * @Date: 2024-01-11 10:36:28
+  * @LastEditors: wintsa
+  * @Description: 查询签署完成的附件
+  * @return {*}
+  */
+  async getFileInfo(data) {
+    const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    const result:any = await Client.getOwnerFile({ signTaskId: data.signTaskId } as GetOwnerFileRequest)
+    console.log(result)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('getDeta获取公司免验证签urlil')
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data.data  }
 
-  
+
 }
 
