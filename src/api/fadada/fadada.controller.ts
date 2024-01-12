@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode, Headers, UseGuards, Head, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Inject, HttpCode, Headers, UseGuards, Head, UseInterceptors, Header } from '@nestjs/common';
 import { FadadaService } from './fadada.service';
 import { CreateFadadaDto } from './dto/create-fadada.dto';
 import { UpdateFadadaDto } from './dto/update-fadada.dto';
@@ -341,8 +341,9 @@ export class FadadaController {
   }
   @Post('/report/getReportUrl')
   @ApiOperation({ summary: '出证' })
-  getReportUrl(@Body() signTaskId:report) {
-    return this.fadadaService.report(signTaskId);
+  getReportUrl(@Body() data:report,@Headers() headers: any) {
+    console.log(headers)
+    return this.fadadaService.report(data);
   }
   @Post('/file/getFinshFile')
   @ApiOperation({ summary: '下载完成签署文档' })

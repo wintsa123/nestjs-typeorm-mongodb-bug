@@ -1484,11 +1484,21 @@ export class FadadaService {
    */
   async report(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    const field = await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
-    // Client.applyReport
-    // Client.downloadReport
-    console.log(data)
-
+    const field = await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=${data.id}`)
+    console.log(field)
+    let params = {
+      signTaskId: data.signTaskId,
+      fileId: field.map(e => e.DOCFILEID),
+      ownerId: { idType: 'corp', openId: this.configService.get('fadada.opencorpId') },
+      reportType: data.reportType
+    }
+    const result:any= await Client.applyReport(params)
+    if (result.status !== 200 || result.data.code !== '100000') {
+      this.logger.error('getDeta获取公司免验证签urlil')
+      this.logger.error(result.data)
+      throw result.data
+    }
+    return result.data.data
   }
   /**
   * @Author: wintsa
@@ -1499,14 +1509,15 @@ export class FadadaService {
   */
   async getFileInfo(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    const result:any = await Client.getOwnerFile({ signTaskId: data.signTaskId } as GetOwnerFileRequest)
+    const result: any = await Client.getOwnerFile({ signTaskId: data.signTaskId } as GetOwnerFileRequest)
     console.log(result)
     if (result.status !== 200 || result.data.code !== '100000') {
       this.logger.error('getDeta获取公司免验证签urlil')
       this.logger.error(result.data)
       throw result.data
     }
-    return result.data.data  }
+    return result.data.data
+  }
 
 
 }
