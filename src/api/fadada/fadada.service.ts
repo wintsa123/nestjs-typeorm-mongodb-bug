@@ -15,6 +15,7 @@ import JSONbig from 'json-bigint';
 import { groupBy, map, uniqBy, zip } from 'lodash';
 import { redisCacheKey } from '@src/utils';
 import { IdTypeEnum, OpenId } from '@fddnpm/fasc-openapi-node-sdk';
+import { GetOwnerFileRequest } from '@fddnpm/fasc-openapi-node-sdk/lib/services/sign_task/sign_task_models';
 
 @Injectable()
 export class FadadaService {
@@ -1486,7 +1487,7 @@ export class FadadaService {
     const field=await this.connection.query(`SELECT DOCFILEID FROM uf_dzqz2024_dt3 where mainid=6`)
     // Client.applyReport
     // Client.downloadReport
-console.log(data)
+         console.log(data)
     
   }
    /**
@@ -1496,11 +1497,13 @@ console.log(data)
    * @Description: 查询签署完成的附件
    * @return {*}
    */
-  async  getFileInfo(data) {
+  async getFileInfo(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    // Client.getMessageReportDownloadUrl
+    Client.getOwnerFile({signTaskId:data.signTaskId} as GetOwnerFileRequest)
     console.log(data)
 
   }
+
+  
 }
 

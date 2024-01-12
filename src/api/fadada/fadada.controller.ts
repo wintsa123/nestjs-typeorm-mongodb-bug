@@ -344,4 +344,9 @@ export class FadadaController {
   getReportUrl(@Query('signTaskId') signTaskId:report) {
     return this.fadadaService.report(signTaskId);
   }
+  @Post('/file/getFinshFile')
+  @ApiOperation({ summary: '下载完成签署文档' })
+  getFinshFile(@Query('signTaskId') data:any) {
+    return this.fadadaService.getFileInfo(data);
+  }
 }
