@@ -1164,6 +1164,7 @@ export class FadadaService {
    */
   async signGetOwnerDownLoadUrl(signTaskId) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
+    console.log(signTaskId)
     let params={
       "ownerId": {"idType":'corp' ,"openId":this.configService.get('fadada.opencorpId')} as OpenId,
       "signTaskId":signTaskId
