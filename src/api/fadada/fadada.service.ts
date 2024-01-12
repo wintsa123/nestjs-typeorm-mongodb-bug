@@ -1162,12 +1162,11 @@ export class FadadaService {
    * @Description: 获取签署文档下载地址
    * @return {*}
    */
-  async signGetOwnerDownLoadUrl(signTaskId) {
+  async signGetOwnerDownLoadUrl(data) {
     const Client = new fascOpenApi.signTaskClient.Client(await this.init())
-    console.log(signTaskId)
     let params={
       "ownerId": {"idType":'corp' ,"openId":this.configService.get('fadada.opencorpId')} as OpenId,
-      "signTaskId":signTaskId
+      "signTaskId":data.signTaskId
     }
     
     let result: any = await Client.getOwnerDownLoadUrl(params)
