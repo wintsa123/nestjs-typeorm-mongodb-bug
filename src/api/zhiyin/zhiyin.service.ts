@@ -475,25 +475,17 @@ export class ZhiyinService {
 
           return generateCacheKey(e.userid)
         })
-        const oaidPromises = data.userid_list.map(async (e) => {
-          try {
-            let stampUser1 = await this.connection.query(`SELECT lastname, id FROM hrmresource WHERE WORKCODE='${e.userid}' `);
-
-            if (stampUser1[0].LASTNAME == null) {
-              throw '盖章人不存在';
-            }
-
-            return stampUser1[0].ID;
-          } catch (error) {
-            // Handle errors if needed
-            console.error(`Error processing userid ${e.userid}:`, error);
-            return null; // or handle the error in a way that fits your use case
-          }
+        const oaidPromises = data.userid_list.map((e) => {
+          return e.userid
         });
+        let sqlResult = await this.connection.query(`SELECT lastname, id FROM hrmresource WHERE WORKCODE in (${oaidPromises.join(',')} )`);
+        console.log(sqlResult)
+        if (sqlResult.some(e => e.LASTNAME == null)) {
+          throw '盖章人不存在';
+        }
 
         // Wait for all promises to resolve
-        const oaidValues = await Promise.all(oaidPromises);
-
+        let oaidValues = sqlResult.map(e => e.id)
         // Filter out null values (in case of errors)
         const validOaids = oaidValues.filter((oaid) => oaid !== null);
         const banUsers = validOaids.map((oaid) => {
