@@ -35,66 +35,65 @@ export class TasksService {
             throw error
         }
     }
-    @Cron(CronExpression.EVERY_DAY_AT_4AM,{name:'setCron'})
+    @Cron(CronExpression.EVERY_DAY_AT_4AM, { name: 'setCron' })
     // @Cron(CronExpression.EVERY_5_SECONDS)
-
     async setCorn() {
-
-        const jobs = this.schedule.getCronJobs();
-        jobs.forEach((_value, key, _map) => {
-            let next;
-            try {
-                // this.schedule.deleteCronJob(key);
-                if (key!=='setCron') {
-                    let jo=this.schedule.getCronJob(key)
-                    jo.stop()
-                    this.logger.warn(`job ${key} stop!`);
-
-                }
-               
-            } catch (e) {
-                next = 'error: next fire date is in the past!';
-            }
-        });
-        const nowDay = new Date()
-        const year = nowDay.getFullYear();
-        const month = (nowDay.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed, so add 1
-        const day = nowDay.getDate().toString().padStart(2, '0');
-
-        const formattedDate = `${year}-${month}-${day}`;
-        console.log(formattedDate)
-
-        let oaUser = await this.connection.query(`select lx from uf_jjrapxx where RQ='${formattedDate}' `)
-        if (oaUser[0].LX == 0) {
-
+        if (process.env.NODE_APP_INSTANCE !== '0') return
+            const jobs = this.schedule.getCronJobs();
             jobs.forEach((_value, key, _map) => {
                 let next;
                 try {
                     // this.schedule.deleteCronJob(key);
-                    let jo=this.schedule.getCronJob(key)
-                    jo.start();
-                    this.logger.warn(`job ${key} start!`);
-    
+                    if (key !== 'setCron') {
+                        let jo = this.schedule.getCronJob(key)
+                        jo.stop()
+                        this.logger.warn(`job ${key} stop!`);
+
+                    }
+
                 } catch (e) {
                     next = 'error: next fire date is in the past!';
                 }
             });
-            
+            const nowDay = new Date()
+            const year = nowDay.getFullYear();
+            const month = (nowDay.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed, so add 1
+            const day = nowDay.getDate().toString().padStart(2, '0');
 
-        }
-      
+            const formattedDate = `${year}-${month}-${day}`;
+            console.log(formattedDate)
+
+            let oaUser = await this.connection.query(`select lx from uf_jjrapxx where RQ='${formattedDate}' `)
+            if (oaUser[0].LX == 0) {
+
+                jobs.forEach((_value, key, _map) => {
+                    let next;
+                    try {
+                        // this.schedule.deleteCronJob(key);
+                        let jo = this.schedule.getCronJob(key)
+                        jo.start();
+                        this.logger.warn(`job ${key} start!`);
+
+                    } catch (e) {
+                        next = 'error: next fire date is in the past!';
+                    }
+                });
 
 
+            }
+
+
+        
     }
- 
+
     private readonly logger = new Logger(TasksService.name);
-      private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=291dfc0c-3545-41e3-a355-6fb592f7c766`;
+    private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=291dfc0c-3545-41e3-a355-6fb592f7c766`;
     // private readonly robot = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4db5544c-1ac9-42ea-8661-fe8b55051002`; //信息部群
 
     @Cron('40 08 * * *')
     // @Cron(CronExpression.EVERY_5_SECONDS)
     async weatherFun() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
             //天气api，地址广州，具体citycode可以查询文件/网络
             const url = `http://t.weather.sojson.com/api/weather/city/101280101`;
@@ -132,7 +131,7 @@ export class TasksService {
 
     // @Cron(CronExpression.EVERY_5_SECONDS)
     async newsFun() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
 
         try {
             const newsUrl = `https://api.oioweb.cn/api/common/HotList`
@@ -169,7 +168,7 @@ export class TasksService {
 
     @Cron('35 8 * * 1-5') // 8:35 AM
     async dakatiXin() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
 
             let newObj = {
@@ -194,7 +193,7 @@ export class TasksService {
 
     @Cron('05 12 * * 1-5') // 11:55 AM
     async dakatiXin2() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
 
             let newObj = {
@@ -219,7 +218,7 @@ export class TasksService {
 
     @Cron('35 13 * * 1-5') // 1:35 PM
     async dakatiXin3() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
 
             let newObj = {
@@ -243,7 +242,7 @@ export class TasksService {
     }
     @Cron('45 17 * * 1-5') // 5:35 PM
     async dakatiXin4() {
-        // if (process.env.NODE_APP_INSTANCE !== '0') return
+        if (process.env.NODE_APP_INSTANCE !== '0') return
         try {
 
             let newObj = {
