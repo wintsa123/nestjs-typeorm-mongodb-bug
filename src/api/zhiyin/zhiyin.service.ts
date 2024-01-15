@@ -12,7 +12,7 @@ import { ApplyDetailEntity } from './entities/ApplyDetail.entity';
 import { StampRecordEntity } from './entities/StampRecord.Entity';
 import { StampRecordDetailEntity } from './entities/StampRecordDetail.entity';
 import { Connection, EntityRepository, In, IsNull, Not, Repository, createConnection, getConnection, getCustomRepository, getManager, getRepository } from 'typeorm';
-import { difference, isEmpty, isNil, pickBy, uniqBy } from 'lodash';
+import {  uniqBy } from 'lodash';
 import { devicesEntity } from './entities/deviceList.entity';
 import { WxchatService } from "src/api/wxchat/wxchat.service";
 import { banUser } from './entities/banUser.entity';
@@ -478,16 +478,15 @@ export class ZhiyinService {
         const oaidPromises = data.userid_list.map((e) => {
           return e.userid
         });
-        let sqlResult = await this.connection.query(`SELECT lastname, id FROM hrmresource WHERE WORKCODE in (${oaidPromises.join(',')} )`);
-        console.log(sqlResult)
-        if (sqlResult.some(e => e.LASTNAME == null)) {
+        let sqlResult = await this.connection.query(`SELECT lastname, id FROM hrmresource WHERE WORKCODE in ('${oaidPromises.join(`','`)}')`);
+
+        if (sqlResult.some(e => e.ID == null)) {
           throw '盖章人不存在';
         }
 
         // Wait for all promises to resolve
-        let oaidValues = sqlResult.map(e => e.id)
+        let validOaids = sqlResult.map(e => e.ID).filter((oaid) => oaid !== null);
         // Filter out null values (in case of errors)
-        const validOaids = oaidValues.filter((oaid) => oaid !== null);
         const banUsers = validOaids.map((oaid) => {
           const banuser = new banUser();
           banuser.oaid = oaid;
