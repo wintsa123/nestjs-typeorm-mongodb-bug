@@ -10,7 +10,7 @@ export class User extends baseEntity {
     @Column({ type: 'string', nullable: true })
     password;
 
-    @Column({ type: 'number', nullable: true })
+    @Column({ type: 'string', nullable: true })
     phone;
     @Column({ type: 'string', nullable: true })
     role;

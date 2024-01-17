@@ -27,7 +27,8 @@ export class UserService {
    */
   async register(data){
     console.log(data)
-    
+    const result=await this.UserRepository.findOne({ where: { name:data.name }})
+    console.log(result)
     const user = new User();
     user.name = data.name;
     user.password = data.password;
@@ -39,7 +40,7 @@ export class UserService {
     const user = new User();
     user.name = "wintsa";
     user.password = "12300114";
-    user.password = "Saw";
+    user.phone = "17666503623";
     user.role ='1'
 
     this.UserRepository.save(user)
