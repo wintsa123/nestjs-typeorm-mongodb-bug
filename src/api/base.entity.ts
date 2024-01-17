@@ -5,15 +5,15 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   BaseEntity,
+  ObjectIdColumn,
+  ObjectId
 } from 'typeorm';
 
 export class baseEntity extends BaseEntity {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'id',
-    comment: '主键id',
+  @ObjectIdColumn({
+   
   })
-  id!: number;
+  id?: ObjectId;
 
   @Transform((row: TransformFnParams) => +new Date(row.value))
   @CreateDateColumn({

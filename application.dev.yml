@@ -6,68 +6,31 @@ tokenExpire: 7
 
 # 数据库配置
 datasource:
-  driverName: mysql
-  host: 192.168.2.222
-  port: 3306
-  database: nestapi
+  driverName: mongodb
+  host: "localhost"
+  port: 27017
+  database: wintsa
   username: root
   password: 12300114
   charset: utf8
   loc: Asia/Shanghai
   logging: true
 
-datasourceOracle:
-  driverName: oracle
-  host: 192.168.2.222
-  port: 1521
-  database: ecology
-  username: ecology
-  password: ecology
-  sid: ecology
-  charset: utf8
-  loc: Asia/Shanghai
-  logging: true
 
 
-#企业微信配置
-wxChat:
-  corpsecret: YbF5JHEjAKWuO5-5nLf5xuH2R1wFc8pGBWTq0fyE12s
-  CorpID: ww97588d93c357248d
-  AgentId: 1000004
-  Token: KxvcyR3SQqTIzAVyIQTn2
-  Key: Fc3rx5pyQ4BePDDT7t5jHOvTzfdVbBDgySDhbebWDAq
-  dakaSecret: 06J216adGcxmj2YaDiUI7F2bwGWBiaS6XcMuYwVbMZI
-  tongXunSecret: -dAuFs4uhcyOjpkHgxDrvPV8gdNb7OPvJW3odGeCua4
+
 # 腾讯地图api
 lbsKey: LW7BZ-NB7C5-QNDSX-VCZVT-D7FQ4
 
 # 阿里oss存储(可直接使用)
 aliyunOss:
-  accessKeyId: 'LTAI4FmwbKtoErzJdwfJmcmd'
-  accessKeySecret: 'bu5UZXAG2dXQ6G75bzTDXoTN1VcALv'
+  accessKeyId: '*'
+  accessKeySecret: '*'
   endpointUrl: 'oss-cn-shenzhen'
   bucketUrl: 'https://an-jia-shop.oss-cn-shenzhen.aliyuncs.com'
   bucketName: 'an-jia-shop'
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
-#法大大
-fadada:
-  appId: '00000876'
-  appSecret: S1NAPOWD45VIXDMI9NL0S3NKSDVM6H3G 
-  serverUrl: https://api.fadada.com/api/v5/
-  opencorpId: 15ad1a994ed746dbbc2420840308d7a6
-  businessId: d065d6947bfb545df69faaaff10868a5
-# fadada:
-#   appId: '80000470'
-#   appSecret: FQCLPQRNNIZXVLX1NQDBS10DUZJ8HNFQ
-#   serverUrl: https://uat-api.fadada.com/api/v5
-#   opencorpId: b665596642694fa39a11e22ca5cdc704
-#   businessId: 3b68a1ff1e851c69ba4c70c2b1997421
-#豸印
-zhiyin:
-  url: https://yk-test.zhiyinseal.com/smartsealservice/
-  appId: tbdudnj23zdxfizwvb2exw8vgp2f4f1r
-  appKey: lgt0ax3q39gx0fm1t9h7dz6oys9el46j
-  AgentId: 1000020
+
 
 ipWhitelist: ['111.229.217.225','111.231.141.181','118.89.112.13','115.159.196.132','127.0.0.1','192.168.2.1','192.168.2.221']

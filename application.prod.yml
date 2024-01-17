@@ -16,53 +16,21 @@ datasource:
   loc: Asia/Shanghai
   logging: true
 
-datasourceOracle:
-  driverName: oracle
-  host: 192.168.2.222
-  port: 1521
-  database: ecology
-  username: ecology
-  password: ecology
-  sid: ecology
-  charset: utf8
-  loc: Asia/Shanghai
-  logging: true
 
 
-#企业微信配置
-wxChat:
-  corpsecret: YbF5JHEjAKWuO5-5nLf5xuH2R1wFc8pGBWTq0fyE12s
-  CorpID: ww97588d93c357248d
-  AgentId: 1000004
-  Token: KxvcyR3SQqTIzAVyIQTn2
-  Key: Fc3rx5pyQ4BePDDT7t5jHOvTzfdVbBDgySDhbebWDAq
-  dakaSecret: 06J216adGcxmj2YaDiUI7F2bwGWBiaS6XcMuYwVbMZI
-  tongXunSecret: -dAuFs4uhcyOjpkHgxDrvPV8gdNb7OPvJW3odGeCua4
+
 # 腾讯地图api
 lbsKey: LW7BZ-NB7C5-QNDSX-VCZVT-D7FQ4
 
 # 阿里oss存储(可直接使用)
 aliyunOss:
-  accessKeyId: 'LTAI4FmwbKtoErzJdwfJmcmd'
-  accessKeySecret: 'bu5UZXAG2dXQ6G75bzTDXoTN1VcALv'
+  accessKeyId: '*'
+  accessKeySecret: '*'
   endpointUrl: 'oss-cn-shenzhen'
   bucketUrl: 'https://an-jia-shop.oss-cn-shenzhen.aliyuncs.com'
   bucketName: 'an-jia-shop'
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
-#法大大
-fadada:
-  appId: '00000876'
-  appSecret: S1NAPOWD45VIXDMI9NL0S3NKSDVM6H3G 
-  serverUrl: https://api.fadada.com/api/v5
-  opencorpId: 15ad1a994ed746dbbc2420840308d7a6
-  businessId: d065d6947bfb545df69faaaff10868a5
-#豸印
-zhiyin:
-  url: https://www.zhiyinseal.cn/smartsealservice/
-  appId: 9koctjctghthidy60frqc4uab2hjevk1
-  appKey: inxz77e5woa4ql6n3o4ciaohbxm0flb8
-  AgentId: 1000023
-  # AgentId: 1000020
 
-ipWhitelist: ['111.229.217.225','111.231.141.181','118.89.112.13','115.159.196.132','82.156.159.103','62.234.17.101','127.0.0.1','192.168.2.1','192.168.2.221']
+
+ipWhitelist: ['111.229.217.225','111.231.141.181','118.89.112.13','115.159.196.132','127.0.0.1','192.168.2.1','192.168.2.221']

@@ -17,7 +17,6 @@ import { IS_DEV, getConfig } from './utils';
 import { ApiModule } from './api/api.module';
 import { PluginModule } from './plugin/plugin.module';
 import { TasksService } from './corn/robot';
-import { WxchatService } from './api/wxchat/wxchat.service';
 import { SocketModule } from './socket/socket.module';
 
 
@@ -36,12 +35,9 @@ import { SocketModule } from './socket/socket.module';
       useFactory: (configService: ConfigService) => {
         return (
           {
-            type: 'mysql',
-            name: "default",
+            type: 'mongodb',
             host: String(configService.get('datasource.host')),
-            port: Number.parseInt(configService.get('datasource.port') ?? '3306'),
-            username: String(configService.get('datasource.username')),
-            password: String(configService.get('datasource.password')),
+            port: Number.parseInt(configService.get('datasource.port') ?? '27017'),
             database: String(configService.get('datasource.database')),
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             logging: configService.get('datasource.logging'),
@@ -55,36 +51,14 @@ import { SocketModule } from './socket/socket.module';
         )
       },
     }),
-    // TypeOrmModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: (configService: ConfigService) => ({
-    //     type: 'oracle',
-    //     name: 'oracle', // 连接名称
-    //     host: "192.168.2.222",
-    //     username: String(configService.get('datasourceOracle.username')),
-    //     password: String(configService.get('datasourceOracle.password')),
-    //     port: Number(configService.get('datasourceOracle.port')),
-    //     sid: String(configService.get('datasourceOracle.sid')),
-    //     synchronize: false,
-    //     extra: {
-    //       poolMax: 40,
-    //       poolMin: 20,
-    //     },
-    //     entities: [__dirname + '/**/*.ORLentity{.ts,.js}'],
-    //     logging: configService.get('datasourceOracle.logging'),
-    //     cache: {
-    //       duration: 60000, // 1分钟的缓存
-    //     },
-    //   }),
-    // }),
+   
     ScheduleModule.forRoot(),
     ApiModule,
     PluginModule,
     SocketModule,
   ],
   providers: [
-    Logger, TasksService, WxchatService,
+    Logger, TasksService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,

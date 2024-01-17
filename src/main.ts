@@ -12,6 +12,7 @@ import * as fastifyXmlBody from 'fastify-xml-body-parser';
 
 import fastifyCsrf from '@fastify/csrf-protection';
 import { fastifyCookie } from '@fastify/cookie';
+import { UserService } from './api/User/User.service';
 
 
 export const config = getConfig();
@@ -41,11 +42,11 @@ async function bootstrap() {
     root: join(__dirname, 'public'),
     prefix: '/', // optional: default '/'
   })
-  app.register(fastifyXmlBody);
+  // app.register(fastifyXmlBody);
 
-  app.register(fastifyCookie, {
-    secret: 'zw', // for cookies signature
-  });
+  // app.register(fastifyCookie, {
+  //   secret: '', // for cookies signature
+  // });
   app.register(fastifyCsrf);
 
   app.register(
@@ -84,31 +85,18 @@ async function bootstrap() {
       ],
     },
   });
+  if (false) {
+    const initService = app.get(UserService);
+    await initService.initial();
+  }
+
+
+
 
   await app.listen(PORT, '0.0.0.0', () => {
     logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
   });
 
 }
-// async function bootstrap() {
-//   const logger: Logger = new Logger('main.ts');
-//   //暂时关闭了api接口
-// const app = await NestFactory.create( AppModule , {
-//   // 开启日志级别打印
-//   logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
-// });
-//   //允许跨域请求
-//   app.enableCors();
-//   // 启动版本管理
-//   app.enableVersioning({
-//     defaultVersion: '1', // 不指定默认版本为v1
-//     type: VersioningType.URI,
-//   });
 
-//   // 给请求添加prefix
-//   app.setGlobalPrefix(PREFIX);
-//   await app.listen(PORT, () => {
-//     logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
-//   });
-// }
 bootstrap();
