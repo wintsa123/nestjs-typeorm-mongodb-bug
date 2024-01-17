@@ -6,9 +6,9 @@ import {
   DeleteDateColumn,
   BaseEntity,
   ObjectIdColumn,
-  ObjectId
+  
 } from 'typeorm';
-
+import { ObjectId } from 'mongodb' //注意这个ObjectId一定要从 mongodb里面导入，而不是typeorm
 export class baseEntity extends BaseEntity {
   @ObjectIdColumn({
    

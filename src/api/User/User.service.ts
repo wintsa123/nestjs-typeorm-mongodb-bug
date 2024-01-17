@@ -4,8 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import {  MongoRepository  } from 'typeorm';
+import { FindManyOptions, MongoRepository, getMongoRepository } from 'typeorm';
 import { User } from './entities/User.entitu';
+import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 
 @Injectable()
 export class UserService {
@@ -25,23 +26,32 @@ export class UserService {
    * @Description: 用户注册
    * @return {*}
    */
-  async register(data){
+  async register(data) {
     console.log(data)
-    const result=await this.UserRepository.findOne({ where: { name:data.name }})
+
+    const result = await this.UserRepository.find({
+      where: {
+        $or: [{ "name": data.name }, { "phone": data.phone }],
+      },
+    })
     console.log(result)
+    if (result.length>0) {
+      throw '该账号/手机号已经注册过了'
+    }
     const user = new User();
     user.name = data.name;
     user.password = data.password;
     user.password = data.phone;
 
-    // this.UserRepository.save(user)
+    this.UserRepository.save(user)
+    return true
   }
   async initial() {
     const user = new User();
     user.name = "wintsa";
     user.password = "12300114";
     user.phone = "17666503623";
-    user.role ='1'
+    user.role = '1'
 
     this.UserRepository.save(user)
 
