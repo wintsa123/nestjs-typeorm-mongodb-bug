@@ -31,7 +31,7 @@ export class UserService {
 
     const result = await this.UserRepository.find({
       where: {
-        $or: [{ "name": data.name }, { "phone": data.phone }],
+        $or: [{ name: data.name }, { phone: data.phone }],
       },
     })
     console.log(result) 
