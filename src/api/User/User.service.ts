@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { FindManyOptions, MongoRepository, getMongoRepository } from 'typeorm';
-import { User } from './entities/User.entitu';
+import { User } from './entities/User.entity';
 import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 
 @Injectable()
@@ -31,10 +31,11 @@ export class UserService {
 
     const result = await this.UserRepository.find({
       where: {
-        $or: [{ "name": data.name }, { "phone": data.phone }],
+        $or: [{ name: data.name }, { phone: data.phone }],
       },
     })
-    console.log(result)
+    console.log(result) 
+
     if (result.length>0) {
       throw '该账号/手机号已经注册过了'
     }
