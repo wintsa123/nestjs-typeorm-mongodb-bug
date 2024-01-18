@@ -4,7 +4,7 @@ import { UserController } from './User.controller';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from './entities/User.entitu';
+import { User } from './entities/User.entity';
 
 @Module({
   imports: [

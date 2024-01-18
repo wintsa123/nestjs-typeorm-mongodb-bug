@@ -7,7 +7,7 @@ tokenExpire: 7
 # 数据库配置
 datasource:
   driverName: mongodb
-  host: "localhost"
+  host: "mongodb+srv://wintsa:12300114@cluster0.txatiuk.mongodb.net/wintsa?retryWrites=true&w=majority"
   port: 27017
   database: wintsa
   username: root

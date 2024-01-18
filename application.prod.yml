@@ -6,10 +6,10 @@ tokenExpire: 7
 
 # 数据库配置
 datasource:
-  driverName: mysql
-  host: 192.168.2.222
-  port: 3306
-  database: nestapi
+  driverName: mongodb
+  host: "mongodb+srv://wintsa:12300114@cluster0.txatiuk.mongodb.net/wintsa?retryWrites=true&w=majority"
+  port: 27017
+  database: wintsa
   username: root
   password: 12300114
   charset: utf8

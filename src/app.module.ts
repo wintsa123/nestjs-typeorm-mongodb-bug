@@ -36,9 +36,9 @@ import { SocketModule } from './socket/socket.module';
         return (
           {
             type: 'mongodb',
-            host: String(configService.get('datasource.host')),
-            port: Number.parseInt(configService.get('datasource.port') ?? '27017'),
-            database: String(configService.get('datasource.database')),
+            url: configService.get('datasource.host'),
+            // port: Number.parseInt(configService.get('datasource.port') ?? '27017'),
+            // database: String(configService.get('datasource.database')),
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             logging: configService.get('datasource.logging'),
             timezone: '+08:00', // 东八区
